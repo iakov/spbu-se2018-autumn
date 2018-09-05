@@ -2,4 +2,4 @@ build_script:
   - dir > dir.txt
 artifacts:
   - path: dir.txt
-  - name: dir-listing.txt
+    name: dir-listing.txt
