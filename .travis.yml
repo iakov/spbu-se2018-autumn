@@ -6,6 +6,6 @@ script:
 matrix:
   include:
     - os: linux
-        name: "Some GNU/Linux"
+      name: "Some GNU/Linux"
     - os: osx
-        name: "macOS"
+      name: "macOS"
