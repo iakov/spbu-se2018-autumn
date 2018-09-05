@@ -1,3 +1,4 @@
+language: erlang
 git:
   depth: 1
 script:
