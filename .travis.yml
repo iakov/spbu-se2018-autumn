@@ -1,4 +1,4 @@
-language: erlang
+language: c
 git:
   depth: 1
 script:
