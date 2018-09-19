@@ -13,14 +13,14 @@ int main()
         {
             for (k=0; k<10; k++)
             {
-                arr[i+j+k]++;
+                arr[i + j + k]++;
             };
         };
     };
     int answer=0;
     for (int i=0; i<28; i++)
     {
-        answer +=arr[i]*arr[i];
+        answer += arr[i] * arr[i];
     };
     printf("%d", answer);
     return 0;
