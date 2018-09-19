@@ -10,11 +10,13 @@ int main()
 		count[i] = 0;
 	}
 	
-	for(i = 0; i < 1000; i++){
+	for(i = 0; i < 1000; i++)
+	{
 		count[(i / 100) + (i % 100 % 10) + ((i / 10) % 10)]++;	
 	}
 	
-	for(i = 0; i < 28; i++){
+	for(i = 0; i < 28; i++)
+	{
 		summ += count[i] * count[i];
 	}
 	
