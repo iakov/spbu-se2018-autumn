@@ -1,11 +1,15 @@
 #include <stdio.h>
 
-int main() {
+int main() 
+{
     int equalDigitSums [28] = {0};
 
-    for (int a = 0; a < 10; a++){
-        for (int b = 0; b < 10; b++){
-            for (int c = 0; c < 10; c++){
+    for (int a = 0; a < 10; a++)
+    {
+        for (int b = 0; b < 10; b++)
+        {
+            for (int c = 0; c < 10; c++)
+            {
                 equalDigitSums[a + b + c]++;
             }
         }
@@ -13,7 +17,8 @@ int main() {
 
     int goldenTicketNumber = 0;
 
-    for (int i = 0; i < 28; i++){
+    for (int i = 0; i < 28; i++)
+    {
         goldenTicketNumber += equalDigitSums[i] * equalDigitSums[i];
     }
 
