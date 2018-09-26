@@ -6,7 +6,9 @@ int main()
 	int count[28];
 	int i;
 	int summ = 0;
-	for(i = 0; i < 28; i++){	
+	
+	for(i = 0; i < 28; i++)
+	{	
 		count[i] = 0;
 	}
 	
