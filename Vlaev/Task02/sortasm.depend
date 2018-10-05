@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1538765358 source:c:\users\nikita\desktop\sortasm\main.c
+	<stdio.h>
+	<stdlib.h>
+
