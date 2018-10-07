@@ -4,6 +4,29 @@
 
 extern int sort(int *arr, int size);
 
+/**  Bubble sort
+
+int sort(int *arr, int size) {
+    int copy[100], transposCount = 0;
+    for (int i = 0; i < size; ++i)
+        copy[i] = arr[i];
+    for (int i = 0; i < size; ++i) {
+        for (int j = 0; j < size - i - 1; ++j) {
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+        if (arr[size - i - 1] != copy[size - i - 1])
+            transposCount++;
+    }
+    return transposCount;
+}
+
+*/
+
+
 void parse(char *str, char *key, int *val) {
     int i = 0, cnt = 0;
 
@@ -22,6 +45,7 @@ void parse(char *str, char *key, int *val) {
     *(val) = atoi(symbolVal);
 }
 
+
 int main(int argc, char *argv[]) {
     int to, from;
     _Bool existTo = 0, existFrom = 0;
@@ -39,7 +63,9 @@ int main(int argc, char *argv[]) {
         }
     }
     int data[100], arr[100], count = 0, arrSize = 0;
-    while (scanf("%d", &data[count])) {
+    char spaceSymbol = ' ';
+    while (spaceSymbol != '\n') {
+        scanf("%d%c", &data[count], &spaceSymbol);
         if (existFrom && data[count] <= from) {
             fprintf(stdout, "%d ", data[count]);
         }
@@ -51,5 +77,6 @@ int main(int argc, char *argv[]) {
         }
     }
     int ans = sort(arr, arrSize);
+    //printf("%d", ans);
     return ans;
 }
