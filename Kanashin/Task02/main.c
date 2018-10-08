@@ -65,9 +65,9 @@
     int  numbersbefore[100], signnumb[100], numbers[100];
     for (i=0; i<100; i++)
     {
-        numbersbefore[i]=0; //массив для хранения набора чисел, которые больше и меньше соответстенных параметров, до сортировки
-        numbers[i]=0; //массив для хранения чисел после сортировки
-        signnumb[i]=1; //отвечает за знак i-го числа
+        numbersbefore[i]=0; 
+        numbers[i]=0; 
+        signnumb[i]=1; 
     }
     i=0;
     char symb=getchar();
@@ -93,7 +93,7 @@
             continue;
         }
     }
-    int flaglessto=0, countmoreto = 0, countnumb = i, countnumbsort = 0; // countnumb - кол-во всех чисел, countnumbsort - кол-во чисел, которые будут участвовать в сортировке
+    int flaglessto=0, countmoreto = 0, countnumb = i, countnumbsort = 0; 
     int morethanto[100]={0};
     //printf("Stdout: ");
     for (i=0; i<=countnumb; i++)
@@ -127,7 +127,7 @@
 
     bubblesort(numbers, countnumbsort);
 
-    int countchanged=0; // кол-во чисел, которые участвовали в сортировке и изменили свою позицию
+    int countchanged=0; 
     //printf("\nSorted: ");
     for (i=0; i<countnumbsort; i++)
     {
