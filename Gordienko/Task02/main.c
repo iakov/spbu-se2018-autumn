@@ -51,6 +51,11 @@ int main(int argc, char * argv[])
             unsorted[iuns] = num;
             iuns++;
         }
+        else
+        {
+            errors[ierr] = num;
+            ierr++;
+        }
     }
 
     for (int i = 0; i < iuns; i++)
@@ -58,8 +63,8 @@ int main(int argc, char * argv[])
 
     quicksort(sorted, 0, iuns - 1);
 
-    for (int i = 0; i < iuns; i++)
-        printf("%d ", sorted[i]);
+    /*for (int i = 0; i < iuns; i++)
+        printf("%d ", sorted[i]); */
 
     for (int i = 0; i < ierr; i++)
     {
