@@ -19,43 +19,37 @@ int strtoint(char *str, int symb)
 
 int main(int argc, char * argv[])
 {
-    int from, to;
-    int flagto = 0, flagfrom = 0;
+    int from, to, flagfrom = 0, flagto = 0;
     int errors[Lim], unsorted[Lim], sorted[Lim];
     int ierr = 0, iuns = 0;
-    int diff = 0;
 
     for (int i = 1; i < argc; i++)
     {
-        if (argv[i][0] != '-')
+        if (argv[i][2] == 't')
         {
-            int num = strtoint(argv[i], 0);
-            if ((flagto && flagfrom && (num > from) && (num < to)) ||
-                (flagto && !flagfrom && (num < to)) ||
-                (!flagto && flagfrom && (num > from)) ||
-                (!flagto && !flagfrom))
-            {
-                unsorted[iuns] = num;
-                iuns++;
-            }
-            else
-            {
-                errors[ierr] = num;
-                ierr++;
-            }
+            flagto = 1;
+            to = strtoint(argv[i], 5);
         }
-        else
+        if (argv[i][2] == 'f')
         {
-            if (argv[i][2] == 't')
-            {
-                flagto = 1;
-                to = strtoint(argv[i], 5);
-            }
-            if (argv[i][2] == 'f')
-            {
-                flagfrom = 1;
-                from = strtoint(argv[i], 7);
-            }
+            flagfrom = 1;
+            from = strtoint(argv[i], 7);
+        }
+    }
+
+    char space = ' ';
+    int num;
+
+    while (space != '\n')
+    {
+        scanf("%d%c", &num, &space);
+        if ((flagto && flagfrom && (num > from) && (num < to)) ||
+            (flagto && !flagfrom && (num < to)) ||
+            (!flagto && flagfrom && (num > from)) ||
+            (!flagto && !flagfrom))
+        {
+            unsorted[iuns] = num;
+            iuns++;
         }
     }
 
@@ -74,6 +68,8 @@ int main(int argc, char * argv[])
         if (flagto && (errors[i] >= to))
             fprintf(stderr, "%d ", errors[i]);
     }
+
+    int diff = 0;
 
     for (int i = 0; i < iuns; i++)
         if (unsorted[i] != sorted[i])
