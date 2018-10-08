@@ -7,11 +7,16 @@ extern int sort(int*, int);
 int my_atoi(char* str, int start_index) {
  	int num = 0;
 	int i = start_index;
+	int sign = 1;
+	if (str[i] == '-') {
+		i++;
+		sign = -1;
+	}
 	while (str[i]) {
 	 	num = num * 10 + (int)(str[i] - '0');
 		i++;
 	}
-	return num;
+	return sign * num;
 }
 
 int main(int argc, char* argv[]) {
@@ -38,5 +43,5 @@ int main(int argc, char* argv[]) {
 		size++;
 	}
 	return sort(array, size);
-	//printf("\n%d", sort(array, size));
+	//printf("\n%d", sort(a, size));
 }
