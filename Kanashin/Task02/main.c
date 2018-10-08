@@ -59,7 +59,6 @@
                 sign = 1;
             }
             else i++;
-
         }
 
     int  numbersbefore[100], signnumb[100], numbers[100];
@@ -93,7 +92,7 @@
             continue;
         }
     }
-    int flaglessto=0, countmoreto = 0, countnumb = i, countnumbsort = 0; 
+    int flaglessfrom = 0, countmoreto = 0, countnumb = i, countnumbsort = 0; 
     int morethanto[100]={0};
     //printf("Stdout: ");
     for (i=0; i<=countnumb; i++)
@@ -107,16 +106,15 @@
         else if (numbers[i]<=from)
         {
             fprintf(stdout, "%d ", numbers[i]);
-            flaglessto=1;
+            flaglessfrom = 1;
         }
         else if (numbers[i]>=to)
         {
             morethanto[countmoreto]=numbers[i];
             countmoreto++;
         }
-
     }
-    if (flaglessto == 0)
+    if (flaglessfrom == 0)
     printf("- ");
     //printf("Stderr: ");
     if (countmoreto == 0)
