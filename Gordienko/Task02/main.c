@@ -7,11 +7,15 @@ extern quicksort(int *s_arr, int first, int last);
 
 int strtoint(char *str, int symb)
 {
-    int num = 0;
+    int num = 0, sign = 1;
+    if (str[symb] == '-')
+    {
+        sign = -1;
+        symb++;
+    }
     while (str[symb] != '\0')
     {
-        num *= 10;
-        num += str[symb] - '0';
+        num = num * 10 + sign * (str[symb] - '0');
         symb++;
     }
     return num;
