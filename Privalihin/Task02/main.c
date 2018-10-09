@@ -2,33 +2,53 @@
 
 extern void sort(int *begin, int len);
 
+int intFromString(char *s)
+{
+    int pos = 0;
+    int intFound = 0;
+    int sign = 1;
+    int res = 0;
+    while (s[pos] != 0)
+    {
+        if ((s[pos] >= '0') && (s[pos] <= '9'))
+        {
+            res = res * 10 + (int)(s[pos] - '0');
+            intFound = 1;
+        }
+        else if (s[pos] == '-')
+            sign = -1;
+        else if (!intFound)
+            sign = 1;
+        else
+            break;
+        pos++;
+    }
+    res = res * sign;
+    return res;
+}
+
 int main(int argc, char **argv)
 {
     int hasLowerBound = 0;
     int hasUpperBound = 0;
-    int lowerBound, upperBound;
+    int lowerBound = 0, upperBound = 0;
     int i;
+    int garbageCan;
+    int *currentReading = &garbageCan;
     for (i = 1; i < argc; i++)
     {
-        int pos = 0;
-        int number = 0;
-        for (; (argv[i][pos] > '9') || (argv[i][pos] < '0'); pos++);
-        while ((argv[i][pos] >= '0') && (argv[i][pos] <= '9'))
-        {
-            number = number * 10 + (int)(argv[i][pos++] - '0');
-        }
-        if (argv[i][2] == 'f')
+        if (argv[i][1] != 0 && argv[i][2] == 'f')
         {
             hasLowerBound = 1;
-            lowerBound = number;
+            currentReading = &lowerBound;
         }
-        else if (argv[i][2] == 't')
+        else if (argv[i][1] != 0 && argv[i][2] == 't')
         {
             hasUpperBound = 1;
-            upperBound = number;
+            currentReading = &upperBound;
         }
+        *currentReading = intFromString(argv[i]);
     }
-
     int numbers[100], backupNumbers[100];
     int len = 0;
     for (i = 0; i < 100; i++)
