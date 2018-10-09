@@ -98,7 +98,6 @@ L7:
 	movl	(%edx), %edx
 	xorl	%ecx, %edx
 	movl	%edx, (%eax)
-	subl	$1, -16(%ebp)
 L6:
 	subl	$1, -16(%ebp)
 L5:
