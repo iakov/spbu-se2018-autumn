@@ -24,7 +24,7 @@ int strtoint(char *str, int symb)   //interpretaion of "atoi" function
 
 int main(int argc, char * argv[])
 {
-    int from = -32767; int to = 32767;  //parametrs values
+    int from = -2147483647; int to = 2147483647;  //parametrs values
     int unsorted[Lim], sorted[Lim];
     int count = 0; //un-/sorted array's index
     int changes = 0;   //amount of changed numbers after sort
@@ -37,20 +37,26 @@ int main(int argc, char * argv[])
             {
                 if (argv[i][5] <= '9' && argv[i][5] >='0')
                     to = strtoint(argv[i], 5);
+                else
+                    if (argv[i+1][0] <= '9' && argv[i+1][0] >='0')
+                        to = strtoint(argv[i+1], 0);
                     else
-                        if (argv[i+1][0] <= '9' && argv[i+1][0] >='0')
-                    to = strtoint(argv[i+1], 0);
+                        if (argv[i+1][1] <= '9' && argv[i+1][1] >='0')
+                            to = strtoint(argv[i+1], 1);
                         else to = strtoint(argv[i+2], 0);
-                }
+            }
             if (argv[i][2] == 'f')
             {
                 if (argv[i][7] <= '9' && argv[i][7] >='0')
                     from = strtoint(argv[i], 7);
+                else
+                    if (argv[i+1][0] <= '9' && argv[i+1][0] >='0')
+                        from = strtoint(argv[i+1], 0);
                     else
-                        if (argv[i+1][0] <= '9' && argv[i+1][0] >='0')
-                    from = strtoint(argv[i+1], 0);
+                        if (argv[i+1][1] <= '9' && argv[i+1][1] >='0')
+                            from = strtoint(argv[i+1], 1);
                         else from = strtoint(argv[i+2], 0);
-                }
+            }
     }
     while (symb != '\n' && symb != '\0')               /* Reading number and next symbol,
                                                                             until meet end of range (\n).
@@ -72,9 +78,6 @@ int main(int argc, char * argv[])
         sorted[i] = unsorted[i];
 
     quickSort(sorted, 0, count - 1);
-
-    for (int i = 0; i < count; i++)
-        printf("%d ", sorted[i]);
 
     for (int i = 0; i < count; i++)  //Counting of changed positions
         if (unsorted[i] != sorted[i])
