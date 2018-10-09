@@ -32,12 +32,26 @@ int main(int argc, char * argv[])
         if (argv[i][2] == 't')
         {
             flagto = 1;
-            to = strtoint(argv[i], 5);
+            if ((argv[i][5] >= '0') && (argv[i][5] <= '9'))
+                to = strtoint(argv[i], 5);
+            else if (argv[i][5] == '\0')
+                to = strtoint(argv[i + 1], 0);
+            else if (argv[i + 1][1] != '\0')
+                to = strtoint(argv[i + 1], 1);
+            else
+                to = strtoint(argv[i + 2], 0);
         }
         if (argv[i][2] == 'f')
         {
             flagfrom = 1;
-            from = strtoint(argv[i], 7);
+            if ((argv[i][7] >= '0') && (argv[i][7] <= '9'))
+                from = strtoint(argv[i], 7);
+            else if (argv[i][7] == '\0')
+                from = strtoint(argv[i + 1], 0);
+            else if (argv[i + 1][1] != '\0')
+                from = strtoint(argv[i + 1], 1);
+            else
+                from = strtoint(argv[i + 2], 0);
         }
     }
 
