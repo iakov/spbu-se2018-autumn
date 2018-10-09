@@ -35,25 +35,25 @@ int main(int argc, char * argv[])
     {
             if (argv[i][2] == 't')
             {
-                if (argv[i][5] <= '9' && argv[i][5] >='0')
+                if ((argv[i][5] <= '9' && argv[i][5] >='0') || argv[i][5] == '-')
                     to = strtoint(argv[i], 5);
                 else
-                    if (argv[i+1][0] <= '9' && argv[i+1][0] >='0')
+                    if ((argv[i+1][0] <= '9' && argv[i+1][0] >='0') || argv[i+1][0] == '-')
                         to = strtoint(argv[i+1], 0);
                     else
-                        if (argv[i+1][1] <= '9' && argv[i+1][1] >='0')
+                        if ((argv[i+1][1] <= '9' && argv[i+1][1] >='0') || argv[i+1][1] == '-')
                             to = strtoint(argv[i+1], 1);
                         else to = strtoint(argv[i+2], 0);
             }
             if (argv[i][2] == 'f')
             {
-                if (argv[i][7] <= '9' && argv[i][7] >='0')
+                if ((argv[i][7] <= '9' && argv[i][7] >='0') || argv[i][7] == '-')
                     from = strtoint(argv[i], 7);
                 else
-                    if (argv[i+1][0] <= '9' && argv[i+1][0] >='0')
+                    if ((argv[i+1][0] <= '9' && argv[i+1][0] >='0') || argv[i+1][0] == '-')
                         from = strtoint(argv[i+1], 0);
                     else
-                        if (argv[i+1][1] <= '9' && argv[i+1][1] >='0')
+                        if ((argv[i+1][1] <= '9' && argv[i+1][1] >='0') || argv[i+1][1] == '-')
                             from = strtoint(argv[i+1], 1);
                         else from = strtoint(argv[i+2], 0);
             }
