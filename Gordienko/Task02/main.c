@@ -24,34 +24,34 @@ int strtoint(char *str, int symb)
 int main(int argc, char * argv[])
 {
     int from, to, flagfrom = 0, flagto = 0;
-    int errors[Lim], unsorted[Lim], sorted[Lim];
-    int ierr = 0, iuns = 0;
+    int unsorted[Lim], sorted[Lim];
+    int numcount = 0;
 
     for (int i = 1; i < argc; i++)
     {
-        if (argv[i][2] == 't')
-        {
-            flagto = 1;
-            if ((argv[i][5] >= '0') && (argv[i][5] <= '9'))
-                to = strtoint(argv[i], 5);
-            else if (argv[i][5] == '\0')
-                to = strtoint(argv[i + 1], 0);
-            else if (argv[i + 1][1] != '\0')
-                to = strtoint(argv[i + 1], 1);
-            else
-                to = strtoint(argv[i + 2], 0);
-        }
         if (argv[i][2] == 'f')
         {
             flagfrom = 1;
-            if ((argv[i][7] >= '0') && (argv[i][7] <= '9'))
+            if ((argv[i][7] == '-') || ((argv[i][7] >= '0') && (argv[i][7] <= '9')))
                 from = strtoint(argv[i], 7);
-            else if (argv[i][7] == '\0')
+            else if ((argv[i + 1][0] == '-') || ((argv[i + 1][0] >= '0') && (argv[i + 1][0] <= '9')))
                 from = strtoint(argv[i + 1], 0);
-            else if (argv[i + 1][1] != '\0')
+            else if ((argv[i + 1][0] == '=') && (argv[i + 1][1] != '\0'))
                 from = strtoint(argv[i + 1], 1);
             else
                 from = strtoint(argv[i + 2], 0);
+        }
+        if (argv[i][2] == 't')
+        {
+            flagto = 1;
+            if ((argv[i][5] == '-') || ((argv[i][5] >= '0') && (argv[i][5] <= '9')))
+                to = strtoint(argv[i], 5);
+            else if ((argv[i + 1][0] == '-') || ((argv[i + 1][0] >= '0') && (argv[i + 1][0] <= '9')))
+                to = strtoint(argv[i + 1], 0);
+            else if ((argv[i + 1][0] == '=') && (argv[i + 1][1] != '\0'))
+                to = strtoint(argv[i + 1], 1);
+            else
+                to = strtoint(argv[i + 2], 0);
         }
     }
 
@@ -61,40 +61,25 @@ int main(int argc, char * argv[])
     while (space != '\n')
     {
         scanf("%d%c", &num, &space);
-        if ((flagto && flagfrom && (num > from) && (num < to)) ||
-            (flagto && !flagfrom && (num < to)) ||
-            (!flagto && flagfrom && (num > from)) ||
-            (!flagto && !flagfrom))
-        {
-            unsorted[iuns] = num;
-            iuns++;
-        }
+        if (flagfrom && (num <= from))
+            fprintf(stdout, "%d ", num);
+        else if (flagto && (num >= to))
+            fprintf(stderr, "%d ", num);
         else
         {
-            errors[ierr] = num;
-            ierr++;
+            unsorted[numcount] = num;
+            numcount++;
         }
     }
 
-    for (int i = 0; i < iuns; i++)
+    for (int i = 0; i < numcount; i++)
         sorted[i] = unsorted[i];
 
-    quicksort(sorted, 0, iuns - 1);
-
-    /*for (int i = 0; i < iuns; i++)
-        printf("%d ", sorted[i]); */
-
-    for (int i = 0; i < ierr; i++)
-    {
-        if (flagfrom && (errors[i] <= from))
-            fprintf(stdout, "%d ", errors[i]);
-        if (flagto && (errors[i] >= to))
-            fprintf(stderr, "%d ", errors[i]);
-    }
+    quicksort(sorted, 0, numcount - 1);
 
     int diff = 0;
 
-    for (int i = 0; i < iuns; i++)
+    for (int i = 0; i < numcount; i++)
         if (unsorted[i] != sorted[i])
             diff++;
 
