@@ -26,42 +26,50 @@ int sort(int *arr, int size) {
 
 */
 
+int to = 0, from = 0;
+_Bool existTo = 0, existFrom = 0;
 
-void parse(char *str, char *key, int *val) {
-    int i = 0, cnt = 0;
-
-    // Parametr's name extracting
-    for (i = 2; i < strlen(str) && str[i] != '='; ++i)
-        key[i - 2] = str[i];
-    if (i == strlen(str))
-        return;
-    i++;
-
-    // Number extracting
-    char symbolVal[64];
-    for ( ; i < strlen(str); ++i)
-        if ('0' <= str[i] && str[i] <= '9')
-            symbolVal[cnt++] = str[i];
-    *(val) = atoi(symbolVal);
-}
-
-
-int main(int argc, char *argv[]) {
-    int to, from;
-    _Bool existTo = 0, existFrom = 0;
-    for (int i = 1; i < argc; ++i) {
-        char key[10] = "";
-        int val;
-        parse(argv[i], key, &val);
-        if (key[0] == 't' && key[1] == 'o') {
-            to = val;
-            existTo = 1;
-        }
-        else if (key[0] == 'f' && key[1] == 'r' && key[2] == 'o' && key[3] == 'm') {
-            from = val;
+void parse(char *str) {
+    int i = 0, cnt;
+    char substr[4], number[1000];
+    for ( ; i < strlen(str); ) {
+        if (i < strlen(str) - 4)
+            memcpy(substr, str + i, 4 * sizeof(char));
+        else
+            memcpy(substr, str + i, 2 * sizeof(char));
+        if (substr[0] == 'f' && substr[1] == 'r' && substr[2] == 'o' && substr[3] == 'm') {
+            i += 5;
             existFrom = 1;
+            cnt = 0;
+            memset(number, ' ', 1000 * sizeof(char));
+            for ( ; i < strlen(str) && '0' <= str[i] && str[i] <= '9'; ++i)
+                number[cnt++] = str[i];
+            from = atoi(number);
+        }
+        else if (substr[0] == 't' && substr[1] == 'o') {
+            i += 3;
+            existTo = 1;
+            cnt = 0;
+            memset(number, ' ', 1000 * sizeof(char));
+            for ( ; i < strlen(str) && '0' <= str[i] && str[i] <= '9'; ++i)
+                number[cnt++] = str[i];
+            to = atoi(number);
+        }
+        else {
+            ++i;
         }
     }
+}
+
+int main(int argc, char *argv[]) {
+
+    // Parsing argv
+    char argvConcat[1000];
+    for (int i = 1; i < argc; ++i)
+        strcat(argvConcat, argv[i]);
+    parse(argvConcat);
+
+    // Reading numbers
     int data[100], arr[100], count = 0, arrSize = 0;
     char spaceSymbol = ' ';
     while (spaceSymbol != '\n') {
