@@ -86,9 +86,6 @@ hoarasort:
 	addq	%rdx, %rax
 	movl	-16(%rbp), %edx
 	movl	%edx, (%rax)
-	movl	res(%rip), %eax
-	addl	$1, %eax
-	movl	%eax, res(%rip)
 .L7:
 	addl	$1, -4(%rbp)
 	subl	$1, -8(%rbp)
@@ -121,3 +118,4 @@ hoarasort:
 	popq	%rbp
 	ret
 	.seh_endproc
+	

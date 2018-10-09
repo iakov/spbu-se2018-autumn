@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 int a[100];
-int res=0;
+
 const long long int INTMAX=4294967296;
 /*void hoarasort(int a[], int first, int last)
 {
@@ -22,7 +23,6 @@ do {
        tmp=a[i];
        a[i]=a[j];
        a[j]=tmp;
-       res++;
      }
      i++;
      j--;
@@ -33,23 +33,18 @@ if (i < last)
    hoarasort(a, i, last);
 if (first < j)
    hoarasort(a, first,j);
-}*/
-
+}
+*/
 const int wrong_com=666;
-char parse_command(char* com, char *comtype,long long int *num)
+char parse_command(char * com,int comlen,long long int * from, long long int * to)
 {
     int sost=0;
     int i=0;
-   /*  while (com[i]!='\0')
-    {
-        printf("%c\n",com[i]);
-        i++;
-    }
-    i=0;*/
-    *num=0;
+    long long int num=0;
+    int type=0;
     while (sost<100)
     {
-       // printf("%d\n",sost);
+
         switch (sost)
         {
             case 0:
@@ -77,13 +72,13 @@ char parse_command(char* com, char *comtype,long long int *num)
                     if (com[i]=='f')
                     {
                         i+=5;
-                        *comtype=0;
+                        type=0;
                         sost=3;
                     }
                     else if (com[i]=='t')
                     {
                         i+=3;
-                        *comtype=1;
+                        type=1;
                         sost=3;
                     }
                     else sost=wrong_com;
@@ -94,24 +89,36 @@ char parse_command(char* com, char *comtype,long long int *num)
                 {
                     if (com[i]=='\0')
                     {
-                        sost=wrong_com;
-                    }
-                    else sost=4;
-                    break;
-                }
-            case 4:
-                {
-                    if (com[i]=='\0')
-                    {
-                        return 1;
-                    }
-                    else
-                        if ((com[i]>='0')&&(com[i]<='9'))
+                        if (type==0)
                         {
-                            *num = (*num) * 10 + com[i] - '0';
-                            i++;
+                            *from=num;
                         }
-                        else sost=666;
+                        else
+                        {
+                            *to=num;
+                        }
+                        return '1';
+                    }
+                    else if (com[i]=='-')
+                    {
+                        if (type==0)
+                        {
+                            *from=num;
+                        }
+                        else
+                        {
+                            *to=num;
+                        }
+                        sost=1;
+                        num=0;
+                        i++;
+                    }
+                    else  if ((com[i]>='0')&&(com[i]<='9'))
+                            {
+                                num = num * 10 + com[i] - '0';
+                                i++;
+                            }
+                            else sost=wrong_com;
                     break;
                 }
             case 666:
@@ -125,46 +132,72 @@ char parse_command(char* com, char *comtype,long long int *num)
 int main(int argc, char* argv[])
 {
 
-    /*for (int i=0;i<argc-1;i++)
-    {
-            printf("%s\n",argv[i+1]);
-    }*/
 	long long int from=-INTMAX;
 	long long int to=INTMAX+1;
-
+	char commass [100];
+	char * command=commass;
+	int charlen=0;
     for (int i=1;i<argc;i++)
     {
+        int j=0;
+        int doplen=0;
 
-        char type=3;
-        char * ptype=&type;
-
-        long long int value=-1;
-        long long int *pvalue=&value;
-        //printf("%d\n",argc);
-
-        char b=parse_command(argv[i],ptype,pvalue);
-       // printf("%lld\n",*pvalue);
-        if (b==1)
+        while (argv[i][j]!='\0')
         {
-            if (*ptype==0)
+            if (argv[i][j]!=' ')
             {
-                from=(*pvalue);
+                command[j+charlen]=argv[i][j];
+                doplen++;
             }
-            if (*ptype==1)
-            {
-                to=(*pvalue);
-            }
+            j++;
         }
+        charlen+=doplen;
     }
-    //printf("%d",666);
-    int len=0;
+    char b=parse_command(command,charlen,&from,&to);
 
-   // while (!());
-    char c='A';
-    int x=0;
-    while (c!='\n')
+    if (b=='1')
     {
-        if (c==' ')
+
+
+        int len=0;
+        int x=0;
+        char c;
+            c=getchar();
+        char got_number=0;
+        while (c!='\n')
+        {
+
+
+            if (c==' ')
+            {
+                got_number=1;
+                if (x<=from)
+                {
+                    printf("%d ",x);
+                }
+                else
+                if (x>=to)
+                {
+                   fprintf(stderr,"%d ",x);
+                }
+                else
+                {
+                    a[len]=x;
+                    len++;
+                }
+                x=0;
+            }
+            else
+            if ((c>='0')&&(c<='9'))
+            {
+                x=x*10+c-'0';
+                got_number=0;
+            }
+            c=getchar();
+        }
+
+
+        if (got_number==0)
         {
             if (x<=from)
             {
@@ -173,60 +206,28 @@ int main(int argc, char* argv[])
             else
             if (x>=to)
             {
-               fprintf(stderr,"%d ",x);
+                fprintf(stderr,"%d ",x);
             }
             else
             {
                 a[len]=x;
                 len++;
             }
-            x=0;
         }
-        else
-        if ((c>='0')&&(c<='9'))
+
+
+        int buf_mass[100];
+        for (int i=0;i<len;i++)
         {
-            x=x*10+c-'0';
+            buf_mass[i]=a[i];
         }
-        c=getchar();
-    }
-    if (x<=from)
-    {
-        printf("%d ",x);
-    }
-    else
-    if (x>=to)
-    {
-        fprintf(stderr,"%d ",x);
-    }
-    else
-    {
-        a[len]=x;
-        len++;
-    }
-    x=0;
-    /*int temp=scanf("%d",&x);
-    while (!(temp>3))
-    {
-        if (x<=from)
+        extern hoarasort(int a[], int first, int last);
+        hoarasort(a,0,len-1);
+        int res=0;
+        for (int i=0;i<len;i++)
         {
-            printf("%d ",x);
+            res+=(a[i]!=buf_mass[i]);
         }
-        else
-        if (x>=to)
-        {
-           fprintf(stderr,"%d ",x);
-        }
-        else
-        {
-            a[len]=x;
-            len++;
-        }
-        temp=scanf("%d",&x);
-        printf("%d",temp);
-    }*/
-   // printf("%d",666);
-    //int r=0;
-    extern hoarasort(int a[], int first, int last);
-    hoarasort(a,0,len-1);
-    return res;
+        return res;
+    }
 }
