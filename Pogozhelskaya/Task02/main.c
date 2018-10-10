@@ -33,23 +33,20 @@ int main(int argc, char *argv[])
         from = atoi(argv[6]);
         lower_bound = 1;
     }
-    while (scanf("%d", &number))
-    {
+    char temp;
+    do { 
+        scanf("%d%c", &number, &temp);
         if (lower_bound &&  (number <= from))
-        {
             fprintf(stdout, "%d ", number);
-        }
         else if (upper_bound && (number >= to))
-        {
             fprintf(stderr, "%d ", number);
-        }
         else
         {
             data[n] = number;
             buffer[n] = number;
             n++;
         }
-    }
+    } while (temp != '\n');
     sort(data, n);
     int cnt = 0;
     for(int i = 0; i < n; i++)
