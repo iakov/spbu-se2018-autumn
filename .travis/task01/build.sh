@@ -1,5 +1,8 @@
 #!/bin/bash
 
 pushd "$1"
-gcc *.c
-popd
+if gcc *.c; then
+  popd
+else
+  exit 1
+fi
