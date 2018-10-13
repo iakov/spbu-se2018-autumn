@@ -1,7 +1,7 @@
 #!/bin/bash
 
 pushd "$1"
-if gcc *.c; then
+if $CC *.c; then
   popd
 else
   exit 1
