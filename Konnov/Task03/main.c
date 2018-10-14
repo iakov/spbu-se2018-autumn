@@ -1,10 +1,10 @@
 #include <stdio.h>
 
-int i, N;
-double res;
+int N;
 
-float sum_series(int Num)
+double sum_series(int Num)
 {
+	int i;
 	double retu = 0;
 	for(i = 1; i <= Num; i++)
 	{
@@ -13,9 +13,9 @@ float sum_series(int Num)
 	return retu;
 }
 
-int main()
+double main()
 {
 	scanf("%d", &N);
-	printf("%f", sum_series(N));
-	return 0;
+	printf("%f", sum_series(N) );
+	return sum_series(N);
 }
