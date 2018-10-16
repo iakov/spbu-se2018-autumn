@@ -90,5 +90,5 @@ while (i < argc) {
     res = sortirovka (j, sort);
     printf("\n%d",res);
 
-    return 0;
+    return res;
 }
