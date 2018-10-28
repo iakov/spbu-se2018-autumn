@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
 	int i = 0, j = 0, tmp = 0, flag = 0, from = -2147483647, to = 2147483647, numbers, k = 0;
 	int reduced[100], sorted[100];
 	for (i = 1; i < argc; i++) {
-		if (argv[i][2] = 'f') {
+		if (argv[i][2] == 'f') {
 			if (((argv[i][7] >= '0') && (argv[i][7] <= '9')) || (argv[i][7] == '-')) {
 				from = transfer(argv[i], 7);
 			}
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
 			}
 			else from = transfer(argv[i + 1], 0);
 			}
-		if (argv[i][2] = 't') {
+		if (argv[i][2] == 't') {
 			if (((argv[i][5] >= '0') && (argv[i][5] <= '9')) || (argv[i][5] == '-')) {
 				to = transfer(argv[i], 5);
 			}
