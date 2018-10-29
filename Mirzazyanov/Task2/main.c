@@ -68,6 +68,7 @@ int main(int argc, char *argv[]) {
 			fprintf(stderr, "%d \n", numbers);
 		}
 	}
+	
 	quickSort(sorted, 0, k - 1);
 	printf("Sorted: ");
 	for (i = 0; i < k; i++) {
