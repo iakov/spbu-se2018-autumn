@@ -8,7 +8,7 @@ double sum_series(int n)
     {
         sum += 1.0 / i;
     }
-    return - sum - 1.0 / (2 * (2*n + 1));
+    return - sum - 1.0 / ((2 * n) * 2);
 }
 
 int main()
