@@ -17,13 +17,14 @@ _Bool check_int(char ch) {
 
 int my_atoi(char* str, int start_index) {
  	int num = 0;
-	int i = start_index;                      
+	int i = start_index;
+	int strsize = strlen(str);                      
 	int sign = 1;
 	if (str[i] == '-') {
 		i++;
 		sign = -1;
 	}
-	while (str[i]) {
+	while (i < strsize && '0' <= str[i] && str[i] <= '9') {
 	 	num = num * 10 + (int)(str[i] - '0');
 		i++;
 	}
@@ -33,35 +34,25 @@ int my_atoi(char* str, int start_index) {
 int main(int argc, char* argv[]) {
 	int from = INT_MIN;
 	int to = INT_MAX;
-	// what I was...
-	/*for (int i = 1; i < argc; i++) {
-		if (argv[i][1] == 'f')
-			from = my_atoi(argv[i], 6);
-		if (argv[i][1] == 't')
-			to = my_atoi(argv[i], 4);
-	}*/
 
-	// what have I become...
-	int status = WAITING;
-	for (int i = 1; i < argc; i++) {
-		int strsize = strlen(argv[i]);
-	 	for (int strpnt = 0; strpnt < strsize; strpnt++) {   
-			if (status != WAITING && check_int(argv[i][strpnt])) {
-			 	if (status == READ_FROM)
-					from = my_atoi(argv[i], strpnt);
-				if (status == READ_TO)
-					to = my_atoi(argv[i], strpnt);
-				status = WAITING;
-				break;
-			}
-			if (argv[i][strpnt] == 'f') {
-				status = READ_FROM;
-			}
-			if (argv[i][strpnt] == 't') {
-				status = READ_TO;
-			}                                 
-		}
+	char params[50];
+	for (int i = 1; i < argc; i++)
+		strcat(params, argv[i]);
+
+	int strsize = strlen(params);
+	int i = 0;
+	while (i < strsize) {
+	 	while (i < strsize && params[i] != '=')
+			i++;
+		if (i >= strsize)
+			break;
+		if (params[i - 1] == 'm') // from 
+		 	from = my_atoi(params, i + 1);
+		if (params[i - 1] == 'o') // to
+			to = my_atoi(params, i + 1);
+		i++;
 	}
+
 	int array[100];
 	int size = 0, inp;
 	while (scanf("%d", &inp)) {
