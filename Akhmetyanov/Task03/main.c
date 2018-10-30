@@ -15,6 +15,6 @@ int main()
 {
     int num;
     scanf("%d", &num);
-    printf("%.20f %.20f\n", sum_series(num) + log(2));
+    printf("%.20f %.20f\n", sum_series(num), sum_series(num) + log(2));
     return 0;
 }
