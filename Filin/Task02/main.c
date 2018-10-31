@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 
-extern int sortirovka (int razmer, int massive[]);
+extern int mysort (int sizein, int massive[]);
 
 int main(int argc, char* argv[])
 {
@@ -87,7 +87,7 @@ while (i < argc) {
     j++;
     i++;
   }
-    res = sortirovka (j, sort);
+    res = mysort (j, sort);
     printf("\n%d",res);
 
     return res;
