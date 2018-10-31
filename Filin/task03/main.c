@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int sum_series(int n){
+double sum_series(int n){
     double res = 0.0, lsum = 0.0, rsum = 0.0;
     n--;
     for(int i=n+1; i <= 2*n; i++) lsum = lsum - 1/(double)i;
