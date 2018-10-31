@@ -1,7 +1,7 @@
 	.text
-	.globl	_sortirovka
-	.def	_sortirovka;	.scl	2;	.type	32;	.endef
-_sortirovka:
+	.globl	_mysort
+	.def	_mysort;	.scl	2;	.type	32;	.endef
+_mysort:
 LFB14:
 	.cfi_startproc
 	pushl	%ebp
