@@ -5,7 +5,7 @@ const int Lim = 100;    //limit of array
 
 extern void quickSort(int* s_arr, int first, int last);
 
-int strtoint(char *str, int symb)   //interpretaion of "atoi" function
+int StrToInt(char *str, int symb)   //interpretaion of "atoi" function
 {
     int num = 0; int sign = 1;
     if (str[symb] == '-')
@@ -22,6 +22,19 @@ int strtoint(char *str, int symb)   //interpretaion of "atoi" function
     return num*sign;
 }
 
+int Parametrs_Scan(char * argv[], int i, int k)
+{
+    if ((argv[i][k] <= '9' && argv[i][k] >='0') || argv[i][k] == '-')
+                    return StrToInt(argv[i], k);
+                else
+                    if ((argv[i+1][0] <= '9' && argv[i+1][0] >='0') || argv[i+1][0] == '-')
+                        return StrToInt(argv[i+1], 0);
+                    else
+                        if ((argv[i+1][1] <= '9' && argv[i+1][1] >='0') || argv[i+1][1] == '-')
+                            return StrToInt(argv[i+1], 1);
+                        else return StrToInt(argv[i+2], 0);
+}
+
 int main(int argc, char * argv[])
 {
     int from = -2147483647; int to = 2147483647;  //parametrs values
@@ -31,33 +44,14 @@ int main(int argc, char * argv[])
     int i, var;
     char symb = ' ';
 
-   for (i = 1; i < argc; i++)  // Reading parametrs
+for (int i = 1; i < argc; i++)  // Reading parametrs
     {
             if (argv[i][2] == 't')
-            {
-                if ((argv[i][5] <= '9' && argv[i][5] >='0') || argv[i][5] == '-')
-                    to = strtoint(argv[i], 5);
-                else
-                    if ((argv[i+1][0] <= '9' && argv[i+1][0] >='0') || argv[i+1][0] == '-')
-                        to = strtoint(argv[i+1], 0);
-                    else
-                        if ((argv[i+1][1] <= '9' && argv[i+1][1] >='0') || argv[i+1][1] == '-')
-                            to = strtoint(argv[i+1], 1);
-                        else to = strtoint(argv[i+2], 0);
-            }
+                to = Parametrs_Scan(argv, i, 5);
             if (argv[i][2] == 'f')
-            {
-                if ((argv[i][7] <= '9' && argv[i][7] >='0') || argv[i][7] == '-')
-                    from = strtoint(argv[i], 7);
-                else
-                    if ((argv[i+1][0] <= '9' && argv[i+1][0] >='0') || argv[i+1][0] == '-')
-                        from = strtoint(argv[i+1], 0);
-                    else
-                        if ((argv[i+1][1] <= '9' && argv[i+1][1] >='0') || argv[i+1][1] == '-')
-                            from = strtoint(argv[i+1], 1);
-                        else from = strtoint(argv[i+2], 0);
-            }
+                from = Parametrs_Scan(argv, i, 7);
     }
+
     while (symb != '\n' && symb != '\0')               /* Reading number and next symbol,
                                                                             until meet end of range (\n).
                                                                             Placing numbers either in array or in stderr/out*/
