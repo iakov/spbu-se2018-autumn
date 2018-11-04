@@ -1,21 +1,23 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 
-int N;
-
-double sum_series(int Num)
+double sum_series(int N)
 {
 	int i;
-	double retu = 0.0;
-	for(i = Num; i < 2 * Num; i++)
+	N /= 2;
+	double suma = 0;
+	for(i = 0; i <= N - 1; i++)
 	{
-		retu += -1.0 / (double)i;
+		suma -= (1.0 / (6 * N)) * (((double)N / (N + i)) + 4 * (1.0 / (1.0 + ((2 * i + 1.0) / (2 * N)))) + ((double)N / (N + i + 1)));
 	}
-	return retu;
+	return suma;
 }
 
-double main()
+int main()
 {
-	scanf("%d", &N);
-	printf("%.10lf", sum_series(N));
-	return sum_series(N);
+	int Num; scanf("%d", &Num);
+	double del = -log(2.0);
+	printf("%.17lf \n%.17lf \n\n", sum_series(Num), sum_series(Num) - del);
+	return 0;
 }
