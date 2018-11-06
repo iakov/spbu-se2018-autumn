@@ -15,7 +15,7 @@ int main( int argc, char *argv[] )
     //getting "from", "to" values using getopt
     int opt;
     
-    while (1)
+    while (true)
     {
         static struct option long_options[] = 
         {
@@ -36,12 +36,9 @@ int main( int argc, char *argv[] )
             case 't':
                 to = atoi(optarg);
                 break;
-            case '?':
-                break;
             default:
                 break;
         }
-
     }
     
     int array[100] = {0};
