@@ -3,10 +3,11 @@
 
 long double sum_series(unsigned long long int N)
 {
-    long double result = 0;
-    for (unsigned long long int i = 0; i < N; i++)
+    long double result = 0.0, half = 0.5;
+    for (unsigned long long int i = 1; i <= N; i++)
     {
-        result -= 1.0 / (2 * i + 1) / (2 * i + 2);
+        result -= half / i;
+	half /= 2.0;
     }
     return result;
 }
