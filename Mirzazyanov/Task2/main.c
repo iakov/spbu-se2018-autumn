@@ -1,6 +1,7 @@
 ﻿#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <limits.h>
 
 extern void quickSort(int *numbers, int left, int right);
 
@@ -22,35 +23,44 @@ int transfer(char *param, int count)
 	con *= sign;
 	return con;
 }
+void comfort(char *p, int *prm, int *check) {
+	int count1 = 0;
+	while (p[count1] != '\0') {
+	
+		if ((p[count1] >= '0') && (p[count1] <= '9') || ((p[count1] == '-') && (p[count1] >= '0') && (p[count1] <= '9')))  {
+			*prm = transfer(p, count1);
+			*check = 1;
+			break;
+		}
+		count1++;
+	}
+}
+
 int main(int argc, char *argv[]) {
-	int i = 0, j = 0, tmp = 0, flag = 0, from = -2147483647, to = 2147483647, numbers, k = 0;
+	int i = 0, j = 0, tmp = 0, flag = 0, from = INT_MIN, to = INT_MAX, numbers, k = 0;
 	int reduced[100], sorted[100];
 	for (i = 1; i < argc; i++) {
 		if (argv[i][2] == 'f') {
-			if (((argv[i][7] >= '0') && (argv[i][7] <= '9')) || (argv[i][7] == '-')) {
-				from = transfer(argv[i], 7);
+			comfort(argv[i], &from, &flag);
+			if (flag == 0) {
+				comfort(argv[i + 1], &from, &flag);
 			}
-			else if ((argv[i + 2][0] >= '0') && (argv[i + 2][0] <= '9') || (argv[i + 2][0] == '-')) {
-				from = transfer(argv[i + 2], 0);
+			if (flag == 0) {
+				comfort(argv[i + 2], &from, &flag);
 			}
-			else if ((argv[i + 1][1] >= '0') && (argv[i + 1][1] <= '9') || (argv[i + 1][1] == '-')) {
-				from = transfer(argv[i + 1], 1);
-			}
-			else from = transfer(argv[i + 1], 0);
-			}
+		}
+		flag == 0;
 		if (argv[i][2] == 't') {
-			if (((argv[i][5] >= '0') && (argv[i][5] <= '9')) || (argv[i][5] == '-')) {
-				to = transfer(argv[i], 5);
+			comfort(argv[i], &to, &flag);
+			if (flag == 0) {
+				comfort(argv[i + 1], &to, &flag);
 			}
-			else if ((argv[i + 2][0] >= '0') && (argv[i + 2][0] <= '9') || (argv[i + 2][0] == '-')) {
-				to = transfer(argv[i + 2], 0);
+			if (flag == 0) {
+				comfort(argv[i + 2], &to, &flag);
 			}
-			else if ((argv[i + 1][1] >= '0') && (argv[i + 1][1] <= '9') || (argv[i + 1][1] == '-')) {
-				to = transfer(argv[i + 1], 1);;
-			}
-			else to = transfer(argv[i + 1], 0);
+	
 		}
-		}
+	}
 	char space = ' ';
 	while (space != '\n' && space != '\0') {
 		scanf("%d%c", &numbers, &space);
@@ -68,7 +78,7 @@ int main(int argc, char *argv[]) {
 			fprintf(stderr, "%d \n", numbers);
 		}
 	}
-	
+
 	quickSort(sorted, 0, k - 1);
 	printf("Sorted: ");
 	for (i = 0; i < k; i++) {
