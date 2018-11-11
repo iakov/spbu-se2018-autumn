@@ -48,8 +48,31 @@ void params(int argc, char *argv[])
     		    parametrs[counter++] = (argv[i])[j++];
         parametrs[counter] = '\0';
         counter = 0;
+        int *lim;
         while (parametrs[counter++] != '\0')
-    	    if (parametrs[counter] == 'f')
+            if (parametrs[counter] == 'f' || parametrs[counter] == 't')
+                {
+                    /* '3' and '5' are numbers of symbols between
+                    'f' or 't' and first digit or minus in string*/
+                    if (parametrs[counter] == 'f')
+                    {
+                        counter += 5;
+                        lim = &down;
+                    }
+                    else
+                    {
+                        counter += 3;
+                        lim = &high;
+                    }
+        		    int sign = parametrs[counter] == '-' ? -1 : 1;
+        		    if (sign == -1)
+                        ++counter;
+        		    *lim = 0;
+        		    while(isdigit(parametrs[counter]))
+        			    *lim = *lim * 10 + parametrs[counter++] - '0';
+        		    *lim *= sign;
+        	    }
+    	    /*if (parametrs[counter] == 'f')
     	    {
     		    counter += 5;
     		    int sign = parametrs[counter] == '-' ? -1 : 1;
@@ -68,6 +91,6 @@ void params(int argc, char *argv[])
     		    while (isdigit(parametrs[counter]))
     			    high = high * 10 + parametrs[counter++] - '0';
     		    high *= sign;
-    	    }
+    	    }*/
         free(parametrs);
     }
