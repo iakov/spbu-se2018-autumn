@@ -72,25 +72,5 @@ void params(int argc, char *argv[])
         			    *lim = *lim * 10 + parametrs[counter++] - '0';
         		    *lim *= sign;
         	    }
-    	    /*if (parametrs[counter] == 'f')
-    	    {
-    		    counter += 5;
-    		    int sign = parametrs[counter] == '-' ? -1 : 1;
-    		    if (sign == -1) ++counter;
-    		    down = 0;
-    		    while(isdigit(parametrs[counter]))
-    			    down = down * 10 + parametrs[counter++] - '0';
-    		    down *= sign;
-    	    }
-            else if (parametrs[counter] == 't')
-    	    {
-    		    counter += 3;
-    		    int sign = parametrs[counter] == '-' ? -1 : 1;
-    		    if (sign == -1) ++counter;
-    		    high = 0;
-    		    while (isdigit(parametrs[counter]))
-    			    high = high * 10 + parametrs[counter++] - '0';
-    		    high *= sign;
-    	    }*/
         free(parametrs);
     }
