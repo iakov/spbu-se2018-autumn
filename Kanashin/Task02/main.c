@@ -1,70 +1,49 @@
  #include <stdio.h>
  #include <stdlib.h>
-
- extern bubblesort(int* a, int n);
-
- int convertparams(char *param, int numb)
+  extern void bubblesort(int* a, int n);
+  int convertParams(char *param, int numb)
  {
     int sign=1;
-    int paramnum = 0;
+    int paramNum = 0;
     while(param[numb] != '\0')
     {
         if (param[numb] == '-')
             sign = -1;
         else
         {
-            paramnum = 10*paramnum + atoi(&param[numb]);
+            paramNum = 10*paramNum + atoi(&param[numb]);
         }
         numb++;
     }
-    paramnum *= sign;
-    return paramnum;
+    paramNum *= sign;
+    return paramNum;
  }
+ int convertToFrom(char* argv[], int it, int secondIt)
+ {
+        if (argv[it][secondIt]>='0' && argv[it][secondIt]<='9' || argv[it][secondIt]=='-')
+            return convertParams(argv[it], secondIt);
 
- int main (int argc, char * argv[])
+        else if (argv[it+1][0]>='0' && argv[it+1][0]<='9' || argv[it+1][0]=='-')
+            return convertParams(argv[it+1], 0);
+
+        else
+            return convertParams(argv[it+2], 0);
+ }
+  int main (int argc, char * argv[])
  {
     int sign=1, i=1, from = -2147483648, to = 2147483647;
-    while (i<argc)
+    for (i; i<argc; i++)
     {
         if (argv[i][2] == 'f')
         {
-            if (argv[i][7]>='0' && argv[i][7]<='9' || argv[i][7]=='-')
-            {
-                from = convertparams(argv[i], 7);
-                i++;
-            }
-            else if (argv[i+1][1]>='0' && argv[i+1][1]<='9' || argv[i+1][1]=='-')
-            {
-                from = convertparams(argv[i+1], 1);
-                i += 2;
-            }
-            else
-            {
-                from = convertparams(argv[i+2], 0);
-                i += 3;
-            }
+            from = convertToFrom(argv, i, 7);
         }
         else if (argv[i][2] == 't')
         {
-            if (argv[i][5]>='0' && argv[i][5]<='9' || argv[i][5]=='-')
-            {
-                to = convertparams(argv[i], 5);
-                i++;
-            }
-            else if (argv[i+1][1]>='0' && argv[i+1][1]<='9' || argv[i+1][1]=='-')
-            {
-                to = convertparams(argv[i+1], 1);
-                i += 2;
-            }
-            else
-            {
-                to = convertparams(argv[i+2], 0);
-                i += 3;
-            }
+            to = convertToFrom(argv, i, 5);
         }
-        else i++;
     }
-    int  numbersbefore[100]={0}, numbers[100]={0};
+    int  numbersBefore[100]={0}, numbers[100]={0};
     sign=1;
     i=0;
     char symb=getchar();
@@ -90,42 +69,40 @@
             continue;
         }
     }
-    int flaglessfrom=0, countmoreto = 0, countnumb = i, countnumbsort = 0;
-    int morethanto[100]={0};
-    for (i=0; i<=countnumb; i++)
+    int flagLessFrom=0, countMoreTo = 0, countNumb = i, countNumbSort = 0;
+    int moreThanTo[100]={0};
+    for (i=0; i<=countNumb; i++)
     {
         if (numbers[i]>from && numbers[i]<to)
         {
-            numbers[countnumbsort]=numbers[i];
-            numbersbefore[countnumbsort]=numbers[countnumbsort];
-            countnumbsort++;
+            numbers[countNumbSort]=numbers[i];
+            numbersBefore[countNumbSort]=numbers[countNumbSort];
+            countNumbSort++;
         }
         else if (numbers[i]<=from)
         {
             fprintf(stdout, "%d ", numbers[i]);
-            flaglessfrom=1;
+            flagLessFrom=1;
         }
         else if (numbers[i]>=to)
         {
-            morethanto[countmoreto]=numbers[i];
-            countmoreto++;
+            moreThanTo[countMoreTo]=numbers[i];
+            countMoreTo++;
         }
     }
-    if (!flaglessfrom)
+    if (!flagLessFrom)
     printf("- ");;
-    if (countmoreto == 0)
+    if (countMoreTo == 0)
         fprintf(stderr, "%c", '-');
     else
-        for (i=0; i<countmoreto; i++)
-            fprintf(stderr, "%d ", morethanto[i]);
-
-    bubblesort(numbers, countnumbsort);
-
-    int countchanged=0;
-    for (i=0; i<countnumbsort; i++)
+        for (i=0; i<countMoreTo; i++)
+            fprintf(stderr, "%d ", moreThanTo[i]);
+     bubblesort(numbers, countNumbSort);
+     int countChanged=0;
+    for (i=0; i<countNumbSort; i++)
     {
-        if (numbers[i]!=numbersbefore[i])
-            countchanged++;
+        if (numbers[i]!=numbersBefore[i])
+            countChanged++;
     }
-    return countchanged;
+    return countChanged;
  }
