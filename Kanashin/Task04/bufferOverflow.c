@@ -2,7 +2,7 @@
 
 void other()
 {
-    printf("You finally came to the secret function!!!");
+    printf("You finally has come to the secret function!!!");
 }
 
 void input()
@@ -10,7 +10,7 @@ void input()
     char buff[17];
     printf("Write something here: \n");
     scanf("%s", buff);
-    printf("You wrote something like \"%s\"\n", buff);
+    printf("You has written something like \"%s\"\n", buff);
 }
 
 int main()
