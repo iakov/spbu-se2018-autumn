@@ -3,7 +3,7 @@
 #include<string.h>
 #include<time.h>
 
-void swapCharPointers(char **a, char **b)
+void swapCStrings(char **a, char **b)
 {
     char *tmp = *a;
     *a = *b;
@@ -19,13 +19,17 @@ void heapSort(char **array, int len)
         int pos = 1;
         while (heap[pos] != NULL)
         {
-
             if (0 < strcmp(heap[pos], array[i]))
             {
-                swapCharPointers(heap + pos, array + i);
+                swapCStrings(heap + pos, array + i);
             }
+            /*We balance the tree by randomly choosing the branch to add the new element.
+            The element stored in heap[pos] has children stored in heap[2 * pos] and heap[2 * pos + 1]*/
             pos = 2 * pos + (rand() & 1);
-            if (pos > heapSize)//если рандомный выбор ветки завел нас не туда, всегда можно начать заново!
+            /*If choosing the random branch has led us too far, we can just start again.
+            Since heapSize is 4 times bigger than the actual amount of elements,
+            we are quite likely to find a good place for the element soon enough. */
+            if (pos > heapSize)
                 pos = 1;
         }
         heap[pos] = array[i];
@@ -69,27 +73,27 @@ void bubbleSort(char **array, int len)
     for (int i = 0; i < len; i++)
         for (int j = i + 1; j < len; j++)
             if (strcmp(array[i], array[j]) > 0)
-                swapCharPointers(array + i, array + j);
+                swapCStrings(array + i, array + j);
 }
 
 void mergeSort(char **array, int len)
 {
-    if (len == 1)
+    if (len <= 1)
         return;
     int m = len / 2;
     mergeSort(array, m);
     mergeSort(array + m, len - m);
     char ** tmp = malloc(len * sizeof(char *));
-    int pos1 = 0, pos2 = m, pos = 0;
-    while (pos1 < m)
+    int posLeft = 0, posRight = m, pos = 0;
+    while (posLeft < m)
     {
-        if (pos2 >= len || strcmp(array[pos2], array[pos1]) > 0)
-            tmp[pos++] = array[pos1++];
+        if (posRight >= len || strcmp(array[posRight], array[posLeft]) > 0)
+            tmp[pos++] = array[posLeft++];
         else
-            tmp[pos++] = array[pos2++];
+            tmp[pos++] = array[posRight++];
     }
-    while (pos2 < len)
-       tmp[pos++] = array[pos2++];
+    while (posRight < len)
+       tmp[pos++] = array[posRight++];
     for (int i = 0; i < len; i++)
         array[i] = tmp[i];
     free(tmp);
@@ -102,7 +106,7 @@ void insertionSort(char **array, int len)
         int j = 0;
         for (; j < i &&  strcmp(array[i], array[j]) > 0; j++);
         for (; j < i; j++)
-            swapCharPointers(array + i, array + j);
+            swapCStrings(array + i, array + j);
     }
 }
 
@@ -120,7 +124,7 @@ void quickSort(char **array, int len)
             r--;
         if (l >= r)
             break;
-        swapCharPointers(array + r, array + l);
+        swapCStrings(array + r, array + l);
         r--;
         l++;
     }
@@ -128,20 +132,30 @@ void quickSort(char **array, int len)
     quickSort(array + l, len - l);
 }
 
-void hubSort(char **array, int len, char *algorithm)
+void sortWithGivenAlgorithm(char **array, int len, char *algorithm)
 {
-    if (!strcmp(algorithm, "bubble"))
+    //This is not the most reliable way to do this, but unfortunately switch doesn't work with C strings, since it uses the actual value
+    switch (algorithm[0])
+    {
+    case 'b':
         bubbleSort(array, len);
-    else if (!strcmp(algorithm, "insertion"))
-        insertionSort(array, len);
-    else if (!strcmp(algorithm, "merge"))
-        mergeSort(array, len);
-    else if (!strcmp(algorithm, "quick"))
-        quickSort(array, len);
-    else if (!strcmp(algorithm, "heap"))
+        break;
+    case 'h':
         heapSort(array, len);
-    else
+        break;
+    case 'i':
+        insertionSort(array, len);
+        break;
+    case 'm':
+        mergeSort(array, len);
+        break;
+    case 'q':
+        quickSort(array, len);
+        break;
+    default:
         printf("Error detected! Unknown algorithm requested! Initiating godSort, ETA 999 years...\n");
+        break;
+    }
 }
 
 
@@ -166,7 +180,7 @@ int main(int argc, char **argv)
         text[len] = malloc((strlen(buffer) + 1) * sizeof(char));
         strcpy(text[len], buffer);
     }
-    hubSort(text, len, argv[3]);
+    sortWithGivenAlgorithm(text, len, argv[3]);
     for (int i = 0; i < len; i++)
         printf("%s", text[i]);
     for (int i = 0; i < linesCount; i++)
