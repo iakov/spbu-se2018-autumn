@@ -1,32 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "helper.h"
 
 int *a, *b, n;
 char *file_str;
-
-void swap_array(int i, int j)
-{
-    int h = a[i];
-    a[i] = a[j];
-    a[j] = h;
-}
-
-void shift_array(int i, int j)
-{
-    int h = a[j], k;
-    for (k = j; k > i; k--) a[k] = a[k-1];
-    a[i] = h;
-}
-
-int compare_str(int i, int j) /// str[i] < str[j]
-{
-    int q;
-    for (q = 0; file_str[a[i] + q] && file_str[a[j] + q] && file_str[a[i] + q] == file_str[a[j] + q]; q++) {}
-    if (!file_str[a[j] + q]) return 0;
-    if (!file_str[a[i] + q]) return 1;
-    if (file_str[a[i] + q] < file_str[a[j] + q]) return 1;
-    return 0;
-}
 
 void bubble_sort()
 {
@@ -35,9 +13,9 @@ void bubble_sort()
     {
         for (j = 1; j < n-i; j++)
         {
-            if (compare_str(j, j - 1))
+            if (strcmp(file_str + a[j], file_str + a[j-1]) < 0)
             {
-                swap_array(j, j - 1);
+                swap_in_array(j, j - 1, a);
             }
         }
     }
@@ -48,8 +26,8 @@ void insertion_sort()
     int i, j;
     for (i = 0; i < n; i++)
     {
-        for (j = i - 1; j >= 0 && compare_str(i, j); j--) {}
-        shift_array(j+1, i);
+        for (j = i - 1; j >= 0 && strcmp(file_str + a[i], file_str + a[j]) < 0; j--) {}
+        shift_in_array(j+1, i, a);
     }
 }
 
@@ -61,7 +39,7 @@ void merge_sort(int l, int r)
     merge_sort(m, r);
     for (k = l; k < r; k++)
     {
-        if (i == m || (j != r && compare_str(j, i)))
+        if (i == m || (j != r && strcmp(file_str + a[j], file_str + a[i]) < 0))
         {
             b[k] = a[j];
             j++;
@@ -83,11 +61,11 @@ void quick_sort(int l, int r)
     j = r - 1;
     while (i != j)
     {
-        while (i < j && compare_str(i, mid)) {i++;}
-        while (i < j && compare_str(mid, j)) {j--;}
-        swap_array(i, j);
+        while (i < j && strcmp(file_str + a[i], file_str + a[mid]) < 0) {i++;}
+        while (i < j && strcmp(file_str + a[mid], file_str + a[j]) < 0) {j--;}
+        swap_in_array(i, j, a);
         if (mid == i || mid == j) mid = i + j - mid;
-        if (!compare_str(i, j) && i < j) i++;
+        if (strcmp(file_str + a[i], file_str + a[j]) >= 0 && i < j) i++;
     }
     quick_sort(l, i);
     quick_sort(i + 1, r);
@@ -96,7 +74,7 @@ void quick_sort(int l, int r)
 void radix_sort(int l, int r, int dig)
 {
     if (l + 1 >= r) return;
-    int d[257], i, j, k = l, qq;
+    int d[257], i, j, k = l;
     for (i = 1; i < 257; i++) d[i] = 0;
     d[0] = l;
     for (i = l; i < r; i++)
@@ -129,22 +107,31 @@ int main(int argc, char *argv[])
     file_str = malloc(1000000000);
     a = malloc(4 * n + 4);
     a[0] = 0;
-    char x[10000];
-    for (i = 0; i < n && fgets(x, 10000, fin); i++)
+    char reading_str[10000];
+    for (i = 0; i < n && fgets(reading_str, 10000, fin); i++)
     {
-        for (j = 0; x[j] != '\n' && x[j]; j++) file_str[a[i] + j] = x[j];
+        for (j = 0; reading_str[j] != '\n' && reading_str[j]; j++) file_str[a[i] + j] = reading_str[j];
         file_str[a[i] + j] = '\0';
         a[i + 1] = a[i] + j + 1;
     }
-    if (argv[3][0] == 'b') bubble_sort();
-    else if (argv[3][0] == 'i') insertion_sort();
-    else if (argv[3][0] == 'm') {b = malloc(4 * n + 4); merge_sort(0, n); free(b);}
-    else if (argv[3][0] == 'q') quick_sort(0, n);
-    else if (argv[3][0] == 'r')
+    switch (argv[3][0])
     {
+    case 'b': bubble_sort(); break;
+    case 'i': insertion_sort(); break;
+    case 'm':
+        b = malloc(4 * n + 4);
+        merge_sort(0, n);
+        free(b);
+        break;
+    case 'q': quick_sort(0, n); break;
+    case 'r':
         b = malloc(4 * n + 4);
         radix_sort(0, n, 0);
         free(b);
+        break;
+    default:
+        printf("ERROR!!!\n");
+        return 0;
     }
     for (i = 0; i < n; i++)
     {
