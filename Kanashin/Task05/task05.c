@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+void printError(char *reasonOfError){
+    printf("Error: %s\n", reasonOfError);
+    exit(1);
+}
+
 void swapLines(char* str[], int n, int m){
     char *temp = str[n];
     str[n] = str[m];
@@ -49,6 +54,8 @@ void merge(char *str[], int left, int mid, int right)
 
     char **Left = malloc(lenOfLeft*sizeof(char*));
     char **Right = malloc(lenOfRight*sizeof(char*));
+    if (Left == NULL || Right == NULL) printError("Cannot allocate extra memory for merge sort");
+
 
     for (firstSub = 0; firstSub < lenOfLeft; firstSub++)
         Left[firstSub] = str[left + firstSub];
@@ -104,6 +111,7 @@ void mergeSort(char *str[], int left, int right)
         merge(str, left, mid, right);
     }
 }
+
 int partition(char *str[], int low, int high)
 {
     char *pivot = str[high];
@@ -149,7 +157,6 @@ void heapify(char* str[], int n, int i)
         heapify(str, n, largest);
     }
 }
-
 void heapSort(char *str[], int n)
 {
     for (int i = n / 2 - 1; i >= 0; i--)
@@ -167,26 +174,33 @@ int main(int argc, char *argv[])
     int amountString = atoi(argv[1]);
     char *fileName = argv[2];
     char algName = argv[3][0];
+    if (argc != 4)  printError("Invalid number of parameters");
 
-    FILE *myFile = fopen(fileName, "r");
-    if (myFile == NULL){
-        printf("Cannot open file");
-        return 1;
-    }
+    FILE *myFile;
+    if ((myFile = fopen(fileName, "r")) == NULL) printError("Cannot open file");
 
-    int lenOfStr = 1;
-    char **str = (char**) malloc(amountString*sizeof(char*));
+    char **str = malloc(amountString*sizeof(char*));
+    if (str == NULL) printError("Cannot allocate memory for array of lines");
+
     for (int numStr=0; numStr<amountString; numStr++){
-        str[numStr] = malloc(lenOfStr*sizeof(char));
-        for (int currLenOfCurrStr=0; (str[numStr][currLenOfCurrStr] = fgetc(myFile)) != '\n'; currLenOfCurrStr++){
-            if (currLenOfCurrStr+1>lenOfStr){
+        int lenOfStr = 1;
+        str[numStr] = (char*) malloc(lenOfStr*sizeof(char));
+        if (str[numStr] == NULL) printError("Cannot allocate memory for line firstly");
+        char symbBuff;
+        for (int currLenOfCurrStr=0; (symbBuff = fgetc(myFile)) != '\n'; currLenOfCurrStr++){
+            if  (symbBuff == EOF)
+                if (ferror(myFile)) printError("Error of reading file");
+                else break;
+            if (currLenOfCurrStr+1>=lenOfStr){
                 lenOfStr *=2;
                 str[numStr] = (char*) realloc(str[numStr], lenOfStr*sizeof(char));
+                if (str[numStr] == NULL) printError("Cannot allocate memory for line");
             }
+            str[numStr][currLenOfCurrStr] = symbBuff;
+            str[numStr][currLenOfCurrStr+1] = '\0';
         }
     }
     fclose(myFile);
-
     switch (algName){
         case 'b':
             bubbleSort(str, amountString);
@@ -204,13 +218,13 @@ int main(int argc, char *argv[])
             heapSort(str, amountString);
             break;
         default:
-            break;
+            printError("Invalid name of algorithm");
     }
-
     for (int numStr=0; numStr<amountString; numStr++){
-        printf("%s", str[numStr]);
+        printf("%s\n", str[numStr]);
         free(str[numStr]);
     }
+
     free(str);
     return 0;
 }
