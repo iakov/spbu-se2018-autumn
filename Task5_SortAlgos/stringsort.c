@@ -1,15 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
-#include <sys/time.h>
 
-char *input[10000000];
+const int MAX = 10000000;
+const int hMOD = 1000000007;
+const int hP = 357;
+
+char *input[MAX];
 
 int _Myhash(char *str) {
  	long long hashStr = 0;
 	for (int i = 0; i < strlen(str); i++) {
-	 	hashStr = (hashStr * 357 + str[i]) % 1000000007;
+	 	hashStr = (hashStr * hP + str[i]) % hMOD;
 	}
 	return (int)hashStr;
 }
@@ -27,7 +29,6 @@ void swapString(char **a, char **b) {
  	char *tmp = *a;
 	*a = *b;
 	*b = tmp;
-	free(tmp);
 }
 
 void swapInt(int *a, int *b) {
@@ -42,8 +43,9 @@ void forcedExit(char* message) {
 }
 
 void radixSort(int fileSize, int stringSize) {
- 	int numOfWords[256];
-	int nextWordIndex[256];
+	int dictSize = 256;
+ 	int numOfWords[dictSize];
+	int nextWordIndex[dictSize];
 	int *sortedIndexes = malloc(fileSize * sizeof(int));
 	int *stringLen = malloc(fileSize * sizeof(int));
 	if (stringLen == NULL)
@@ -58,12 +60,12 @@ void radixSort(int fileSize, int stringSize) {
 	}
 
 	for (int digit = stringSize - 1; digit >= 0; digit--) {
-		for (int i = 0; i < 256; i++) numOfWords[i] = 0;
+		for (int i = 0; i < dictSize; i++) numOfWords[i] = 0;
 		for (int i = 0; i < fileSize; i++) {
 		 	numOfWords[getStringChar(i, digit)]++;
 		}
 		nextWordIndex[0] = 0;
-		for (int i = 1; i < 256; i++) {
+		for (int i = 1; i < dictSize; i++) {
 		        nextWordIndex[i] = nextWordIndex[i - 1] + numOfWords[i - 1];
 		}
 		for (int i = 0; i < fileSize; i++) {
