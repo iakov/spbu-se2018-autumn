@@ -154,7 +154,7 @@ void quickSort(int left, int right, int strLen) {
 	char *sep = (char*)malloc(strLen * sizeof(char));
 	if (sep == NULL)
 		forcedExit("no memory");
-	strcpy(sep, input[(rand() % (right - left)) + left]);
+	strcpy(sep, input[(rand() % (right - left)) + left]); // get random element in [left, right)
 	int lSepIndex = left;
 	int rSepIndex = right - 1;
 	while (lSepIndex <= rSepIndex) {
