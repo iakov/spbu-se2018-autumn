@@ -104,59 +104,59 @@ void insertionSort(int fileSize) {
 	}
 }
 
-void mergeSort(int l, int r) {
- 	if (r - l <= 1) {
+void mergeSort(int left, int right) {
+ 	if (right - left <= 1) {
 		return;
 	}
-	int mid = (l + r) / 2;
-	mergeSort(l, mid);
-	mergeSort(mid, r);
-	int *sortedIndexes = malloc((r - l) * sizeof(int));
+	int mid = (left + right) / 2;
+	mergeSort(left, mid);
+	mergeSort(mid, right);
+	int *sortedIndexes = malloc((right - left) * sizeof(int));
 	if (sortedIndexes == NULL)
 		forcedExit("no memory");
-	int lSorted = l;
+	int lSorted = left;
 	int rSorted = mid;
 	int nextIndex = 0;
-	while (lSorted < mid && rSorted < r) {
+	while (lSorted < mid && rSorted < right) {
 	 	if (strcmp(input[lSorted], input[rSorted]) < 0) {
-	 	 	sortedIndexes[lSorted - l] = nextIndex;
+	 	 	sortedIndexes[lSorted - left] = nextIndex;
 			lSorted++;
 			nextIndex++;
 		}
 		else {
-		 	sortedIndexes[rSorted - l] = nextIndex;
+		 	sortedIndexes[rSorted - left] = nextIndex;
 			rSorted++;
 			nextIndex++;
 		}
 	}
 	while (lSorted < mid) {
-	 	sortedIndexes[lSorted - l] = nextIndex;
+	 	sortedIndexes[lSorted - left] = nextIndex;
 		nextIndex++;
 		lSorted++;
 	}
-	while (rSorted < r) {
-	 	sortedIndexes[rSorted - l] = nextIndex;
+	while (rSorted < right) {
+	 	sortedIndexes[rSorted - left] = nextIndex;
 		nextIndex++;
 		rSorted++;
 	}
-	for (int i = l; i < r; i++) {
-	 	while (sortedIndexes[i - l] != i - l) {
-	 	 	swapString((input + i), (input + sortedIndexes[i - l] + l));
-			swapInt(&sortedIndexes[i - l], &sortedIndexes[sortedIndexes[i - l]]);
+	for (int i = left; i < right; i++) {
+	 	while (sortedIndexes[i - left] != i - left) {
+	 	 	swapString((input + i), (input + sortedIndexes[i - left] + left));
+			swapInt(&sortedIndexes[i - left], &sortedIndexes[sortedIndexes[i - left]]);
 		}
 	}
 	free(sortedIndexes);
 }
 
-void quickSort(int l, int r, int strLen) {
- 	if (r - l <= 1)
+void quickSort(int left, int right, int strLen) {
+ 	if (right - left <= 1)
 		return;
 	char *sep = (char*)malloc(strLen * sizeof(char));
 	if (sep == NULL)
 		forcedExit("no memory");
-	strcpy(sep, input[(rand() % (r - l)) + l]);
-	int lSepIndex = l;
-	int rSepIndex = r - 1;
+	strcpy(sep, input[(rand() % (right - left)) + left]);
+	int lSepIndex = left;
+	int rSepIndex = right - 1;
 	while (lSepIndex <= rSepIndex) {
 	 	while (strcmp(input[lSepIndex], sep) < 0) {
 	 	 	lSepIndex++;
@@ -171,12 +171,12 @@ void quickSort(int l, int r, int strLen) {
 		}
 	}
 	free(sep);
-	quickSort(l, rSepIndex + 1, strLen);
-	quickSort(rSepIndex + 1, r, strLen);
+	quickSort(left, rSepIndex + 1, strLen);
+	quickSort(rSepIndex + 1, right, strLen);
 }
 
 int main(int argc, char* argv[]) {
- 	FILE *file = fopen(argv[2], "r");
+ 	FILE *file = fopen(argv[2], "right");
 	int maxStringLen = 16;
 	int fileSize = atoi(argv[1]);
 	if (file == NULL) {
