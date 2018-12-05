@@ -14,6 +14,12 @@ void heapSort(char **array, int len)
 {
     int heapSize = 4 * len;
     char **heap = calloc(heapSize, sizeof(char *));
+    if (heap == NULL)
+    {
+        printf("Failed to allocate memory for the heap\n");
+        fflush(stdout);
+        return;
+    }
     for (int i = 0; i < len; i++)
     {
         int pos = 1;
@@ -84,6 +90,12 @@ void mergeSort(char **array, int len)
     mergeSort(array, m);
     mergeSort(array + m, len - m);
     char ** tmp = malloc(len * sizeof(char *));
+    if (tmp == NULL)
+    {
+        printf("Failed to allocate memory for the mergeSort\n");
+        fflush(stdout);
+        return;
+    }
     int posLeft = 0, posRight = m, pos = 0;
     while (posLeft < m)
     {
@@ -168,16 +180,53 @@ int main(int argc, char **argv)
     }
     srand(time(0));
     FILE *infile = fopen(argv[2], "r");
+    if (infile == NULL)
+    {
+        printf("Unable to open file\n");
+        fflush(stdout);
+        return 0;
+    }
     int linesCount = atoi(argv[1]);
     int lineSize = 1000000;
     char **text = (char **)malloc(linesCount * sizeof(char *));
+    if (text == NULL)
+    {
+        printf("Unable to allocate enough memory\n");
+        fflush(stdout);
+        return 0;
+    }
     char *buffer = (char *)malloc(lineSize);
+    if (buffer == NULL)
+    {
+        free(text);
+        printf("Unable to allocate enough memory\n");
+        fflush(stdout);
+        return 0;
+    }
     int len;
     for (len = 0; len < linesCount ; len++)
     {
         if (fgets(buffer, lineSize, infile) == NULL)
-            break;
+        {
+            free(buffer);
+            for (int i = 0; i < len; i++)
+                free(text[i]);
+            free(text);
+            printf("Unable to read more than %d lines\n", len);
+            fflush(stdout);
+            return 0;
+        }
         text[len] = malloc((strlen(buffer) + 1) * sizeof(char));
+        if (text[len] == NULL)
+        {
+            free(buffer);
+            for (int i = 0; i < len; i++)
+                free(text[i]);
+            free(text);
+            printf("Unable to allocate enough memory\n");
+            fflush(stdout);
+            return 0;
+        }
         strcpy(text[len], buffer);
     }
     sortWithGivenAlgorithm(text, len, argv[3]);
