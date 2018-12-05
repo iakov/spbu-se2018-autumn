@@ -176,7 +176,7 @@ void quickSort(int left, int right, int strLen) {
 }
 
 int main(int argc, char* argv[]) {
- 	FILE *file = fopen(argv[2], "right");
+ 	FILE *file = fopen(argv[2], "r");
 	int maxStringLen = 16;
 	int fileSize = atoi(argv[1]);
 	if (file == NULL) {
