@@ -11,19 +11,19 @@
 #define BUFFER_SIZE (1 << 20)
 
 Line* g_lines = NULL;
-int64_t g_count = 0;
+int64_t g_linesCount = 0;
+
+SortingMethod sort = NULL;
 
 static uint8_t* g_chars = NULL;
-static int64_t g_mapInit = FALSE;
+static int64_t g_isMapped = FALSE;
 
-static int g_file = -1;
+static int g_fileDescriptor = -1;
 static uint64_t g_fileSize = 0;
-
-void (* sort)();
 
 void print()
 {
-    for (int64_t i = 0; i < g_count; i++)
+    for (int64_t i = 0; i < g_linesCount; i++)
     {
         fwrite(g_lines[i].begin, g_lines[i].size, 1, stdout);
         printf("\n");
@@ -35,7 +35,7 @@ void releaseResources()
     if (g_lines != NULL)
         free(g_lines);
 
-    if (g_mapInit)
+    if (g_isMapped)
     {
         munmap(g_chars, g_fileSize);
     }
@@ -44,21 +44,21 @@ void releaseResources()
         free(g_chars);
     }
 
-    if (g_file != -1)
-        close(g_file);
+    if (g_fileDescriptor != -1)
+        close(g_fileDescriptor);
 }
 
-static int64_t validateCount( const char* argument )
+static int64_t validateLinesCount( const char* argument )
 {
     int64_t count = 0;
-
-    for (int64_t i = 0; argument[i] != '\0'; i++)
+    
+    for (int64_t i = 0, symbol; (symbol = argument[i]) != '\0'; i++)
     {
-        if (argument[i] < '0' || argument[i] > '9')
+        if (symbol < '0' || symbol > '9')
             return FALSE;
 
         count *= 10;
-        count += argument[i] - '0';
+        count += symbol - '0';
     }
 
     g_lines = malloc(count * sizeof(Line));
@@ -66,19 +66,19 @@ static int64_t validateCount( const char* argument )
     if (g_lines == NULL)
         return FALSE;
 
-    g_count = count;
+    g_linesCount = count;
 
     return TRUE;
 }
 
 static int64_t validateFile( const char* argument )
 {
-    g_file = open(argument, O_RDONLY);
+    g_fileDescriptor = open(argument, O_RDONLY);
 
-    if (g_file == -1)
+    if (g_fileDescriptor == -1)
         return FALSE;
 
-    g_fileSize = (uint64_t) lseek(g_file, 0, SEEK_END);
+    g_fileSize = (uint64_t) lseek(g_fileDescriptor, 0, SEEK_END);
 
     if (g_fileSize == 0 || g_fileSize == (uint64_t) -1)
         return FALSE;
@@ -88,49 +88,33 @@ static int64_t validateFile( const char* argument )
 
 static int64_t validateMethod( const char* argument )
 {
-    uint64_t length = strlen(argument);
+    uint64_t id = 0;
 
-    if (length == 4 && memcmp(argument, "heap", 4) == 0)
+    for (int64_t i = 0, symbol; (symbol = argument[i]) != '\0'; i++)
     {
-        sort = sortHeap;
-        return TRUE;
+        if (symbol < 'a' || symbol > 'z' || i == 9)
+            return FALSE;
+
+        id <<= 7;
+        id += symbol;
     }
 
-    if (length == 5 && memcmp(argument, "merge", 5) == 0)
-    {
-        sort = sortMerge;
-        return TRUE;
-    }
+    sort = getSortingMethod(id);
 
-    if (length == 5 && memcmp(argument, "quick", 5) == 0)
-    {
-        sort = sortQuick;
-        return TRUE;
-    }
+    if (sort == NULL)
+        return FALSE;
 
-    if (length == 6 && memcmp(argument, "bubble", 6) == 0)
-    {
-        sort = sortBubble;
-        return TRUE;
-    }
-
-    if (length == 9 && memcmp(argument, "insertion", 9) == 0)
-    {
-        sort = sortInsertion;
-        return TRUE;
-    }
-
-    return FALSE;
+    return TRUE;
 }
 
 static int64_t mapFile()
 {
-    g_chars = mmap(NULL, g_fileSize, PROT_READ, MAP_SHARED, g_file, 0);
+    g_chars = mmap(NULL, g_fileSize, PROT_READ, MAP_SHARED, g_fileDescriptor, 0);
 
     if (g_chars == MAP_FAILED)
         return FALSE;
 
-    g_mapInit = TRUE;
+    g_isMapped = TRUE;
 
     return TRUE;
 }
@@ -142,7 +126,7 @@ static int64_t loadFile()
     if (g_chars == NULL)
         return FALSE;
 
-    lseek(g_file, 0, SEEK_SET);
+    lseek(g_fileDescriptor, 0, SEEK_SET);
 
     uint64_t bufferSize = BUFFER_SIZE;
     uint64_t offset = 0;
@@ -152,7 +136,7 @@ static int64_t loadFile()
         if (bufferSize + offset > g_fileSize)
             bufferSize = g_fileSize - offset;
 
-        if (read(g_file, g_chars + offset, bufferSize) != (int64_t) bufferSize)
+        if (read(g_fileDescriptor, g_chars + offset, bufferSize) != (int64_t) bufferSize)
             return FALSE;
 
         offset += bufferSize;
@@ -175,7 +159,7 @@ int64_t initialize( int argumentsCount, char** arguments )
         return FALSE;
     }
 
-    if (!validateCount(arguments[1]))
+    if (!validateLinesCount(arguments[1]))
     {
         fprintf(stderr, "Invalid count of lines: '%s'\n", arguments[1]);
         return FALSE;
@@ -201,8 +185,8 @@ int64_t initialize( int argumentsCount, char** arguments )
         return FALSE;
     }
 
-    int64_t allocatedCount = g_count;
-    g_count = 0;
+    int64_t allocatedCount = g_linesCount;
+    g_linesCount = 0;
 
     g_lines[0].begin = g_chars;
 
@@ -212,21 +196,21 @@ int64_t initialize( int argumentsCount, char** arguments )
     {
         if (*i == '\n')
         {
-            g_lines[g_count].size = i - g_lines[g_count].begin;
+            g_lines[g_linesCount].size = i - g_lines[g_linesCount].begin;
 
-            g_count++;
+            g_linesCount++;
 
-            if (g_count >= allocatedCount)
+            if (g_linesCount >= allocatedCount)
                 break;
 
-            g_lines[g_count].begin = i + 1;
+            g_lines[g_linesCount].begin = i + 1;
         }
     }
 
-    if (g_count < allocatedCount)
+    if (g_linesCount < allocatedCount)
     {
-        g_lines[g_count].size = end - g_lines[g_count].begin;
-        g_count++;
+        g_lines[g_linesCount].size = end - g_lines[g_linesCount].begin;
+        g_linesCount++;
     }
 
     return TRUE;

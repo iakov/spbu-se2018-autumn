@@ -70,9 +70,9 @@ static int64_t compare( Line* line1, Line* line2 )
     return EQUAL;
 }
 
-void sortBubble()
+static void sortBubble()
 {
-    for (int64_t count = g_count - 1; count > 0; count--)
+    for (int64_t count = g_linesCount - 1; count > 0; count--)
     {
         for (int64_t i = 0; i < count; i++)
         {
@@ -82,9 +82,9 @@ void sortBubble()
     }
 }
 
-void sortInsertion()
+static void sortInsertion()
 {
-    for (int64_t i = 1; i < g_count; i++)
+    for (int64_t i = 1; i < g_linesCount; i++)
     {
         int64_t j = i - 1;
 
@@ -126,30 +126,30 @@ static void sortQuickRec( int64_t first, int64_t last )
     sortQuickRec(pivot + 1, last);
 }
 
-void sortQuick()
+static void sortQuick()
 {
     srandom(time(NULL));
 
-    sortQuickRec(0, g_count - 1);
+    sortQuickRec(0, g_linesCount - 1);
 }
 
-void sortMerge()
+static void sortMerge()
 {
-    Line* sorted = malloc(sizeof(Line) * g_count);
+    Line* sorted = malloc(sizeof(Line) * g_linesCount);
     if (sorted == NULL)
         return;
 
-    for (int64_t blockSize = 1; blockSize < g_count; blockSize <<= 1)
+    for (int64_t blockSize = 1; blockSize < g_linesCount; blockSize <<= 1)
     {
         int64_t doubleSize = blockSize << 1;
 
-        for (int64_t offset = 0; offset < g_count - blockSize; offset += doubleSize)
+        for (int64_t offset = 0; offset < g_linesCount - blockSize; offset += doubleSize)
         {
             int64_t leftSize = blockSize;
             int64_t rightSize = blockSize;
 
-            if (offset + leftSize + rightSize > g_count)
-                rightSize = g_count - leftSize - offset;
+            if (offset + leftSize + rightSize > g_linesCount)
+                rightSize = g_linesCount - leftSize - offset;
 
             Line* left = g_lines + offset;
             Line* right = left + leftSize;
@@ -228,14 +228,57 @@ static void correctHeap( int64_t index, int64_t count )
     }
 }
 
-void sortHeap()
+static void sortHeap()
 {
-    for (int64_t i = (g_count >> 1) - 1; i >= 0; i--)
-        correctHeap(i, g_count);
+    for (int64_t i = (g_linesCount >> 1) - 1; i >= 0; i--)
+        correctHeap(i, g_linesCount);
 
-    for (int64_t i = g_count - 1; i > 0; i--)
+    for (int64_t i = g_linesCount - 1; i > 0; i--)
     {
         swapLines(g_lines, g_lines + i);
         correctHeap(0, i);
+    }
+}
+
+#define BUBBLE_ID_LOW     0x5c58b665
+#define BUBBLE_ID_HIGH    0x317
+#define INSERTION_ID_LOW  0x2e9a77ee
+#define INSERTION_ID_HIGH 0x69ddcf2f
+#define QUICK_ID_LOW      0x1eba71eb
+#define QUICK_ID_HIGH     0x7
+#define MERGE_ID_LOW      0xdcbcb3e5
+#define MERGE_ID_HIGH     0x6
+#define HEAP_ID_LOW       0xd1970f0
+#define HEAP_ID_HIGH      0x0
+
+SortingMethod getSortingMethod( uint64_t id )
+{
+    uint64_t lowPart = id & 0xFFFFFFFF;
+    uint64_t highPart = id >> 32;
+
+    switch (lowPart)
+    {
+        case BUBBLE_ID_LOW:
+            if (highPart == BUBBLE_ID_HIGH)
+                return sortBubble;
+            return NULL;
+        case INSERTION_ID_LOW:
+            if (highPart == INSERTION_ID_HIGH)
+                return sortInsertion;
+            return NULL;
+        case QUICK_ID_LOW:
+            if (highPart == QUICK_ID_HIGH)
+                return sortQuick;
+            return NULL;
+        case MERGE_ID_LOW:
+            if (highPart == MERGE_ID_HIGH)
+                return sortMerge;
+            return NULL;
+        case HEAP_ID_LOW:
+            if (highPart == HEAP_ID_HIGH)
+                return sortHeap;
+            return NULL;
+        default:
+            return NULL;
     }
 }
