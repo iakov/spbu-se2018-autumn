@@ -130,7 +130,7 @@ void heapify(char **strArr, int root, int num)
 {
     /*
     strArr[root + 1]..[k] is already a heap,
-    str[root] is being added
+    strArr[root] is being added
     */
 
     int child;
