@@ -2,38 +2,44 @@
 #include <stdlib.h>
 #include <string.h>
 
-void printError(char *reasonOfError){
+void printError(char *reasonOfError)
+{
     printf("Error: %s\n", reasonOfError);
     exit(1);
 }
 
-void swapLines(char* str[], int n, int m){
-    char *temp = str[n];
-    str[n] = str[m];
-    str[m] = temp;
+void swapLines(char* str[], int firstInd, int secondInd)
+{
+    char *temp = str[firstInd];
+    str[firstInd] = str[secondInd];
+    str[secondInd] = temp;
 }
 
-void bubbleSort(char* str[], int size){
-for (int i = size-1; i >= 0; i--)
+void bubbleSort(char* str[], int amountString)
+{
+for (int i = amountString-1; i >= 0; i--)
   {
-    int flagSwap = 1;
+    int verifSwap = 1;
     for (int j = 0; j<i; j++)
     {
-      if (strcmp(str[j], str[j+1]) > 0){
-        swapLines(str, j, j+1);
-        flagSwap = 0;
-      }
+        if (strcmp(str[j], str[j+1]) > 0)
+        {
+            swapLines(str, j, j+1);
+            verifSwap = 0;
+        }
     }
-    if (flagSwap)
+    if (verifSwap)
+    {
         break;
+    }
   }
 }
 
-void insertionSort(char* str[], int n)
+void insertionSort(char* str[], int amountString)
 {
    int i, j;
    char *key;
-   for (i = 1; i < n; i++)
+   for (i = 1; i < amountString; i++)
    {
        key = str[i];
        j = i-1;
@@ -48,23 +54,32 @@ void insertionSort(char* str[], int n)
 
 void merge(char *str[], int left, int mid, int right)
 {
-    long int firstSub, secondSub, finalInd;
-    long int lenOfLeft = mid - left + 1;
-    long int lenOfRight = right - mid;
+    int firstSub, secondSub, finalInd;
+    int lenOfLeft = mid - left + 1;
+    int lenOfRight = right - mid;
 
     char **Left = malloc(lenOfLeft*sizeof(char*));
     char **Right = malloc(lenOfRight*sizeof(char*));
-    if (Left == NULL || Right == NULL) printError("Cannot allocate extra memory for merge sort");
 
+    if (Left == NULL || Right == NULL)
+    {
+        printError("Cannot allocate extra memory for merge sort");
+    }
 
     for (firstSub = 0; firstSub < lenOfLeft; firstSub++)
+    {
         Left[firstSub] = str[left + firstSub];
+    }
+
     for (secondSub = 0; secondSub < lenOfRight; secondSub++)
+    {
         Right[secondSub] = str[mid + 1+ secondSub];
+    }
 
     firstSub = 0;
     secondSub = 0;
     finalInd = left;
+
     while (firstSub < lenOfLeft && secondSub < lenOfRight)
     {
         if (strcmp(Left[firstSub], Right[secondSub]) < 0)
@@ -95,6 +110,7 @@ void merge(char *str[], int left, int mid, int right)
         secondSub++;
         finalInd++;
     }
+
     free(Right);
     free(Left);
 }
@@ -103,7 +119,7 @@ void mergeSort(char *str[], int left, int right)
 {
     if (left < right)
     {
-        long int mid = left+(right-left)/2;
+        int mid = left+(right-left)/2;
 
         mergeSort(str, left, mid);
         mergeSort(str, mid+1, right);
@@ -125,9 +141,12 @@ int partition(char *str[], int low, int high)
             swapLines(str, i, j);
         }
     }
+
     swapLines(str, i+1, high);
+
     return (i + 1);
 }
+
 void quickSort(char* str[], int low, int high)
 {
     if (low < high)
@@ -139,30 +158,37 @@ void quickSort(char* str[], int low, int high)
     }
 }
 
-void heapify(char* str[], int n, int i)
+void heapify(char* str[], int amountString, int i)
 {
     int largest = i;
-    int l = 2*i + 1;
-    int r = 2*i + 2;
+    int left = 2*i + 1;
+    int right = 2*i + 2;
 
-    if (l < n && strcmp(str[l], str[largest]) > 0)
-        largest = l;
+    if (left < amountString && strcmp(str[left], str[largest]) > 0)
+    {
+        largest = left;
+    }
 
-    if (r < n && strcmp(str[r], str[largest]) > 0)
-        largest = r;
+    if (right < amountString && strcmp(str[right], str[largest]) > 0)
+    {
+        largest = right;
+    }
 
     if (largest != i)
     {
         swapLines(str, i, largest);
-        heapify(str, n, largest);
+        heapify(str, amountString, largest);
     }
 }
-void heapSort(char *str[], int n)
-{
-    for (int i = n / 2 - 1; i >= 0; i--)
-        heapify(str, n, i);
 
-    for (int i=n-1; i>=0; i--)
+void heapSort(char *str[], int amountString)
+{
+    for (int i = amountString / 2 - 1; i >= 0; i--)
+    {
+        heapify(str, amountString, i);
+    }
+
+    for (int i = amountString - 1; i >= 0; i--)
     {
         swapLines(str, 0, i);
         heapify(str, i, 0);
@@ -174,34 +200,58 @@ int main(int argc, char *argv[])
     int amountString = atoi(argv[1]);
     char *fileName = argv[2];
     char algName = argv[3][0];
-    if (argc != 4)  printError("Invalid number of parameters");
+    if (argc != 4)
+    {
+        printError("Invalid number of parameters");
+    }
 
     FILE *myFile;
-    if ((myFile = fopen(fileName, "r")) == NULL) printError("Cannot open file");
+    if ((myFile = fopen(fileName, "r")) == NULL)
+    {
+        printError("Cannot open file");
+    }
 
     char **str = malloc(amountString*sizeof(char*));
-    if (str == NULL) printError("Cannot allocate memory for array of lines");
+    if (str == NULL)
+    {
+        printError("Cannot allocate memory for array of lines");
+    }
 
     for (int numStr=0; numStr<amountString; numStr++){
         int lenOfStr = 1;
         str[numStr] = (char*) malloc(lenOfStr*sizeof(char));
-        if (str[numStr] == NULL) printError("Cannot allocate memory for line firstly");
+        if (str[numStr] == NULL)
+        {
+            printError("Cannot allocate memory for line firstly");
+        }
         char symbBuff;
         for (int currLenOfCurrStr=0; (symbBuff = fgetc(myFile)) != '\n'; currLenOfCurrStr++){
-            if  (symbBuff == EOF)
-                if (ferror(myFile)) printError("Error of reading file");
-                else break;
-            if (currLenOfCurrStr+1>=lenOfStr){
+            if  (symbBuff == EOF && ferror(myFile))
+            {
+                printError("Error of reading file");
+            }
+            else if (symbBuff == EOF)
+            {
+                break;
+            }
+
+            if (currLenOfCurrStr+1>=lenOfStr)
+            {
                 lenOfStr *=2;
                 str[numStr] = (char*) realloc(str[numStr], lenOfStr*sizeof(char));
-                if (str[numStr] == NULL) printError("Cannot allocate memory for line");
+                if (str[numStr] == NULL)
+                {
+                    printError("Cannot allocate memory for line");
+                }
             }
             str[numStr][currLenOfCurrStr] = symbBuff;
             str[numStr][currLenOfCurrStr+1] = '\0';
         }
     }
     fclose(myFile);
-    switch (algName){
+
+    switch (algName)
+    {
         case 'b':
             bubbleSort(str, amountString);
             break;
@@ -220,7 +270,9 @@ int main(int argc, char *argv[])
         default:
             printError("Invalid name of algorithm");
     }
-    for (int numStr=0; numStr<amountString; numStr++){
+
+    for (int numStr=0; numStr<amountString; numStr++)
+    {
         printf("%s\n", str[numStr]);
         free(str[numStr]);
     }
