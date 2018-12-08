@@ -19,16 +19,16 @@ void bubbleSort(char* str[], int amountString)
 {
 for (int i = amountString-1; i >= 0; i--)
   {
-    int verifSwap = 1;
+    int hasSwapped = 1;
     for (int j = 0; j<i; j++)
     {
         if (strcmp(str[j], str[j+1]) > 0)
         {
             swapLines(str, j, j+1);
-            verifSwap = 0;
+            hasSwapped = 0;
         }
     }
-    if (verifSwap)
+    if (hasSwapped)
     {
         break;
     }
