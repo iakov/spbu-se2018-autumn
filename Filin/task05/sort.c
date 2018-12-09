@@ -33,62 +33,62 @@ void insertionsort(char **string, int n)
 void quicksort(char **string, int left, int right)
 {
   if (left >= right) return;
-  int ptrleft = left, ptrright = right;
+  int left_ptr = left, right_ptr = right;
   char* mid = string[(left + right) / 2];
-  while (ptrleft <= ptrright)
+  while (left_ptr <= right_ptr)
    {
-    while (strcmp(mid, string[ptrleft]) == 1)
-      ptrleft++;
-    while (strcmp(mid, string[ptrright]) == -1)
-      ptrright--;
-    if (ptrleft <= ptrright)
+    while (strcmp(mid, string[left_ptr]) == 1)
+      left_ptr++;
+    while (strcmp(mid, string[right_ptr]) == -1)
+      right_ptr--;
+    if (left_ptr <= right_ptr)
      {
-      char *buf = string[ptrleft];
-      string[ptrleft] = string[ptrright];
-      string[ptrright] = buf;
-      ptrleft++;
-      ptrright--;
+      char *buf = string[left_ptr];
+      string[left_ptr] = string[right_ptr];
+      string[right_ptr] = buf;
+      left_ptr++;
+      right_ptr--;
      }
    }
-  if (left < ptrright)
-    quicksort (string, left, ptrright);
-  if (ptrleft < right)
-    quicksort (string, ptrleft, right);
+  if (left < right_ptr)
+    quicksort (string, left, right_ptr);
+  if (left_ptr < right)
+    quicksort (string, left_ptr, right);
 }
 
 void mergesort (char** string, int left, int right)
 {
- if (left == right - 1) return;
+ if (left >= right - 1) return;
  int mid = (left + right) / 2;
  int i;
  mergesort (string, left, mid);
  mergesort (string, mid, right);
  char** buf = malloc((right - left) * sizeof(char*));
- int ptrleft = left, ptrright = mid, newptr = 0;
- while (ptrleft < mid && ptrright < right)
-   if (strcmp (string[ptrright], string[ptrleft]) == 1)
+ int left_ptr = left, right_ptr = mid, new_ptr = 0;
+ while (left_ptr < mid && right_ptr < right)
+   if (strcmp (string[right_ptr], string[left_ptr]) == 1)
     {
-     buf[newptr] = string [ptrleft];
-     newptr++;
-     ptrleft++;
+     buf[new_ptr] = string [left_ptr];
+     new_ptr++;
+     left_ptr++;
     }
    else
     {
-     buf[newptr] = string [ptrright];
-     newptr++;
-     ptrright++;
+     buf[new_ptr] = string [right_ptr];
+     new_ptr++;
+     right_ptr++;
     }
- while (ptrleft < mid)
+ while (left_ptr < mid)
   {
-   buf[newptr] = string [ptrleft];
-   newptr++;
-   ptrleft++;
+   buf[new_ptr] = string [left_ptr];
+   new_ptr++;
+   left_ptr++;
   }
- while (ptrright < right)
+ while (right_ptr < right)
   {
-   buf[newptr] = string [ptrright];
-   newptr++;
-   ptrright++;
+   buf[new_ptr] = string [right_ptr];
+   new_ptr++;
+   right_ptr++;
   }
  for (i = left; i < right; i++)
    string[i] = buf[i - left];
@@ -135,6 +135,11 @@ void heapsort (char** string, int n)
 int main (int argc, char* argv[])
 {
  FILE *file = fopen(argv[2], "r");
+ if (file == NULL)
+  {
+   fprintf(stderr, "Error! Can not open file.");
+   return 0;
+  }
  int i, n;
  n = atoi(argv[1]);
  for (i = 0; i < n; ++i)
@@ -142,7 +147,8 @@ int main (int argc, char* argv[])
    string[i] = (char*) malloc(1025 * sizeof(char));
    fgets(string[i], 1024, file);
   }
- switch (argv[3][0])
+ char* namesort = argv[3];
+ switch (namesort[0])
   {
         case 'b': {
             bubblesort(string, n);
