@@ -2,7 +2,7 @@ language: c
 git:
   depth: 1
 script:
- - true
+ - .scripts/travis/test_all.sh
 matrix:
   include:
     - os: linux

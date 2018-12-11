@@ -2,12 +2,15 @@
 #set -xuevo pipefail
 set -ueo pipefail
 
+export LC_ALL=C
+
 [ -n "${TS_COMMON:-}" ] && {  2>/dev/null return || exit ; } || export TS_COMMON=1  
 CURRENT_SCRIPT_DIR=$(dirname $(readlink -f $0))
 ROOT_SOURCES_DIR=$(readlink -f $CURRENT_SCRIPT_DIR/../..)
 TESTS_ROOT_DIR=$(readlink -f $ROOT_SOURCES_DIR/.scripts/tests)
 
 CONSOLE_COLOR_GREEN='\033[0;32m'
+CONSOLE_COLOR_YELLOW='\033[0;33m'
 CONSOLE_COLOR_RED='\033[0;31m'
 CONSOLE_COLOR_DEFAULT='\033[0m'
 

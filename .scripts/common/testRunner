@@ -5,20 +5,29 @@ performTests() {
   local task_dir=$2
   local tests_dir=$1
   cd $task_dir
-  echoColor DEFAULT "Running tests from \"$tests_dir\" in \"$task_dir\""
   if [ -x $tests_dir/setup ] ; then $tests_dir/setup ; fi
-  for t in $tests_dir/test*; do $t; done
+  for t in $tests_dir/test*; do 
+    if [ -x $t ] ; then
+      export TESTNAME=$(basename $t)
+      if $t ; then
+        logOk "$TESTNAME passed"
+      else
+        logWarn "Failed"
+      fi
+    else
+      logWarn "Skipped non-executable test $t"
+    fi
+  done
 }
 
 forTask() {
   local task_src_dir="$1"
-  TASK=$(basename $task_src_dir)
-  local tests="$TESTS_ROOT_DIR"/"$TASK"
+  export TASKNAME=$(basename $task_src_dir)
+  local tests="$TESTS_ROOT_DIR"/"$TASKNAME"
   if ! [ -d $tests ] ; then
     logError "Incorrect task directory name"
   else
     performTests "$tests" "$task_src_dir"
-    logOk "PASSED"
   fi
 }
 
@@ -35,7 +44,7 @@ isUserDir() {
 
 forUser() {
   local u="$1"
-  USERNAME=$(basename $u)
+  export USERNAME=$(basename $u)
   if isUserDir "$u" ; then  forAllTasks "$u" ; fi
 }
 

@@ -5,12 +5,16 @@
 totalErrors=0
 
 logOk() {
-   echoColor GREEN "$USERNAME/$TASK: $*"
+   echoColor GREEN "$USERNAME/$TASKNAME: $*"
    #((totalErrors += 1))
 }
 
+logWarn() {
+   echoColor YELLO "$USERNAME/$TASKNAME: $*"
+}
+
 logError() {
-   echoColor RED "$USERNAME/$TASK: $*"
+   echoColor RED "$USERNAME/$TASKNAME: $*"
    ((totalErrors += 1))
 }
 

@@ -1,2 +1,2 @@
 #!/bin/bash
-echo "Test was called in directory $PWD with $# parameters: $*"
+>/dev/null echo "Running common $TESTNAME for task $TASKNAME of user $USERNAME in $PWD with $# parameters: $*"
