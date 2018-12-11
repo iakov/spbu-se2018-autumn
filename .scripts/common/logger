@@ -1,0 +1,16 @@
+#!/bin/bash
+#set -xuevo pipefail
+. $(dirname $(readlink -f "${BASH_SOURCE[0]}"))/functions
+
+totalErrors=0
+
+logOk() {
+   echoColor GREEN "$USERNAME/$TASK: $*"
+   #((totalErrors += 1))
+}
+
+logError() {
+   echoColor RED "$USERNAME/$TASK: $*"
+   ((totalErrors += 1))
+}
+
