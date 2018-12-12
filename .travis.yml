@@ -1,6 +1,12 @@
 language: c
 git:
   depth: 1
+addons:
+  apt:
+    update: false
+    packages:
+    - clang-format
+    - colordiff
 script:
  - .scripts/travis/test_all.sh
 matrix:

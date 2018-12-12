@@ -10,7 +10,7 @@ logOk() {
 }
 
 logWarn() {
-   echoColor YELLO "$USERNAME/$TASKNAME: $*"
+   echoColor YELLOW "$USERNAME/$TASKNAME: $*"
 }
 
 logError() {
