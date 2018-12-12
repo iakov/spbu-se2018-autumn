@@ -1,0 +1,26 @@
+#!/bin/bash
+. $(dirname $(readlink -f "${BASH_SOURCE[0]}"))/../../common/logger
+>/dev/null echo "Running common $TESTNAME for task $TASKNAME of user $USERNAME in $PWD with $# parameters: $*"
+compile(){
+  TEST_CFLAGS="-Wall -Wextra -Werror -Wno-error=sign-compare -fsanitize=address -fsanitize=undefined"
+  TEST_O2="-O2"
+  TEST_O3="-O3 -flto"
+  local exitCode=0
+  gcc ${TEST_CFLAGS} ${TEST_O3} -o $1 main.c sort.s || exitCode=$?
+  return $exitCode
+}
+
+runTest(){
+  TEST_OUTPUT=test
+  for c in *.c ; do
+    clang-format -style LLVM $c > $c.reformatted
+    colordiff $c $c.reformatted | tail -n +2 | head -n 20 || true
+  done
+  if ! compile $TEST_OUTPUT ; then
+    return 1;
+  fi
+  $TEST_OUTPUT || true
+}
+
+
+runTest
