@@ -1,6 +1,5 @@
 #!/bin/bash
 . $(dirname $(readlink -f "${BASH_SOURCE[0]}"))/logger
-
 performTests() {
   local task_dir=$2
   local tests_dir=$1
@@ -10,14 +9,15 @@ performTests() {
     export TESTNAME=$(basename $t)
     if [ -x $t ] ; then
       if $t ; then
-        logOk "$TESTNAME passed"
+        logOk "PASSED"
       else
-        logWarn "Failed"
+        logWarn "FAILED with $?"
       fi
     else
-      logWarn "$TESTNAME skipped"
+      logWarn "SKIPPED"
     fi
   done
+  unset TESTNAME
 }
 
 forTask() {
@@ -29,6 +29,7 @@ forTask() {
   else
     performTests "$tests" "$task_src_dir"
   fi
+  unset TASKNAME
 }
 
 forAllTasks() {
@@ -46,6 +47,7 @@ forUser() {
   local u="$1"
   export USERNAME=$(basename $u)
   if isUserDir "$u" ; then  forAllTasks "$u" ; fi
+  unset USERNAME
 }
 
 forAllUsers() {
