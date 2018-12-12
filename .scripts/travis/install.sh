@@ -2,6 +2,6 @@
 set -euxo pipefail
 case $TRAVIS_OS_NAME in
   osx)
-    export OMEBREW_NO_AUTO_UPDATE=1
+    export HOMEBREW_NO_AUTO_UPDATE=1
     brew install coreutils #for GNU's "readlink -f"
 esac

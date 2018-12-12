@@ -7,15 +7,15 @@ performTests() {
   cd $task_dir
   if [ -x $tests_dir/setup ] ; then $tests_dir/setup ; fi
   for t in $tests_dir/test*; do 
+    export TESTNAME=$(basename $t)
     if [ -x $t ] ; then
-      export TESTNAME=$(basename $t)
       if $t ; then
         logOk "$TESTNAME passed"
       else
         logWarn "Failed"
       fi
     else
-      logWarn "Skipped non-executable test $t"
+      logWarn "$TESTNAME skipped"
     fi
   done
 }
