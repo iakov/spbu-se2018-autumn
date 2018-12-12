@@ -11,7 +11,7 @@ performTests() {
       if $t ; then
         logOk "PASSED"
       else
-        logWarn "FAILED with $?"
+        logError "FAILED with $?"
       fi
     else
       logWarn "SKIPPED"
@@ -25,7 +25,7 @@ forTask() {
   export TASKNAME=$(basename $task_src_dir)
   local tests="$TESTS_ROOT_DIR"/"$TASKNAME"
   if ! [ -d $tests ] ; then
-    logError "Incorrect task directory name"
+    logWarn "SKIPPED incorrect task directory name"
   else
     performTests "$tests" "$task_src_dir"
   fi
