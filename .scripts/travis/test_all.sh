@@ -1,8 +1,7 @@
 #!/bin/bash
 case "_$TRAVIS_OS_NAME" in
   _osx)
-    shopt -s expand_aliases
-    alias readlink=greadlink
+    export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 esac
 
 . $(dirname $(readlink -f $0))/../common/testRunner
