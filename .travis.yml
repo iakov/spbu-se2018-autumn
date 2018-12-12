@@ -7,11 +7,14 @@ addons:
     packages:
     - clang-format
     - colordiff
+install:
+ - .scritps/travis/install.sh
 script:
  - .scripts/travis/test_all.sh
 matrix:
   include:
     - os: linux
+      dist: bionic
       name: "Some GNU/Linux"
     - os: osx
       name: "macOS"
