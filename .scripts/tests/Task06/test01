@@ -1,4 +1,5 @@
 #!/bin/bash
+return 0 || exit 0
 . $(dirname $(readlink -f "${BASH_SOURCE[0]}"))/../../common/logger
 >/dev/null echo "Running common $TESTNAME for task $TASKNAME of user $USERNAME in $PWD with $# parameters: $*"
 compile(){
