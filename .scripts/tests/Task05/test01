@@ -30,6 +30,19 @@ runBinary() {
   timeout --preserve-status --kill-after=10 --signal=TERM $duration $*
 }
 
+runTestCase() {
+    local test_array_len=$1
+    local test_input=$2
+    local test_alg=$3
+    local test_expected=$4
+    local out=std.out
+    local err=std.err
+    runBinary $TEST_BINARY $test_array_len $test_input $a > $out 2>$err || exitCode=$?
+    if [[ $exitCode != 0 ]] ; then return $exitCode; fi
+    [ -s $out ] && [ ! -s $err ] && sort -C $out && ((TESTSTEP+=1)) # && logOk "step $TESTSTEP finished"
+    diff $test_expected $out
+}
+
 runTest(){
   TEST_BINARY=./test
   rm -f $TEST_BINARY
@@ -40,8 +53,8 @@ runTest(){
   if ! compile $TEST_BINARY ; then
     return 171
   fi
-  local test_array_len=1
   local test_input=/etc/hostname
+  local test_array_len=$(wc -l < $test_input)
   local test_algorithm=""
   local test_algorithm_list="bubble insertion merge quick radix"
   local exitCode
@@ -62,15 +75,11 @@ runTest(){
   # empty file
   >/dev/null 2>&1 runBinary $TEST_BINARY 0 /dev/null "quick"
 
-  for a in $test_algorithm_list ; do 
-    local out=std.out
-    local err=std.err
-    runBinary $TEST_BINARY $test_array_len $test_input $a > $out 2>$err || exitCode=$?
-    if [[ $exitCode != 0 ]] ; then return $exitCode; fi
-    [ -s $out ] && [ ! -s $err ] && ((TESTSTEP+=1)) # && logOk "step $TESTSTEP finished"
-    diff <(sort $test_input) $out
+  local test_expected=$(mktemp)
+  sort $test_input > $test_expected
+  for a in $test_algorithm_list ; do
+    runTestCase $test_array_len $test_input $a $test_expected
   done
-
 }
 
 
