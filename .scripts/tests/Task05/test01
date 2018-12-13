@@ -21,6 +21,15 @@ compile(){
   return $exitCode
 }
 
+runBinary() {
+  local duration=5
+  if [[ "$1" =~ ^[0-9]+$ ]]; then
+    duration="$1"
+    shift
+  fi
+  timeout --preserve-status --kill-after=10 --signal=TERM $duration $*
+}
+
 runTest(){
   TEST_BINARY=./test
   rm -f $TEST_BINARY
@@ -38,18 +47,18 @@ runTest(){
   local exitCode
   TESTSTEP=0
   exitCode=0
-  >/dev/null 2>&1 $TEST_BINARY 0 /dev/null "" || exitCode=$?
-  [[ $exitCode > 0 ]] && [[ $exitCode < 5 ]] && ((TESTSTEP+=1)) # && logOk "step $TESTSTEP finished"
+  >/dev/null 2>&1 runBinary $TEST_BINARY 0 /dev/null "" || exitCode=$?
+  [[ $exitCode > 0 ]] && [[ $exitCode < 5 ]] && ((TESTSTEP+=1))  # && logOk "step $TESTSTEP finished"
   exitCode=0
-  >/dev/null 2>&1 $TEST_BINARY $test_array_len $test_input "" || exitCode=$?
+  >/dev/null 2>&1 runBinary $TEST_BINARY $test_array_len $test_input "" || exitCode=$?
   [[ $exitCode > 0 ]] && [[ $exitCode < 5 ]] && ((TESTSTEP+=1)) # && logOk "step $TESTSTEP finished"
   for a in $test_algorithm_list ; do 
-    $TEST_BINARY $test_array_len $test_input $a > stdout.txt 2>stderr.txt || exitCode=$?
+    runBinary $TEST_BINARY $test_array_len $test_input $a > stdout.txt 2>stderr.txt || exitCode=$?
     if [[ $exitCode != 0 ]] ; then return $exitCode; fi
     [ -s stdout.txt ] && [ ! -s stderr.txt ] && ((TESTSTEP+=1)) # && logOk "step $TESTSTEP finished"
   done
 
-  >/dev/null 2>&1 $TEST_BINARY $test_array_len $test_input $test_algorithm && ((TESTSTEP+=1)) # && logOk "step $TESTSTEP finished"
+  >/dev/null 2>&1 runBinary $TEST_BINARY $test_array_len $test_input $test_algorithm && ((TESTSTEP+=1)) # && logOk "step $TESTSTEP finished"
 
 }
 

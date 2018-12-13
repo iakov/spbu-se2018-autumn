@@ -11,7 +11,16 @@ performTests() {
       if $t ; then
         logOk "PASSED"
       else
-        logError "FAILED with $?"
+        local errCode=$?
+        local msg="!!!no explanation!!!"
+        case $errCode in
+        139) msg="access violation (invalid pointer?)";;
+        143) msg="killed on timeout (waiting for data input or too slow?)";;
+        171) msg="no binary (compilation issues?)";;
+          *) msg="process exited with unexpected code: $errCode";;
+
+        esac
+        logError "FAILED - $msg"
       fi
     else
       logWarn "SKIPPED"
