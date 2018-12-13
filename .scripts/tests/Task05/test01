@@ -40,7 +40,7 @@ runTestCase() {
     runBinary $TEST_BINARY $test_array_len $test_input $a > $out 2>$err || exitCode=$?
     if [[ $exitCode != 0 ]] ; then return $exitCode; fi
     [ -s $out ] && [ ! -s $err ] && sort -C $out && ((TESTSTEP+=1)) # && logOk "step $TESTSTEP finished"
-    diff $test_expected $out
+    diff -y -d $test_expected $out 1>$a.diff 2>&1 || return 200
 }
 
 runTest(){
@@ -75,10 +75,19 @@ runTest(){
   # empty file
   >/dev/null 2>&1 runBinary $TEST_BINARY 0 /dev/null "quick"
 
-  local test_expected=$(mktemp)
-  sort $test_input > $test_expected
+  local test_expected=$(mktemp -p .)
+  command sort $test_input > $test_expected
   for a in $test_algorithm_list ; do
     runTestCase $test_array_len $test_input $a $test_expected
+  done
+  test_len=1000
+  test_input=$(mktemp -p .)
+  #hexdump -e '4/4 "%08x\n" "\n"' -n $((4 * $test_len)) /dev/urandom > $test_input
+  hexdump -e '4/4 "%011u\n" "\n"' -n $((4 * $test_len)) /dev/urandom > $test_input
+  test_expected=$(mktemp -p .)
+  command sort -o $test_expected $test_input
+  for a in $test_algorithm_list ; do
+    runTestCase $test_len $test_input $a $test_expected
   done
 }
 

@@ -15,9 +15,11 @@ performTests() {
         local msg="!!!no explanation!!!"
         case $errCode in
         139) msg="access violation (invalid pointer?)";;
+        141) msg="SIGPIPE was issued, please, ask your teacher for an explanation";;
         143) msg="killed on timeout (waiting for data input or too slow?)";;
         155) msg="expecting exit codes 1..5 for incorrect input/parameters, got something else";;
         171) msg="no binary (compilation issues?)";;
+        200) msg="unexpected output/result (incorrect program?)";;
           *) msg="process exited with unexpected code: $errCode";;
 
         esac
