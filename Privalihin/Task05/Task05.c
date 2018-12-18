@@ -219,14 +219,16 @@ int main(int argc, char **argv)
     {
         if (fgets(buffer, lineSize, infile) == NULL)
         {
-            break;
             free(buffer);
             for (int i = 0; i < len; i++)
                 free(text[i]);
             free(text);
             printf("Unable to read more than %d lines\n", len);
             fflush(stdout);
-            exit(4);
+            char test = fgetc(infile);
+            if (test != EOF)
+                exit(test);
+            exit(1);
         }
         text[len] = malloc((strlen(buffer) + 1) * sizeof(char));
         if (text[len] == NULL)
