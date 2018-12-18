@@ -219,6 +219,7 @@ int main(int argc, char **argv)
     {
         if (fgets(buffer, lineSize, infile) == NULL)
         {
+            break;
             free(buffer);
             for (int i = 0; i < len; i++)
                 free(text[i]);
@@ -246,7 +247,7 @@ int main(int argc, char **argv)
     sortWithGivenAlgorithm(text, len, argv[3]);
     for (int i = 0; i < len; i++)
         printf("%s", text[i]);
-    for (int i = 0; i < linesCount; i++)
+    for (int i = 0; i < len; i++)
         free(text[i]);
     free(text);
     free(buffer);
