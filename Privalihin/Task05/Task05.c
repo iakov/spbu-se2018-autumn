@@ -177,7 +177,7 @@ void sortWithGivenAlgorithm(char **array, int len, char *algorithm)
     else
     {
         printf("Invalid algorithm name!\n");
-        exit(2);
+        exit(1);
     }
 }
 
@@ -187,7 +187,7 @@ int main(int argc, char **argv)
     if (argc < 4)
     {
         printf("Invalid number of arguments!\n");
-        exit(1);
+        exit(2);
     }
     srand(time(0));
     FILE *infile = fopen(argv[2], "r");
@@ -220,7 +220,7 @@ int main(int argc, char **argv)
         if (fgets(buffer, lineSize, infile) == NULL)
         {
             break;
-            free(buffer);
+            /*free(buffer);
             for (int i = 0; i < len; i++)
                 free(text[i]);
             free(text);
@@ -229,7 +229,7 @@ int main(int argc, char **argv)
             char test = fgetc(infile);
             if (test != EOF)
                 exit(test);
-            exit(1);
+            if ();*/
         }
         text[len] = malloc((strlen(buffer) + 1) * sizeof(char));
         if (text[len] == NULL)
