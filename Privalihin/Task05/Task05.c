@@ -184,7 +184,7 @@ void sortWithGivenAlgorithm(char **array, int len, char *algorithm)
 
 int main(int argc, char **argv)
 {
-    if (argc != 4)
+    if (argc < 4)
     {
         printf("Invalid number of arguments!\n");
         exit(1);
