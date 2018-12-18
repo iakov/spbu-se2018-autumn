@@ -10,6 +10,13 @@ void swapCStrings(char **a, char **b)
     *b = tmp;
 }
 
+int min(int a, int b)
+{
+    if (a < b)
+        return a;
+    return b;
+}
+
 void heapSort(char **array, int len)
 {
     int heapSize = 4 * len;
@@ -136,12 +143,13 @@ void quickSort(char **array, int len)
             r--;
         if (l >= r)
             break;
-        swapCStrings(array + r, array + l);
-        r--;
-        l++;
+        swapCStrings(array + r--, array + l++);
     }
-    quickSort(array, l);
-    quickSort(array + l, len - l);
+    int splitPos = r + 1;
+    if (strcmp(array[splitPos - 1], separator) > 0)
+        splitPos--;
+    quickSort(array, splitPos);
+    quickSort(array + splitPos, len - splitPos);
 }
 
 void sortWithGivenAlgorithm(char **array, int len, char *algorithm)
