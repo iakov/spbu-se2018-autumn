@@ -177,7 +177,7 @@ void sortWithGivenAlgorithm(char **array, int len, char *algorithm)
     else
     {
         printf("Invalid algorithm name!\n");
-        exit(algorithm[0]);
+        exit(2);
     }
 }
 
