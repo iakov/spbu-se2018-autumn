@@ -219,6 +219,7 @@ int main(int argc, char **argv)
     {
         if (fgets(buffer, lineSize, infile) == NULL)
         {
+            break;
             free(buffer);
             for (int i = 0; i < len; i++)
                 free(text[i]);
