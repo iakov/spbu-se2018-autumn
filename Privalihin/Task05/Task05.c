@@ -158,7 +158,7 @@ void sortWithGivenAlgorithm(char **array, int len, char *algorithm)
     {
         bubbleSort(array, len);
     }
-    else if (strcmp(algorithm, "radix") == 0)
+    else if (strcmp(algorithm, "heap") == 0)
     {
         heapSort(array, len);
     }
@@ -177,7 +177,7 @@ void sortWithGivenAlgorithm(char **array, int len, char *algorithm)
     else
     {
         printf("Invalid algorithm name!\n");
-        exit(1);
+        exit(algorithm[0]);
     }
 }
 
