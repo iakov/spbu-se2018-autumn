@@ -225,7 +225,7 @@ int main(int argc, char **argv)
             free(text);
             printf("Unable to read more than %d lines\n", len);
             fflush(stdout);
-            exit(1);
+            exit(2);
         }
         text[len] = malloc((strlen(buffer) + 1) * sizeof(char));
         if (text[len] == NULL)
