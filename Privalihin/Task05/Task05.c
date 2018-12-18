@@ -187,7 +187,7 @@ int main(int argc, char **argv)
     if (argc < 4)
     {
         printf("Invalid number of arguments!\n");
-        exit(1);
+        exit(4);
     }
     srand(time(0));
     FILE *infile = fopen(argv[2], "r");
