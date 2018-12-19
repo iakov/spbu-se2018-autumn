@@ -299,8 +299,11 @@ int main(int argc, char *argv[])
             radixSort(data, n);
             break;
         }
-        default:
+        default: {
+            fprintf(stderr, "Invalid algo name");
+            exit(1);
             break;
+        }
     }
     //clock_t t2 = clock();
     for (int i = 0; i < n; ++i)
