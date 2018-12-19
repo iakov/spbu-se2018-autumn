@@ -5,8 +5,6 @@
 #include <time.h>
 #include "md5.h"
 
-
-
 const int MD5_SIZE = 64;
 
 typedef struct item
@@ -48,7 +46,6 @@ int getHash(char input[], int size)
 }
 
 
-
 void init(HashMap *map, int size)
 {
     map->table = calloc(size, sizeof(ListItem*));
@@ -61,7 +58,6 @@ void init(HashMap *map, int size)
         exit(4);
     }
 }
-
 
 
 ListItem *nextItem(HashMap *map, ListItem *current)
@@ -101,7 +97,6 @@ ListItem *nextItem(HashMap *map, ListItem *current)
 }
 
 
-
 void filter(HashMap *map, int (*function) (char*, int) )
 {
     ListItem *current = nextItem(map, NULL);
@@ -112,28 +107,20 @@ void filter(HashMap *map, int (*function) (char*, int) )
     }
 }
 
-
-
 void clear(HashMap *map)
 {
     for (int i = 0; i < map->size; ++i)
     {
-        if (map->table[i] == NULL)
+        while (map->table[i] != NULL)
         {
-            continue;
+            ListItem *temp = map->table[i];
+            map->table[i] = map->table[i]->nextPtr;
+            free(temp->key);
+            free(temp);
         }
-        ListItem *current = map->table[i]->nextPtr;
-        while (current != NULL)
-        {
-            map->table[i]->nextPtr = current->nextPtr;
-            free(current);
-            current = map->table[i]->nextPtr;
-        }
-        free(map->table[i]);
-
         map->table[i] = NULL;
-        map->length[i] = 0;
     }
+    free(map->table);
 }
 
 
@@ -162,6 +149,7 @@ void add(HashMap *map, char *key, int value)
     if (target != NULL)
     {
         target->value += value;
+        free(key);
         return;
     }
 
@@ -175,9 +163,18 @@ void add(HashMap *map, char *key, int value)
 
     newItem->key = key;
     newItem->value = value;
-    newItem->nextPtr = map->table[hashOfString];
 
-    map->table[hashOfString] = newItem;
+    if (map->table[hashOfString] == NULL)
+    {
+        newItem->nextPtr = NULL;
+        map->table[hashOfString] = newItem;
+    }
+    else
+    {
+        newItem->nextPtr = map->table[hashOfString]->nextPtr;
+        map->table[hashOfString]->nextPtr = newItem;
+    }
+
     map->length[hashOfString]++;
 }
 
@@ -200,47 +197,33 @@ int get(HashMap *map, char *key)
 
 void getStat(HashMap *map)
 {
-    int chainAmount = 0;
-    float avgChainLen = 0;
-    int maxChainLen = 0;
-    int differentKeyAmount = 0;
-    char *mostFreqKey;
     int maxFreqValue = 0;
-    int total = 0;
 
     for (int i = 0; i < map->size; ++i)
     {
-        differentKeyAmount += map->length[i];
-        if (map->length[i] != 0)
-        {
-            chainAmount++;
-        }
-        if (maxChainLen < map->length[i])
-        {
-            maxChainLen = map->length[i];
-        }
-
-
         ListItem *current = map->table[i];
         while (current != NULL)
         {
-            total += current->value;
             if (current->value > maxFreqValue)
             {
                 maxFreqValue = current->value;
-                mostFreqKey = current->key;
             }
             current = current->nextPtr;
         }
     }
-    avgChainLen = (float) (differentKeyAmount) / chainAmount;
-    printf("Statistics of hash-table:\n");
-    printf("   Table size: %d\n", map->size);
-    printf("   Chains amount: %d\n", chainAmount);
-    printf("   Average value of chains' length: %f\n", avgChainLen);
-    printf("   Total keys amount: %d\n", total);
-    printf("   Different keys amount: %d\n", differentKeyAmount);
-    printf("   The most frequently used key: '%s' - %d times\n", mostFreqKey, maxFreqValue);
+
+    for (int i = 0; i < map->size; ++i)
+    {
+        ListItem *current = map->table[i];
+        while (current != NULL)
+        {
+            if (current->value == maxFreqValue)
+            {
+                fprintf(stderr, "%s %d\n", current->key, current->value);
+            }
+            current = current->nextPtr;
+        }
+    }
 }
 
 
@@ -262,60 +245,36 @@ int print(char *key, int value)       // example function for filter()
     return value;
 }
 
-char *word;
-
-int main(int argc, char *argv[])
+int main()
 {
-    if (argc != 3)
-    {
-        fprintf(stderr, "Invalid number of arguments");
-        exit(1);
-    }
-
-    int size = atoi(argv[1]);
-    FILE *file = fopen(argv[2], "r");
-
-    if (file == NULL)
-    {
-        fprintf(stderr, "Can not open file");
-        exit(2);
-    }
-    //clock_t timeStart = clock();
+    int size = 1000000;
     init(&map, size);
-    for (;;)
+    int wordLength = 100;
+    char word[wordLength];
+    char *buffer;
+    for ( ; scanf("%s", word) != EOF; )
     {
-        word = malloc(100);
-        if (word == NULL)
+        for (int i = 0; i < (int) strlen(word); ++i)
         {
-            fprintf(stderr, "Memory allocation error");
-            exit(4);
+            if (!isLetter(word[i]))
+            {
+                exit(1);
+            }
         }
-        char input;
-        int len = 0;
-        while ( isLetter(input = (char) fgetc(file)) )
+        if (strlen(word) != 0)
         {
-            input = (char) tolower(input);
-            len++;
-            word[len - 1] = input;
-        }
-        word[len] = '\0';
-
-        if (input == EOF)
-        {
-            break;
-        }
-        if (len != 0)
-        {
-            add(&map, word, 1);
+            buffer = malloc(wordLength * sizeof(char));
+            if (buffer == NULL)
+            {
+                fprintf(stderr, "Memory allocation error");
+                exit(4);
+            }
+            strcpy(buffer, word);
+            add(&map, buffer, 1);
         }
     }
-    //clock_t timeEnd = clock();
-
+    filter(&map, print);
     getStat(&map);
-    //printf("   Time: %f", (float) (timeEnd - timeStart) / CLOCKS_PER_SEC);
-    //filter(&map, print);
     clear(&map);
-    free(word);
-
     return 0;
 }
