@@ -271,40 +271,34 @@ int main(int argc, char *argv[])
     }
 
     char *type = argv[3];
-    //clock_t t1 = clock();
-    switch (type[0])
+
+    if (strcmp(type, "bubble") == 0)
     {
-        case 'b':
-        {
-            bubbleSort(data, n);
-            break;
-        }
-        case 'i':
-        {
-            insertionSort(data, n);
-            break;
-        }
-        case 'm':
-        {
-            mergeSort(data, 0, n);
-            break;
-        }
-        case 'q':
-        {
-            quickSort(data, 0, n - 1);
-            break;
-        }
-        case 'r':
-        {
-            radixSort(data, n);
-            break;
-        }
-        default: {
-            fprintf(stderr, "Invalid algo name");
-            exit(1);
-            break;
-        }
+        bubbleSort(data, n);
     }
+    else if (strcmp(type, "insertion") == 0)
+    {
+        insertionSort(data, n);
+    }
+    else if (strcmp(type, "merge") == 0)
+    {
+        mergeSort(data, 0, n);
+    }
+    else if (strcmp(type, "quick") == 0)
+    {
+        quickSort(data, 0, n - 1);
+    }
+    else if (strcmp(type, "radix") == 0)
+    {
+        radixSort(data, n);
+    }
+    else
+    {
+        fprintf(stderr, "Invalid algo name");
+        exit(1);
+    }
+
+
     //clock_t t2 = clock();
     for (int i = 0; i < n; ++i)
     {
