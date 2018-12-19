@@ -37,6 +37,7 @@ runTestCase() {
     local test_expected=$4
     local out=std.out
     local err=std.err
+    local exitCode=0
     runBinary $TEST_BINARY $test_array_len $test_input $a > $out 2>$err || exitCode=$?
     if [[ $exitCode != 0 ]] ; then return $exitCode; fi
     [ -s $out ] && [ ! -s $err ] && sort -C $out && ((TESTSTEP+=1)) # && logOk "step $TESTSTEP finished"
