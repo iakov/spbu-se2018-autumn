@@ -225,18 +225,13 @@ int main(int argc, char *argv[])
         exit(2);
     }
     int n = atoi(argv[1]);
-    data = malloc((n + 1) * sizeof(char*));
-    for (int i = 0; ; ++i)
+    data = malloc(n * sizeof(char*));
+    for (int i = 0; i < n; ++i)
     {
-        if (i > n)
-        {
-            fprintf(stderr, "Invalid data");
-            exit(3);
-        }
-
         data[i] = malloc(sizeof(char));
         if (data[i] == NULL)
         {
+            free(data);
             fprintf(stderr, "Memory allocation error");
             exit(4);
         }
@@ -257,6 +252,7 @@ int main(int argc, char *argv[])
                 data[i] = (char*) realloc(data[i], size * sizeof(char));
                 if (data[i] == NULL)
                 {
+                    free(data);
                     fprintf(stderr, "Memory allocation error");
                     exit(4);
                 }
@@ -264,40 +260,36 @@ int main(int argc, char *argv[])
             data[i][len - 1] = input;
             data[i][len] = '\0';
         }
-        if (input == EOF)
-        {
-            break;
-        }
     }
 
-    char *type = argv[3];
-
-    if (strcmp(type, "bubble") == 0)
+    if (strcmp(argv[3], "bubble") == 0)
     {
         bubbleSort(data, n);
     }
-    else if (strcmp(type, "insertion") == 0)
+    else if (strcmp(argv[3], "insertion") == 0)
     {
         insertionSort(data, n);
     }
-    else if (strcmp(type, "merge") == 0)
+    else if (strcmp(argv[3], "merge") == 0)
     {
         mergeSort(data, 0, n);
     }
-    else if (strcmp(type, "quick") == 0)
+    else if (strcmp(argv[3], "quick") == 0)
     {
         quickSort(data, 0, n - 1);
     }
-    else if (strcmp(type, "radix") == 0)
+    else if (strcmp(argv[3], "radix") == 0)
     {
         radixSort(data, n);
     }
     else
     {
+        for (int i = 0; i < n; ++i)
+            free(data[i]);
+        free(data);
         fprintf(stderr, "Invalid algo name");
         exit(1);
     }
-
 
     //clock_t t2 = clock();
     for (int i = 0; i < n; ++i)
@@ -305,10 +297,8 @@ int main(int argc, char *argv[])
         printf("%s\n", data[i]);
         free(data[i]);
     }
-    free(data[n]);
+    free(data);
     //printf("Time: %.20f\n", ((double) (t2 - t1) / CLOCKS_PER_SEC));
-
     fclose(file);
-
     return 0;
 }
