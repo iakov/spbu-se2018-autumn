@@ -1,4 +1,4 @@
-#include "MD5.c"
+#include "MD5.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -9,8 +9,8 @@ void removePunctuation(char *word)
     char *res = (char *)calloc(len + 1, sizeof(char));
     if (res == NULL)
     {
-        printf("Why though?\n");
-        exit(1);
+        printf("Insufficient memory\n");
+        exit(4);
     }
     for (uint32_t i = 0; i < len; i++)
     {
@@ -18,7 +18,7 @@ void removePunctuation(char *word)
         {
             res[newlen++] = word[i] - 'A' + 'a';
         }
-        else if ((word[i] <= 'z' && word[i] >= 'a') || (word[i] <= '9' && word[i] >= '0'))
+        else if (word[i] <= 'z' && word[i] >= 'a')
         {
             res[newlen++] = word[i];
         }
@@ -27,6 +27,8 @@ void removePunctuation(char *word)
             res[newlen++] = word[i];
         }
     }
+    while (res[strlen(res) - 1] == '\'' || res[strlen(res) - 1] == '-')
+        res[strlen(res) - 1] = 0;
     strcpy(word, res);
     free(res);
 }
@@ -51,8 +53,8 @@ struct HashTable newHashTable(uint32_t size)
     res.data = (struct HashTableSlot *)calloc(size, sizeof(struct HashTableSlot));
     if (res.data == NULL)
     {
-        printf("Insufficient memory!\n");
-        exit(1);
+        printf("Insufficient memory\n");
+        exit(4);
     }
     res.size = size;
     res.numberOfElements = 0;
@@ -79,8 +81,8 @@ void resize(struct HashTable *hashTable, uint32_t size)
     struct HashTableSlot *newData = (struct HashTableSlot *)calloc(size, sizeof(struct HashTableSlot));
     if (newData == NULL)
     {
-        printf("Insufficient memory!\n");
-        exit(1);
+        printf("Insufficient memory\n");
+        exit(4);
     }
     for (uint32_t i = 0; i < hashTable->size; i++)
     {
@@ -106,8 +108,8 @@ uint32_t getIndex(struct HashTable *hashTable, char *key)
     uint32_t *res = (uint32_t *)calloc(4, sizeof(uint32_t));
     if (res == NULL)
     {
-        printf("Why though?\n");
-        exit(1);
+        printf("Insufficient memory\n");
+        exit(4);
     }
     md5((uint8_t *)key, strlen(key), (uint8_t *)res);
     uint32_t pos = res[0] % hashTable->size;
@@ -149,8 +151,8 @@ void add(struct HashTable *hashTable, char *key, uint32_t value)
     uint32_t *res = (uint32_t *)calloc(4, sizeof(uint32_t));
     if (res == NULL)
     {
-        printf("Why though?\n");
-        exit(1);
+        printf("Insufficient memory\n");
+        exit(4);
     }
     md5((uint8_t *)key, strlen(key), (uint8_t *)res);
     uint32_t pos = res[0] % hashTable->size;
@@ -167,17 +169,12 @@ void add(struct HashTable *hashTable, char *key, uint32_t value)
 
 int main()
 {
-    FILE *infile = fopen("Dos.txt", "r");
-    if (infile == NULL)
-    {
-        printf("Unable to open file");
-        return 0;
-    }
+
     struct HashTable hashTable = newHashTable(256);
     uint32_t wordLength = 100;
     char word[wordLength];
     char *buffer;
-    while (fscanf(infile, "%s", word) != EOF)
+    while (scanf("%s", word) != EOF)
     {
         removePunctuation(word);
         if (strlen(word))
@@ -193,21 +190,25 @@ int main()
             //the buffer pointer is not lost, it's still accessible via hashTable.data[???].key
         }
     }
-    char *mostFrequentWord;
     uint32_t maxWordCount = 0;
     for (uint32_t i = 0; i < hashTable.size; i++)
     {
         if (hashTable.data[i].key != NULL)
         {
+            printf("%s %d\n", hashTable.data[i].key, hashTable.data[i].value);
             if (hashTable.data[i].value > maxWordCount)
             {
                 maxWordCount = hashTable.data[i].value;
-                mostFrequentWord = hashTable.data[i].key;
             }
         }
     }
-    printf("A total of %d different words. The most frequent word is \"%s\", found %d times.\n", hashTable.numberOfElements, mostFrequentWord, maxWordCount);
+    for (uint32_t i = 0; i < hashTable.size; i++)
+    {
+        if (hashTable.data[i].key != NULL && hashTable.data[i].value == maxWordCount)
+        {
+            fprintf(stderr, "%s %d\n", hashTable.data[i].key, hashTable.data[i].value);
+        }
+    }
     clear(&hashTable);
-    fclose(infile);
     return 0;
 }
