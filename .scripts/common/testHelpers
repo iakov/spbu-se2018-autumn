@@ -1,0 +1,48 @@
+#!/bin/bash
+. $(dirname $(readlink -f "${BASH_SOURCE[0]}"))/logger
+compile(){
+  TEST_CFLAGS_RELAXED=""
+  TEST_CFLAGS_STRICT="-Wall -Wextra -Wpedantic -std=c99 -Werror -Wno-error=sign-compare -fsanitize=address -fsanitize=undefined"
+  TEST_O2="-O2"
+  TEST_O3="-O3 -flto -fuse-ld=gold"
+  set -x
+  pwd
+  local sources=$(find $TEST_SRCDIR -name '*.c' ! -path "*/$TEST_TMPDIR/*" )
+  local exitCode=0
+  if gcc ${TEST_CFLAGS_RELAXED} ${TEST_O2} -o $1 $sources 2>compile.log ; then
+    if gcc ${TEST_CFLAGS_STRICT} ${TEST_O3} -o $1 $sources 2>compile.log ; then
+      true
+    else
+      exitCode=$?
+      logError "Failed to compile with strict checks for release"
+    fi
+  else
+    exitCode=$?
+    logError "Failed to compile"
+  fi
+  return $exitCode
+}
+
+runBinary() {
+  local duration=5
+  if [[ "$1" =~ ^[0-9]+$ ]]; then
+    duration="$1"
+    shift
+  fi
+  timeout --preserve-status --kill-after=10 --signal=TERM $duration $*
+}
+
+runTestCase() {
+    local expected=$1
+    shift
+    local out=std.out
+    local err=std.err
+    rm -f $out $err
+    local exitCode=0
+    runBinary $TEST_BINARY $* > $out 2>$err || exitCode=$?
+    if [[ $exitCode != 0 ]] ; then return $exitCode; fi
+    [ -s $out ] && [ ! -s $err ] && sort -C $out && ((TESTSTEP+=1)) # && logOk "step $TESTSTEP finished"
+    diff -y -d $expected $out 1>$a.diff 2>&1 || return 200
+}
+
+

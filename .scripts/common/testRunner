@@ -3,7 +3,7 @@
 performTests() {
   local task_dir=$2
   local tests_dir=$1
-  cd $task_dir
+  pushd $task_dir > /dev/null
   if [ -x $tests_dir/setup ] ; then $tests_dir/setup ; fi
   for t in $tests_dir/test*; do 
     export TESTNAME=$(basename $t)
@@ -30,6 +30,7 @@ performTests() {
     fi
   done
   unset TESTNAME
+  popd > /dev/null
 }
 
 forTask() {
