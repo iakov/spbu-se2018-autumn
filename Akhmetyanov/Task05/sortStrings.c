@@ -17,7 +17,7 @@ void *mallocCheck(size_t n)
     if (memPtr == NULL)
     {
         fprintf(stderr, "Unable to allocate memory!\n");
-        exit(EXIT_FAILURE);
+        exit(4);
     }
     return memPtr;
 }
@@ -39,7 +39,6 @@ void bubbleSort(char **strArr, int arrLen)
 void insertionSort(char **strArr, int arrLen)
 {
     int j = 0;
-
     for (int i = 1; i < arrLen; i++)
     {
         j = i;
@@ -92,37 +91,35 @@ void mergeSort(char **strArr, int arrLen)
     free(temp);
 }
 
-void quickSort(char **strArr, int arrLen)
+int partition(char **strArr, int left, int right)
 {
-    int leftPos = 0;
-    int rightPos = arrLen - 1;
-    char *mid = strArr[arrLen / 2];
+    char *pivotVal = strArr[left];
+    int leftPos = left;
+    int rightPos = right;
     while (leftPos < rightPos)
     {
-        while (strcmp(strArr[leftPos], mid) < 0)
+        while (strcmp(strArr[leftPos], pivotVal) < 0)
         {
             leftPos++;
         }
-
-        while (strcmp(strArr[rightPos], mid) > 0)
+        while (strcmp(strArr[rightPos], pivotVal) > 0)
         {
             rightPos--;
         }
+        if (leftPos >= rightPos)
+            return rightPos;
+        swapChars(&strArr[rightPos], &strArr[leftPos]);
+    }
+    return 0;
+}
 
-        if (leftPos < rightPos)
-        {
-            swapChars(&strArr[rightPos], &strArr[leftPos]);
-            rightPos--;
-            leftPos++;
-        }
-    }
-    if (leftPos > 1)
+void quicksort(char **strArr, int left, int right)
+{
+    if (left < right)
     {
-    	quickSort(strArr, leftPos);
-    }
-    if (arrLen - leftPos > 1)
-    {
-    	quickSort(strArr + leftPos, arrLen - leftPos);
+        int splitPoint = partition(strArr, left, right);
+        quicksort(strArr, left, splitPoint);
+        quicksort(strArr, splitPoint + 1, right);
     }
 }
 
@@ -132,7 +129,6 @@ void heapify(char **strArr, int root, int num)
     strArr[root + 1]..[k] is already a heap,
     strArr[root] is being added
     */
-
     int child;
     while(2 * root + 1 < num) 
     {
@@ -169,9 +165,9 @@ int main(int argc, char *argv[])
     if (argc != 4)
     {
         printf("Invalid argument number!\n");
-        exit(EXIT_FAILURE);
+        exit(1);
     }
-    int arrLen = atoi(argv[1]);
+    int arrMaxLen = atoi(argv[1]);
     char *filename = argv[2];
     char algorithm = argv[3][0];
 
@@ -180,25 +176,20 @@ int main(int argc, char *argv[])
     if (textFile == NULL) 
     {
         fprintf(stderr, "Unable to open file!\n");
-        exit(EXIT_FAILURE);
+        exit(2);
     }
-    char **strArr = mallocCheck(arrLen * sizeof(char *));
+    char **strArr = mallocCheck(arrMaxLen * sizeof(char *));
     char *buffer = mallocCheck(LINE_MAX);
-    for (int i = 0; i < arrLen; i++)
+    int arrLen = 0;
+    for (arrLen = 0; arrLen < arrMaxLen; arrLen++)
     {
         if (fgets(buffer, LINE_MAX, textFile) == NULL)
         {
-            fprintf(stderr, "Unable to read input!\n");
-            for (int j = 0; j < arrLen; j++)
-            {
-                free(strArr[j]);
-            }
-            free(strArr);
-            free(buffer);
-            exit(EXIT_FAILURE);
+            //Amount of strings is less than max amount from arguments
+            break;
         }
-        strArr[i] = mallocCheck((strlen(buffer) + 1) * sizeof(char));
-        strcpy(strArr[i], buffer);
+        strArr[arrLen] = mallocCheck((strlen(buffer) + 1) * sizeof(char));
+        strcpy(strArr[arrLen], buffer);
     }
     fclose(textFile);
     free(buffer);
@@ -206,7 +197,7 @@ int main(int argc, char *argv[])
     switch (algorithm)
     {
         case 'q' :
-            quickSort(strArr, arrLen);
+            quicksort(strArr, 0, arrLen - 1);
             break;
         case 'm' :
             mergeSort(strArr, arrLen);
@@ -217,12 +208,12 @@ int main(int argc, char *argv[])
         case 'i' :
             insertionSort(strArr, arrLen);
             break;
-        case 'h' :
+        case 'r' :
             heapSort(strArr, arrLen);
             break;
         default:
             printf("Unknown algorithm!\n");
-            exit(EXIT_FAILURE);
+            exit(1);
     }
     for (int i = 0; i < arrLen; i++)
     {
