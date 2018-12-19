@@ -22,7 +22,7 @@ void removePunctuation(char *word)
         {
             res[newlen++] = word[i];
         }
-        else if (newlen > 0 && (word[i] == '-' || word[i] == '’')) //for words like ill-spoken, well-known, it's etc.
+        else if (newlen > 0 && (word[i] == '-' || word[i] == '\'')) //for words like ill-spoken, well-known, it's etc.
         {
             res[newlen++] = word[i];
         }
