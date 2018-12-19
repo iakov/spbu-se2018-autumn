@@ -54,7 +54,8 @@ runTest(){
   if ! compile $TEST_BINARY ; then
     return 171
   fi
-  local test_input=/etc/hostname
+  local test_input=./one_liner
+  echo "xxxx" > $test_input
   local test_array_len=$(wc -l < $test_input)
   local test_algorithm=""
   local test_algorithm_list="bubble insertion merge quick radix"
