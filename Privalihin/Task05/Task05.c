@@ -174,6 +174,10 @@ void sortWithGivenAlgorithm(char **array, int len, char *algorithm)
     {
         quickSort(array, len);
     }
+    else if (strcmp(algorithm, "radix") == 0)
+    {
+        heapSort(array, len);
+    }
     else
     {
         printf("Invalid algorithm name!\n");
