@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <limits.h>
 
 void swapChars(char **a, char **b)
 {
@@ -167,6 +166,7 @@ int main(int argc, char *argv[])
         printf("Invalid argument number!\n");
         exit(1);
     }
+    int lineMaxLen = 1000000;
     int arrMaxLen = atoi(argv[1]);
     char *filename = argv[2];
     char algorithm = argv[3][0];
@@ -179,11 +179,11 @@ int main(int argc, char *argv[])
         exit(2);
     }
     char **strArr = mallocCheck(arrMaxLen * sizeof(char *));
-    char *buffer = mallocCheck(LINE_MAX);
+    char *buffer = mallocCheck(lineMaxLen);
     int arrLen = 0;
     for (arrLen = 0; arrLen < arrMaxLen; arrLen++)
     {
-        if (fgets(buffer, LINE_MAX, textFile) == NULL)
+        if (fgets(buffer, lineMaxLen, textFile) == NULL)
         {
             //Amount of strings is less than max amount from arguments
             break;
