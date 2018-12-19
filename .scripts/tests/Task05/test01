@@ -2,13 +2,14 @@
 . $(dirname $(readlink -f "${BASH_SOURCE[0]}"))/../../common/logger
 >/dev/null echo "Running common $TESTNAME for task $TASKNAME of user $USERNAME in $PWD with $# parameters: $*"
 compile(){
+	set -x
   TEST_CFLAGS_RELAXED=""
   TEST_CFLAGS_STRICT="-Wall -Wextra -Wpedantic -std=c99 -Werror -Wno-error=sign-compare -fsanitize=address -fsanitize=undefined"
   TEST_O2="-O2"
   TEST_O3="-O3 -flto"
   local exitCode=0
-  if gcc ${TEST_CFLAGS_RELAXED} ${TEST_O2} -o $1 *.c 2>/dev/null ; then
-    if gcc ${TEST_CFLAGS_STRICT} ${TEST_O3} -o $1 *.c 2>/dev/null ; then
+  if gcc ${TEST_CFLAGS_RELAXED} ${TEST_O2} -o $1 *.c 2>compile.log ; then
+    if gcc ${TEST_CFLAGS_STRICT} ${TEST_O3} -o $1 *.c 2>compile.log ; then
       true
     else
       exitCode=$?
@@ -52,9 +53,11 @@ runTest(){
 #    colordiff $c $c.reformatted | tail -n +2 | head -n 20 || true
 #  done
   if ! compile $TEST_BINARY ; then
+    cat compile.log
     return 171
   fi
-  local test_input=/etc/hostname
+  local test_input=./one_liner
+  echo "xxxx" > $test_input
   local test_array_len=$(wc -l < $test_input)
   local test_algorithm=""
   local test_algorithm_list="bubble insertion merge quick radix"

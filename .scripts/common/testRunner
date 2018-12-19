@@ -69,6 +69,6 @@ forAllUsers() {
 
 setStatus() {
   local errorsCnt=$1
-  ((errorsCnt > 1)) && echo 123 || echo 0
+  ((errorsCnt > 0)) && echo 123 || echo 0
 }
 
