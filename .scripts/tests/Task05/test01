@@ -7,8 +7,8 @@ compile(){
   TEST_O2="-O2"
   TEST_O3="-O3 -flto"
   local exitCode=0
-  if gcc ${TEST_CFLAGS_RELAXED} ${TEST_O2} -o $1 *.c 2>/dev/null ; then
-    if gcc ${TEST_CFLAGS_STRICT} ${TEST_O3} -o $1 *.c 2>/dev/null ; then
+  if gcc ${TEST_CFLAGS_RELAXED} ${TEST_O2} -o $1 *.c 2>compile.log ; then
+    if gcc ${TEST_CFLAGS_STRICT} ${TEST_O3} -o $1 *.c 2>compile.log ; then
       true
     else
       exitCode=$?
@@ -52,6 +52,7 @@ runTest(){
 #    colordiff $c $c.reformatted | tail -n +2 | head -n 20 || true
 #  done
   if ! compile $TEST_BINARY ; then
+    cat compile.log
     return 171
   fi
   local test_input=./one_liner
