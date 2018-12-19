@@ -1,11 +1,20 @@
 language: c
 git:
   depth: 1
+addons:
+  apt:
+    update: false
+    packages:
+    - clang-format
+    - colordiff
+install:
+ - .scripts/travis/install.sh
 script:
- - true
+ - .scripts/travis/test_all.sh
 matrix:
   include:
     - os: linux
+      dist: bionic
       name: "Some GNU/Linux"
     - os: osx
       name: "macOS"

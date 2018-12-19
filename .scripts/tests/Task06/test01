@@ -1,0 +1,58 @@
+#!/bin/bash
+. $(dirname $(readlink -f "${BASH_SOURCE[0]}"))/../../common/logger
+>/dev/null echo "Running common $TESTNAME for task $TASKNAME of user $USERNAME in $PWD with $# parameters: $*"
+compile(){
+  TEST_CFLAGS_RELAXED=""
+  TEST_CFLAGS_STRICT="-Wall -Wextra -Wpedantic -std=c99 -Werror -Wno-error=sign-compare -fsanitize=address -fsanitize=undefined"
+  TEST_O2="-O2"
+  TEST_O3="-O3 -flto"
+  TEST_SOURCES=$(find . -name '*.c')
+  local exitCode=0
+  if gcc ${TEST_CFLAGS_RELAXED} ${TEST_O2} -o $1 $TEST_SOURCES 2>/dev/null ; then
+    if gcc ${TEST_CFLAGS_STRICT} ${TEST_O3} -o $1 $TEST_SOURCES 2>/dev/null ; then
+      true
+    else
+      exitCode=$?
+      logError "Failed to compile with strict checks for release"
+    fi
+  else
+    exitCode=$?
+    logError "Failed to compile"
+  fi
+  return $exitCode
+}
+
+runTest(){
+  TEST_BINARY=./test
+  rm -f $TEST_BINARY
+#  for c in *.c ; do
+#    clang-format -style LLVM $c > $c.reformatted
+#    colordiff $c $c.reformatted | tail -n +2 | head -n 20 || true
+#  done
+  if ! compile $TEST_BINARY ; then
+    return 171
+  fi
+  local test_array_len=1
+  local test_input=/etc/hostname
+  local test_algorithm=""
+  local test_algorithm_list="q m b i h"
+  local exitCode
+#  TESTSTEP=0
+#  exitCode=0
+#  >/dev/null 2>&1 $TEST_BINARY 0 /dev/null "" || exitCode=$?
+#  [[ $exitCode > 0 ]] && [[ $exitCode < 5 ]] && ((TESTSTEP+=1)) # && logOk "step $TESTSTEP finished"
+#  exitCode=0
+#  >/dev/null 2>&1 $TEST_BINARY $test_array_len $test_input "" || exitCode=$?
+#  [[ $exitCode > 0 ]] && [[ $exitCode < 5 ]] && ((TESTSTEP+=1)) # && logOk "step $TESTSTEP finished"
+#  for a in $test_algorithm_list ; do
+#    $TEST_BINARY $test_array_len $test_input $a > stdout.txt 2>stderr.txt || exitCode=$?
+#    if [[ $exitCode != 0 ]] ; then return $exitCode; fi
+#    [ -s stdout.txt ] && [ ! -s stderr.txt ] && ((TESTSTEP+=1)) # && logOk "step $TESTSTEP finished"
+#  done
+#
+#  >/dev/null 2>&1 $TEST_BINARY $test_array_len $test_input $test_algorithm && ((TESTSTEP+=1)) # && logOk "step $TESTSTEP finished"
+#
+}
+
+
+runTest
