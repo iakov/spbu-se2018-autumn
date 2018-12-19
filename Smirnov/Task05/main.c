@@ -3,15 +3,8 @@
 #include <string.h>
 #include <time.h>
 
-
-
-char **data;
-char **sorted;
-
-int *len;
-int *lenOfSorted;
-
-
+char **sorted, **data;
+int *len, *lenOfSorted;
 
 void swapStrings(char **first, char **second)
 {
@@ -20,18 +13,14 @@ void swapStrings(char **first, char **second)
     *second = temp;
 }
 
-
-
 void mergeSort(char **array, int left, int right)
 {
-
     if (left == right - 1)
     {
         return;
     }
 
     int mid = (left + right) / 2;
-
     mergeSort(array, left, mid);
     mergeSort(array, mid, right);
 
@@ -55,14 +44,12 @@ void mergeSort(char **array, int left, int right)
             rightPtr++;
         }
     }
-
     while (leftPtr < mid)
     {
         buffer[current] = array[leftPtr];
         current++;
         leftPtr++;
     }
-
     while (rightPtr < right)
     {
         buffer[current] = array[rightPtr];
@@ -75,10 +62,7 @@ void mergeSort(char **array, int left, int right)
         array[left + i] = buffer[i];
 
     free(buffer);
-
 }
-
-
 
 void bubbleSort(char **array, int size)
 {
@@ -94,8 +78,6 @@ void bubbleSort(char **array, int size)
     }
 }
 
-
-
 void insertionSort(char **array, int size)
 {
     for (int i = 1; i < size; ++i)
@@ -110,11 +92,8 @@ void insertionSort(char **array, int size)
     }
 }
 
-
-
 void quickSort(char **array, int left, int right)
 {
-
     if (left >= right)
     {
         return;
@@ -125,12 +104,10 @@ void quickSort(char **array, int left, int right)
 
     while (leftPtr <= rightPtr)
     {
-
         while (strcmp(mid, array[leftPtr]) == 1)
         {
             leftPtr++;
         }
-
         while (strcmp(array[rightPtr], mid) == 1)
         {
             rightPtr--;
@@ -144,39 +121,28 @@ void quickSort(char **array, int left, int right)
         }
     }
 
-
-
     if (left < rightPtr)
     {
         quickSort(array, left, rightPtr);
     }
-
-
     if (leftPtr < right)
     {
         quickSort(array, leftPtr, right);
     }
-
 }
-
-
 
 void radixSort(char **array, int size)
 {
-
     int maxLen = 0, maxCode = 0;
-
     len = malloc(size * sizeof(int));
     lenOfSorted = malloc(size * sizeof(int));
     sorted = malloc(size * sizeof(char*));
 
-
     if (len == NULL || lenOfSorted == NULL || sorted == NULL)
     {
-        fprintf(stderr, "Memory error");
-        return;
+        fprintf(stderr, "Memory allocation error");
+        exit(4);
     }
-
 
     for (int i = 0; i < size; ++i)
     {
@@ -199,8 +165,8 @@ void radixSort(char **array, int size)
 
     if (dict == NULL)
     {
-        fprintf(stderr, "Memory error");
-        return;
+        fprintf(stderr, "Memory allocation error");
+        exit(4);
     }
 
     for (int charNum = maxLen - 1; charNum >= 0; --charNum)
@@ -228,56 +194,51 @@ void radixSort(char **array, int size)
         for (int i = 0; i < size; ++i)
         {
             int x = (charNum >= len[i]) ? 0 : ((int) array[i][charNum]);
-
-            sorted[ dict[x] ] = array[i];
-            lenOfSorted[ dict[x] ] = len[i];
+            sorted[dict[x]] = array[i];
+            lenOfSorted[dict[x]] = len[i];
             dict[x]++;
         }
-
-
 
         for (int i = 0; i < size; ++i)
         {
             len[i] = lenOfSorted[i];
         }
-
         for (int i = 0; i < size; ++i)
         {
             array[i] = sorted[i];
         }
-
     }
-
     free(dict);
 }
 
 int main(int argc, char *argv[])
 {
-
-    if (argc < 4)
+    if (argc != 4)
     {
         fprintf(stderr, "Invalid number of arguments");
-        return 0;
+        exit(1);
     }
-
     FILE *file = fopen(argv[2], "r");
-
     if (file == NULL)
     {
-        fprintf(stderr, "Can not open file");
-        return 0;
+        fprintf(stderr, "Unable to open file");
+        exit(2);
     }
-
     int n = atoi(argv[1]);
-    data = malloc(n * sizeof(char*));
-
-    for (int i = 0; i < n; ++i)
+    data = malloc((n + 1) * sizeof(char*));
+    for (int i = 0; ; ++i)
     {
+        if (i > n)
+        {
+            fprintf(stderr, "Invalid data");
+            exit(3);
+        }
+
         data[i] = malloc(sizeof(char));
         if (data[i] == NULL)
         {
-            fprintf(stderr, "Memory error");
-            return 0;
+            fprintf(stderr, "Memory allocation error");
+            exit(4);
         }
 
         char input;
@@ -296,19 +257,21 @@ int main(int argc, char *argv[])
                 data[i] = (char*) realloc(data[i], size * sizeof(char));
                 if (data[i] == NULL)
                 {
-                    fprintf(stderr, "Memory error");
-                    return 0;
+                    fprintf(stderr, "Memory allocation error");
+                    exit(4);
                 }
             }
             data[i][len - 1] = input;
             data[i][len] = '\0';
         }
+        if (input == EOF)
+        {
+            break;
+        }
     }
 
     char *type = argv[3];
-
     //clock_t t1 = clock();
-
     switch (type[0])
     {
         case 'b':
@@ -339,15 +302,13 @@ int main(int argc, char *argv[])
         default:
             break;
     }
-
     //clock_t t2 = clock();
-
     for (int i = 0; i < n; ++i)
     {
         printf("%s\n", data[i]);
         free(data[i]);
     }
-
+    free(data[n]);
     //printf("Time: %.20f\n", ((double) (t2 - t1) / CLOCKS_PER_SEC));
 
     fclose(file);
