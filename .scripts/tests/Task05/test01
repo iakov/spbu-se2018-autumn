@@ -2,6 +2,7 @@
 . $(dirname $(readlink -f "${BASH_SOURCE[0]}"))/../../common/logger
 >/dev/null echo "Running common $TESTNAME for task $TASKNAME of user $USERNAME in $PWD with $# parameters: $*"
 compile(){
+	set -x
   TEST_CFLAGS_RELAXED=""
   TEST_CFLAGS_STRICT="-Wall -Wextra -Wpedantic -std=c99 -Werror -Wno-error=sign-compare -fsanitize=address -fsanitize=undefined"
   TEST_O2="-O2"
