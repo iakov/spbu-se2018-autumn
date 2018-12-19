@@ -112,13 +112,13 @@ int partition(char **strArr, int left, int right)
     return 0;
 }
 
-void quicksort(char **strArr, int left, int right)
+void quickSort(char **strArr, int left, int right)
 {
     if (left < right)
     {
         int splitPoint = partition(strArr, left, right);
-        quicksort(strArr, left, splitPoint);
-        quicksort(strArr, splitPoint + 1, right);
+        quickSort(strArr, left, splitPoint);
+        quickSort(strArr, splitPoint + 1, right);
     }
 }
 
@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
     int lineMaxLen = 1000000;
     int arrMaxLen = atoi(argv[1]);
     char *filename = argv[2];
-    char algorithm = argv[3][0];
+    char *algorithm = argv[3];
 
     //Reading text file
     FILE *textFile = fopen(filename, "r");   
@@ -194,26 +194,34 @@ int main(int argc, char *argv[])
     fclose(textFile);
     free(buffer);
 
-    switch (algorithm)
+    if (strcmp(algorithm, "bubble") == 0)
     {
-        case 'q' :
-            quicksort(strArr, 0, arrLen - 1);
-            break;
-        case 'm' :
-            mergeSort(strArr, arrLen);
-            break;
-        case 'b' :
-            bubbleSort(strArr, arrLen);
-            break;
-        case 'i' :
-            insertionSort(strArr, arrLen);
-            break;
-        case 'r' :
-            heapSort(strArr, arrLen);
-            break;
-        default:
-            printf("Unknown algorithm!\n");
-            exit(1);
+        bubbleSort(strArr, arrLen);
+    }
+    else if (strcmp(algorithm, "heap") == 0)
+    {
+        heapSort(strArr, arrLen);
+    }
+    else if (strcmp(algorithm, "insertion") == 0)
+    {
+        insertionSort(strArr, arrLen);
+    }
+    else if (strcmp(algorithm, "merge") == 0)
+    {
+        mergeSort(strArr, arrLen);
+    }
+    else if (strcmp(algorithm, "quick") == 0)
+    {
+        quickSort(strArr, 0, arrLen - 1);
+    }
+    else if (strcmp(algorithm, "radix") == 0)
+    {
+        heapSort(strArr, arrLen);
+    }
+    else
+    {
+        printf("Unknown algorithm!\n");
+        exit(1);
     }
     for (int i = 0; i < arrLen; i++)
     {
@@ -223,6 +231,7 @@ int main(int argc, char *argv[])
     {
         free(strArr[i]);
     }
+
     free(strArr);
     return 0;
 }
