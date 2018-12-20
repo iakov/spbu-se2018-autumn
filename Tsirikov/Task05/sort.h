@@ -119,7 +119,7 @@ int quick(char **strings, long left, long right)
 
 int radix_in_buckets(char **strings, char **copy, long left, long right, long depth)
 {
-  long *symbols = calloc(ALPHABET, sizeof(long));
+  long *symbols = calloc( ALPHABET + 1, sizeof(long) );
   NULL_CHECK( symbols );
   long buf, different_symbols = 0;
 
@@ -138,9 +138,9 @@ int radix_in_buckets(char **strings, char **copy, long left, long right, long de
     }
   }
   long diff = different_symbols;
-  int *real_symbols = calloc(diff, sizeof(int));
+  int *real_symbols = calloc( diff + 1, sizeof(int) );
   NULL_CHECK( real_symbols );
-  long *order_symbols = calloc(ALPHABET, sizeof(long));
+  long *order_symbols = calloc( ALPHABET + 1, sizeof(long) );
   NULL_CHECK( order_symbols );
   for ( buf = ALPHABET - 1; different_symbols != 0; buf--)
   {
