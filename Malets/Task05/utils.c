@@ -20,7 +20,7 @@ void freeMemory( void* pointer )
         free(pointer);
 }
 
-extern void suicide( const char* suicideNote, Reason suicideReason )
+void suicide( const char* suicideNote, Reason suicideReason )
 {
     fprintf(stderr, "%s\n", suicideNote);
     exit(suicideReason);
