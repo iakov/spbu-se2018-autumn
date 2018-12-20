@@ -23,6 +23,6 @@ int main()
     }
 
     free( arr );
-    printf("%d\n", answer);
+    printf( "%d\n", answer );
     return 0;
 }
