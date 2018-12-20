@@ -1,22 +1,21 @@
 #include <stdio.h>
+#include <string.h>
 
-#include "sort.h"
-
-int main( int argc, char** argv )
+void other()
 {
-    fprintf(stderr, "initialization...\n");
-    if (initialize(argc, argv))
-    {
-        fprintf(stderr, "sorting...\n");
-        sort();
+    printf("You are inside\n");
+}
 
-        fprintf(stderr, "printing...\n");
-        print();
-    }
-    else
-        fprintf(stderr, "failed\n");
+void input()
+{
+    char string[32];
 
-    releaseResources();
+    scanf("%s", string);
+    printf("String length is '%d'\n", strlen(string));
+}
 
+int main()
+{
+    input();
     return 0;
 }
