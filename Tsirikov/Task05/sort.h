@@ -177,23 +177,23 @@ int radix_in_buckets(char **strings, char **copy, long left, long right, long de
       (char)( real_symbols[buf] ) != '\n'
     )
     {
-      new_left  = buf > 1 ? order_symbols[real_symbols[buf - 1]] : left;
+      new_left  = buf > 0 ? order_symbols[real_symbols[buf - 1]] : left;
       new_right = order_symbols[real_symbols[buf]] - 1;
-      radix_in_buckets(strings, copy, new_left, new_right, depth + 1);
+      radix_in_buckets( strings, copy, new_left, new_right, depth + 1 );
     }
   }
-  free(real_symbols);
-  free(symbols);
-  free(order_symbols);
+  free( real_symbols );
+  free( symbols );
+  free( order_symbols );
   return 0;
 }
 
 
-int radix(char **strings)
+int radix( char **strings )
 {
-  char **copy = calloc(number_of_strings + 1, sizeof(char *));
+  char **copy = calloc( number_of_strings + 1, sizeof( char * ) );
   NULL_CHECK( copy );
-  radix_in_buckets(strings, copy, 0, number_of_strings - 1, 0);
-  free(copy);
+  radix_in_buckets( strings, copy, 0, number_of_strings - 1, 0 );
+  free( copy );
   return 0;
 }
