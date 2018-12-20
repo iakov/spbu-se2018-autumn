@@ -1,59 +1,22 @@
 #!/bin/bash
-. $(dirname $(readlink -f "${BASH_SOURCE[0]}"))/../../common/logger
->/dev/null echo "Running common $TESTNAME for task $TASKNAME of user $USERNAME in $PWD with $# parameters: $*"
-compile(){
-  TEST_CFLAGS_RELAXED=""
-  TEST_CFLAGS_STRICT="-Wall -Wextra -Wpedantic -std=c99 -Werror -Wno-error=sign-compare -fsanitize=address -fsanitize=undefined"
-  TEST_O2="-O2"
-  TEST_O3="-O3 -flto"
-  local exitCode=0
-  if gcc ${TEST_CFLAGS_RELAXED} ${TEST_O2} -o $1 *.c 2>/dev/null ; then
-    if gcc ${TEST_CFLAGS_STRICT} ${TEST_O3} -o $1 *.c 2>/dev/null ; then
-      true
-    else
-      exitCode=$?
-      logError "Failed to compile with strict checks for release"
-    fi
-  else
-    exitCode=$?
-    logError "Failed to compile"
-  fi
-  return $exitCode
-}
-
-runBinary() {
-  local duration=5
-  if [[ "$1" =~ ^[0-9]+$ ]]; then
-    duration="$1"
-    shift
-  fi
-  timeout --preserve-status --kill-after=10 --signal=TERM $duration $*
-}
-
-runTestCase() {
-    local test_array_len=$1
-    local test_input=$2
-    local test_alg=$3
-    local test_expected=$4
-    local out=std.out
-    local err=std.err
-    runBinary $TEST_BINARY $test_array_len $test_input $a > $out 2>$err || exitCode=$?
-    if [[ $exitCode != 0 ]] ; then return $exitCode; fi
-    [ -s $out ] && [ ! -s $err ] && sort -C $out && ((TESTSTEP+=1)) # && logOk "step $TESTSTEP finished"
-    diff -y -d $test_expected $out 1>$a.diff 2>&1 || return 200
-}
+. $(dirname $(readlink -f "${BASH_SOURCE[0]}"))/../../common/testHelpers
 
 runTest(){
-  TEST_BINARY=./test
+  TEST_SRCDIR=$PWD
+  TEST_TMPDIR=$(mktemp -d -p .)
+  cd $TEST_TMPDIR
+  TEST_BINARY=./test-"$TASKNAME"
   rm -f $TEST_BINARY
 #  for c in *.c ; do
 #    clang-format -style LLVM $c > $c.reformatted
 #    colordiff $c $c.reformatted | tail -n +2 | head -n 20 || true
 #  done
   if ! compile $TEST_BINARY ; then
+    cat compile.log
     return 171
   fi
-  local test_input=/etc/hostname
+  local test_input=./one_liner
+  echo "xxxx" > $test_input
   local test_array_len=$(wc -l < $test_input)
   local test_algorithm=""
   local test_algorithm_list="bubble insertion merge quick radix"
@@ -78,7 +41,7 @@ runTest(){
   local test_expected=$(mktemp -p .)
   command sort $test_input > $test_expected
   for a in $test_algorithm_list ; do
-    runTestCase $test_array_len $test_input $a $test_expected
+    runTestCase $test_expected $test_array_len $test_input $a
   done
   test_len=1000
   test_input=$(mktemp -p .)
@@ -87,7 +50,7 @@ runTest(){
   test_expected=$(mktemp -p .)
   command sort -o $test_expected $test_input
   for a in $test_algorithm_list ; do
-    runTestCase $test_len $test_input $a $test_expected
+    runTestCase $test_expected $test_len $test_input $a
   done
 }
 
