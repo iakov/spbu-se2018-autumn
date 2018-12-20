@@ -168,7 +168,7 @@ int main(int argc, char* argv[]) {
         else if (strcmp(sort_name, "merge") == 0)
             merge_sort(strings, 0, N);
         else if (strcmp(sort_name, "quick") == 0)
-            quick_sort(strings, N - 1);
+            quick_sort(strings, 0, N - 1);
         else if (strcmp(sort_name, "heap") == 0)
             heap_sort(strings, N);
         else if (strcmp(sort_name, "radix") == 0)
