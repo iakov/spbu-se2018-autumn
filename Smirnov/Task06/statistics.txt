@@ -1,5 +1,6 @@
 Book for analyse: Jack London, "White Fang"
 
+
 Statistics of hash-table:
 
   Table size: 100000
