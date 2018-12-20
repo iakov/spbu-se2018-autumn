@@ -267,7 +267,7 @@ int main(int argc, char *argv[])
     {
         quickSort(str, 0, amountString-1);
     }
-    else if ( 0 == strcmp("heap", algName) )
+    else if ( 0 == strcmp("radix", algName) )
     {
         heapSort(str, amountString);
     }
