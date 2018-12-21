@@ -43,7 +43,7 @@ runTestCase() {
     if [[ $exitCode != 0 ]] ; then head -n 20 $err || true ; return $exitCode; fi
     [ -s $out ] && ${TASKNAME}_postcheck $out && ((TESTSTEP+=1)) # && logOk "step $TESTSTEP finished"
     local quoted_args="${*//.\//}"
-    diff -y -d $expected $out 1> "$quoted_args.diff" 2>&1 \
+    diff -d $expected $out 1> "$quoted_args.diff" 2>&1 \
       ||  { logError "Unexpected result for args: $quoted_args" ; head -n 5 "$quoted_args.diff" ; return 200 ; }
 }
 
