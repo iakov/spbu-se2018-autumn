@@ -177,7 +177,6 @@ void FunctionDef(char *text, int N, char Name){
 int main(int argc, char **argv)
 {
 	int i=0, N, j=0, z=0;
-	srand(time(0));
     if (argc != 4){
         printf("Invalid number of arguments!\n");
         exit(1);
