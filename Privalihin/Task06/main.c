@@ -208,7 +208,7 @@ int main(int argc, char *argv[])
 {
     if (argc > 1 || argv[0] == NULL)
     {
-        return 1;
+        exit(1);
     }
 
     struct HashTable hashTable = newHashTable(256);
