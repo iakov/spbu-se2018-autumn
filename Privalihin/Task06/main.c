@@ -204,13 +204,8 @@ void add(struct HashTable *hashTable, char *key, uint32_t value)
     hashTable->data[pos].value = value;
 }
 
-int main(int argc, char *argv[])
+int main()
 {
-    if (argc > 1 || argv[0] == NULL)
-    {
-        exit(1);
-    }
-
     struct HashTable hashTable = newHashTable(256);
     uint32_t wordLength = 100;
     char word[wordLength];
