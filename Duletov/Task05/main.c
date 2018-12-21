@@ -182,6 +182,9 @@ int main(int argc, char **argv)
         exit(1);
     }
     N = atoi(argv[1]);
+  if(N==0){
+  	return(0);
+  } 
 	FILE *f=fopen(argv[2], "r");
 	if(f==0){
 	printf("Failed to open file\n");
