@@ -2,11 +2,13 @@
 . $(dirname $(readlink -f "${BASH_SOURCE[0]}"))/logger
 compile(){
   TEST_CFLAGS_RELAXED=""
-  TEST_CFLAGS_STRICT="-Wall -Wextra -Wpedantic -std=c99 -Werror -Wno-error=sign-compare -fsanitize=address -fsanitize=undefined -fsanitize-undefined-trap-on-error -O3 -x c"
+  TEST_CFLAGS_SANITIZED="-fsanitize=address -fsanitize=undefined -fsanitize-undefined-trap-on-error -O2"
+  TEST_CFLAGS_STRICT="-Wall -Wextra -Wpedantic -std=c99 -Werror -Wno-error=sign-compare -x c -g"
   local sources=$(find $TEST_SRCDIR -name '*.c' ! -path "*/$TEST_TMPDIR/*" )
   local exitCode=0
-  if ${CC:-gcc} ${TEST_CFLAGS_RELAXED} -o $1 $sources 2>compile.log ; then
-    if ${CC:-gcc} ${TEST_CFLAGS_STRICT} -o $1 $sources 2>compile.log ; then
+  local cc=${CC:-gcc}
+  if $cc ${TEST_CFLAGS_RELAXED} -o $1 $sources 2>compile.log ; then
+    if $cc ${TEST_CFLAGS_STRICT} ${TEST_CFLAGS_SANITIZED} -o $1 $sources 2>compile.log ; then
       true
     else
       exitCode=$?
@@ -16,6 +18,7 @@ compile(){
     exitCode=$?
     logError "Failed to compile"
   fi
+  unset cc
   return $exitCode
 }
 
