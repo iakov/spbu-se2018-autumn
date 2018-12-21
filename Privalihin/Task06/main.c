@@ -212,7 +212,7 @@ int main(int argc, char *argv[])
     }
 
     struct HashTable hashTable = newHashTable(256);
-    uint32_t wordLength = 100;
+    uint32_t wordLength = 10000;
     char word[wordLength];
     char *buffer;
 
@@ -221,7 +221,7 @@ int main(int argc, char *argv[])
         removePunctuation(word);
         if (strlen(word))
         {
-            buffer = (char *)calloc(wordLength, sizeof(char));
+            buffer = (char *)calloc(strlen(word) + 1, sizeof(char));
             if (buffer == NULL)
             {
                 printf(memoryErrorMessage);
