@@ -1,5 +1,5 @@
-#include "./hashes/sha1.c"
-#include "./hashes/md5.c"
+#include "./hashes/sha1c.h"
+#include "./hashes/md5c.h"
 
 
 #define HEXMULTIPLE 256

@@ -14,12 +14,14 @@ void analyse_book( char *bookname )
     printf( "Can`t open the file.\n" );
     exit(2);
   }
+
   long long int file_size;
   if( 0 >= ( file_size = lseek( file_descriptor, 0, SEEK_END ) ) )
     {
       printf( "Can`t read the file.\n" );
       exit(3);
     }
+
   char *book;
   if( MAP_FAILED == ( book = (char *)\
 ( mmap( NULL, file_size, PROT_READ, MAP_SHARED, file_descriptor, 0 ) ) ) )
@@ -27,6 +29,7 @@ void analyse_book( char *bookname )
     printf( "Can`t map the file into memory.\n" );
     exit(4);
   }
+
   long long int i = 0;
   long long int length = 0;
   unsigned char str_buf[MAXSTR];
@@ -40,10 +43,12 @@ void analyse_book( char *bookname )
       str_buf[length++] = (unsigned char)( book[i] );
       i++;
     }
+
     str_buf[length] = '\0';
     insert_key( str_buf, length );
     length = 0;
   }
+
   if( -1 == munmap( book, file_size ) )
   {
     printf( "Can`t delete the mapping.\n" );
