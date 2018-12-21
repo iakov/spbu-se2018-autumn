@@ -28,19 +28,19 @@ runTest(){
   TESTSTEP=0
   exitCode=0
   # bad sort algo name
-  >/dev/null 2>&1 runBinary $TEST_BINARY $test_array_len $test_input "badname" || exitCode=$?
+  runBinary $TEST_BINARY $test_array_len $test_input "badname" || exitCode=$?
   [[ $exitCode > 0 ]] && [[ $exitCode < 5 ]] && ((TESTSTEP+=1)) || return 155 # && logOk "step $TESTSTEP finished"
 
   # empty sort algo name
-  >/dev/null 2>&1 runBinary $TEST_BINARY $test_array_len $test_input "" || exitCode=$?
+  runBinary $TEST_BINARY $test_array_len $test_input "" || exitCode=$?
   [[ $exitCode > 0 ]] && [[ $exitCode < 5 ]] && ((TESTSTEP+=1)) || return 155 # && logOk "step $TESTSTEP finished"
 
   # len is greater than actual data
-  >/dev/null 2>&1 runBinary $TEST_BINARY $test_array_len /dev/null "quick" || exitCode=$?
+  runBinary $TEST_BINARY $test_array_len /dev/null "quick" || exitCode=$?
   [[ $exitCode > 0 ]] && [[ $exitCode < 5 ]] && ((TESTSTEP+=1)) || return 155 # && logOk "step $TESTSTEP finished"
 
   # empty file
-  >/dev/null 2>&1 runBinary $TEST_BINARY 0 /dev/null "quick"
+  runBinary $TEST_BINARY 0 /dev/null "quick"
 
   local test_expected=$(mktemp -p .)
   command sort $test_input > $test_expected
