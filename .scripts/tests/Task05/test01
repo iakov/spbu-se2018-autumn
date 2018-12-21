@@ -1,6 +1,10 @@
 #!/bin/bash
 . $(dirname $(readlink -f "${BASH_SOURCE[0]}"))/../../common/testHelpers
 
+Task05_postcheck() {
+  sort -C $1
+}
+
 runTest(){
   TEST_SRCDIR=$PWD
   TEST_TMPDIR=$(mktemp -d -p .)
