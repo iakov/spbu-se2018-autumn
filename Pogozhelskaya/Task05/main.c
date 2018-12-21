@@ -145,16 +145,22 @@ int main(int argc, char* argv[]) {
                     exit(4);
                 }
 		        int j = 0;
-		        while ((strings[i][j++] = fgetc(f)) != '\n') {
-			      strings[i] = (char*)realloc(strings[i], (j + 1) * sizeof(char));
+		        while((strings[i][j++] = fgetc(f)) != '\n') {
+			        strings[i] = (char*)realloc(strings[i], (j + 1) * sizeof(char));
                     if (strings[i] == NULL) {
                         fprintf(stderr, "%s\n", "Allocation error");
                         fflush(stdout);
                         exit(4);
                     }
+                    if (feof(f)) {
+                        N = i;
+                        break;
+                    }
                 }
 		        if (j > max_string)
 			        max_string = j;
+                if(feof(f))
+                    break;
 	        }
         } else {
             printf("%s\n", "Unable to open the file"); 
