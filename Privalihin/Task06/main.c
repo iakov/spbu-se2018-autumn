@@ -186,7 +186,7 @@ int main(int argc, char *argv[])
     {
         if ((inputSymbol <= 'Z' && inputSymbol >= 'A'))
         {
-            word[wordLen++] = inputSymbol - 'A' + 'a';
+            word[wordLen++] = inputSymbol;// - 'A' + 'a';
         }
         else if (inputSymbol <= 'z' && inputSymbol >= 'a')
         {
