@@ -27,7 +27,7 @@ runTest(){
 
   test_input="$(mktemp -p . testInputXXXX)"
   find "$TEST_SRCDIR" -name '*.h' -o -name '*.c' | xargs cat | tr  "[:punct:][:digit:]" "  " | sed -r 's/\b[a-zA-Z]\b//g' > $test_input
-  awk '{a[$0]++ ; if (max < a[$0]) { max = a[$0] ; } } END{for (k in a) if (a[k] == max) { print k,a[k]} }' RS='[[:space:]]+' "$test_input" | sort > "$test_input.out"
+  gawk '{a[$0]++ ; if (max < a[$0]) { max = a[$0] ; } } END{for (k in a) if (a[k] == max) { print k,a[k]} }' RS='[[:space:]]+' "$test_input" | sort > "$test_input.out"
   < "$testInput" runTestCase "$test_input.out"
 
 #  local test_expected=$(mktemp -p .)
