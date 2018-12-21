@@ -2,9 +2,9 @@
 . $(dirname $(readlink -f "${BASH_SOURCE[0]}"))/../../common/testHelpers
 
 runTest(){
-  TEST_SRCDIR=$PWD
-  TEST_TMPDIR=$(mktemp -d -p .)
-  cd $TEST_TMPDIR
+  TEST_SRCDIR="$PWD"
+  TEST_TMPDIR="$(mktemp -d -p .)"
+  cd "$TEST_TMPDIR"
   TEST_BINARY=./test-"$TASKNAME"
   rm -f $TEST_BINARY
   if ! compile $TEST_BINARY ; then
@@ -14,14 +14,16 @@ runTest(){
   local test_input=./one_liner
   echo "xxxx" > $test_input
   touch empty
-  local test_array_len=$(wc -l < $test_input)
-  local test_algorithm=""
-  local test_algorithm_list="bubble insertion merge quick radix"
   local exitCode
   TESTSTEP=0
   exitCode=0
   < /dev/null runTestCase empty
   < $test_input runTestCase <(echo "xxxx 1")
+
+  test_input="$(mktemp -p . testInputXXXX)"
+  find "$TEST_SRCDIR" -name '*.h' -o -name '*.c' | xargs cat | tr  "[:punct:][:digit:]" "  " | sed -r 's/\b[a-zA-Z]\b//g' > $test_input
+  awk '{a[$0]++ ; if (max < a[$0]) { max = a[$0] ; } } END{for (k in a) if (a[k] == max) { print k,a[k]} }' RS='[[:space:]]+' "$test_input" | sort > "$test_input.out"
+  < "$testInput" runTestCase "$test_input.out"
 
 #  local test_expected=$(mktemp -p .)
 #  command sort $test_input > $test_expected
