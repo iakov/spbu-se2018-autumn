@@ -1,9 +1,10 @@
 #!/bin/bash
 . $(dirname $(readlink -f "${BASH_SOURCE[0]}"))/logger
 compile(){
-  TEST_CFLAGS_RELAXED=""
+  TEST_CFLAGS_GENERAL="-g -Wall -Wextra -pedantic -std=c99 -x c"
+  TEST_CFLAGS_RELAXED="${TEST_CFLAGS_GENERAL}"
   TEST_CFLAGS_SANITIZED="-fsanitize=address -fsanitize=undefined -fsanitize-undefined-trap-on-error -O2"
-  TEST_CFLAGS_STRICT="-Wall -Wextra -Wpedantic -std=c99 -Werror -Wno-error=sign-compare -x c -g"
+  TEST_CFLAGS_STRICT="${TEST_CFLAGS_GENERAL} -Werror -Wno-error=sign-compare"
   local sources=$(find $TEST_SRCDIR -name '*.c' ! -path "*/$TEST_TMPDIR/*" )
   local exitCode=0
   local cc=${CC:-gcc}
