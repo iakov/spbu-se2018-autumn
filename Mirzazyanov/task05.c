@@ -135,7 +135,6 @@ int main(int argc, char *argv[]) {
 		printf("Error, incorrect count of strings");
 		exit(1);
 	}
-	int i = 0;
 	int strlenght = 1000000;
 	char **str = (char**)malloc(numofstr * sizeof(char*));
 	if (str == NULL) {
@@ -164,13 +163,21 @@ int main(int argc, char *argv[]) {
 		exit(1);
 	}
 
-	for (i = 0; i < numofstr; i++) 
+	for (int i = 0; i < numofstr; i++) 
 	{
 		if (fgets(buffer, strlenght, fp) == NULL) 
 		{
 			break;		
 		}
 		str[i] = malloc((strlen(buffer) + 1) * sizeof(char));
+		if (str[i] == NULL){
+		printf("No mem");
+			int errvar = i;
+			for (int j = 0; j < errvar; j++){
+			free(str[j]);
+			}
+			exit(3);
+		}
 		strcpy(str[i], buffer);
 	    	
 		
