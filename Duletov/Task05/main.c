@@ -208,7 +208,13 @@ int main(int argc, char **argv)
 	text[i]='\n';
 	Strings[j][1]=z+1;
 	fclose(f);
-	FunctionDef(text, N, argv[3][0]);
+	if(strcmp(argv[3],"bubble")==0 || strcmp(argv[3],"insertion")==0 || strcmp(argv[3],"heap")==0 || strcmp(argv[3],"merge")==0 || strcmp(argv[3],"radix")==0 || strcmp(argv[3],"quick")==0){
+	 FunctionDef(text, N, argv[3][0]);
+	}
+	else{
+		printf("Invalid name of algorythm");
+		exit(1);
+	}
 	for(i=0;i<N;i++){
 		for(j=0;j<Strings[i][1];j++){
 			printf("%c",text[Strings[i][0]+j]);
