@@ -6,41 +6,6 @@
 
 #define memoryErrorMessage "Insufficient memory!\n"
 
-void removePunctuation(char *word)
-{
-    uint32_t len = strlen(word), newlen = 0;
-    char *stripped = (char *)calloc(len + 1, sizeof(char));
-
-    if (stripped == NULL)
-    {
-        printf(memoryErrorMessage);
-        exit(4);
-    }
-
-    for (uint32_t i = 0; i < len; i++)
-    {
-        if ((word[i] <= 'Z' && word[i] >= 'A'))
-        {
-            stripped[newlen++] = word[i] - 'A' + 'a';
-        }
-        else if (word[i] <= 'z' && word[i] >= 'a')
-        {
-            stripped[newlen++] = word[i];
-        }
-        else if (newlen > 0 && (word[i] == '-' || word[i] == '\'')) //for words like ill-spoken, well-known, it's etc.
-        {
-            stripped[newlen++] = word[i];
-        }
-    }
-
-    while (stripped[strlen(stripped) - 1] == '\'' || stripped[strlen(stripped) - 1] == '-')
-    {
-        stripped[strlen(stripped) - 1] = 0;
-    }
-
-    strcpy(word, stripped);
-    free(stripped);
-}
 
 struct HashTableSlot
 {
@@ -212,15 +177,32 @@ int main(int argc, char *argv[])
     }
 
     struct HashTable hashTable = newHashTable(256);
-    uint32_t wordLength = 10000;
-    char word[wordLength];
+    char word[10000];
     char *buffer;
+    char inputSymbol;
+    int wordLen = 0;
 
-    while (scanf("%s", word) != EOF)
+    while ((inputSymbol = getchar()) != EOF)
     {
-        removePunctuation(word);
-        if (strlen(word))
+        if ((inputSymbol <= 'Z' && inputSymbol >= 'A'))
         {
+            word[wordLen++] = inputSymbol - 'A' + 'a';
+        }
+        else if (inputSymbol <= 'z' && inputSymbol >= 'a')
+        {
+            word[wordLen++] = inputSymbol;
+        }
+        else if (wordLen > 0 && (inputSymbol == '-' || inputSymbol == '\'')) //for words like ill-spoken, well-known, it's etc.
+        {
+            word[wordLen++] = inputSymbol;
+        }
+        else if (wordLen)
+        {
+            while (word[wordLen - 1] == '\'' || word[wordLen - 1] == '-')
+            {
+                word[wordLen--] = '\0';
+            }
+            word[wordLen] = '\0';
             buffer = (char *)calloc(strlen(word) + 1, sizeof(char));
             if (buffer == NULL)
             {
@@ -231,6 +213,7 @@ int main(int argc, char *argv[])
             strcpy(buffer, word);
             add(&hashTable, buffer, get(&hashTable, buffer) + 1);
             //the buffer pointer is not lost, it's still accessible via hashTable.data[???].key
+            wordLen = 0;
         }
     }
 
