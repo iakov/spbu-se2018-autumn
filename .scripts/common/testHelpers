@@ -2,7 +2,7 @@
 . $(dirname $(readlink -f "${BASH_SOURCE[0]}"))/logger
 compile(){
   TEST_CFLAGS_RELAXED=""
-  TEST_CFLAGS_STRICT="-Wall -Wextra -Wpedantic -std=c99 -Werror -Wno-error=sign-compare -fsanitize=address -fsanitize=undefined -fsanitize=leak -fsanitize-undefined-trap-on-error -O3 -x c"
+  TEST_CFLAGS_STRICT="-Wall -Wextra -Wpedantic -std=c99 -Werror -Wno-error=sign-compare -fsanitize=address -fsanitize=undefined -fsanitize-undefined-trap-on-error -O3 -x c"
   local sources=$(find $TEST_SRCDIR -name '*.c' ! -path "*/$TEST_TMPDIR/*" )
   local exitCode=0
   if ${CC:-gcc} ${TEST_CFLAGS_RELAXED} -o $1 $sources 2>compile.log ; then
