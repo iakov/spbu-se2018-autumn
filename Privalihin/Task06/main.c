@@ -1,36 +1,45 @@
-#include "MD5.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "MD5.h"
+
+#define memoryErrorMessage "Insufficient memory!\n"
+
 void removePunctuation(char *word)
 {
     uint32_t len = strlen(word), newlen = 0;
-    char *res = (char *)calloc(len + 1, sizeof(char));
-    if (res == NULL)
+    char *stripped = (char *)calloc(len + 1, sizeof(char));
+
+    if (stripped == NULL)
     {
-        printf("Insufficient memory\n");
+        printf(memoryErrorMessage);
         exit(4);
     }
+
     for (uint32_t i = 0; i < len; i++)
     {
         if ((word[i] <= 'Z' && word[i] >= 'A'))
         {
-            res[newlen++] = word[i] - 'A' + 'a';
+            stripped[newlen++] = word[i] - 'A' + 'a';
         }
         else if (word[i] <= 'z' && word[i] >= 'a')
         {
-            res[newlen++] = word[i];
+            stripped[newlen++] = word[i];
         }
         else if (newlen > 0 && (word[i] == '-' || word[i] == '\'')) //for words like ill-spoken, well-known, it's etc.
         {
-            res[newlen++] = word[i];
+            stripped[newlen++] = word[i];
         }
     }
-    while (res[strlen(res) - 1] == '\'' || res[strlen(res) - 1] == '-')
-        res[strlen(res) - 1] = 0;
-    strcpy(word, res);
-    free(res);
+
+    while (stripped[strlen(stripped) - 1] == '\'' || stripped[strlen(stripped) - 1] == '-')
+    {
+        stripped[strlen(stripped) - 1] = 0;
+    }
+
+    strcpy(word, stripped);
+    free(stripped);
 }
 
 struct HashTableSlot
@@ -49,16 +58,18 @@ struct HashTable
 
 struct HashTable newHashTable(uint32_t size)
 {
-    struct HashTable res;
-    res.data = (struct HashTableSlot *)calloc(size, sizeof(struct HashTableSlot));
-    if (res.data == NULL)
+    struct HashTable hashTable;
+    hashTable.data = (struct HashTableSlot *)calloc(size, sizeof(struct HashTableSlot));
+
+    if (hashTable.data == NULL)
     {
-        printf("Insufficient memory\n");
+        printf(memoryErrorMessage);
         exit(4);
     }
-    res.size = size;
-    res.numberOfElements = 0;
-    return res;
+
+    hashTable.size = size;
+    hashTable.numberOfElements = 0;
+    return hashTable;
 }
 
 void clear(struct HashTable *hashTable)
@@ -71,6 +82,7 @@ void clear(struct HashTable *hashTable)
             free(hashTable->data[i].hash);
         }
     }
+
     free(hashTable->data);
     hashTable->size = 0;
     hashTable->numberOfElements = 0;
@@ -79,25 +91,30 @@ void clear(struct HashTable *hashTable)
 void resize(struct HashTable *hashTable, uint32_t size)
 {
     struct HashTableSlot *newData = (struct HashTableSlot *)calloc(size, sizeof(struct HashTableSlot));
+
     if (newData == NULL)
     {
-        printf("Insufficient memory\n");
+        printf(memoryErrorMessage);
         exit(4);
     }
+
     for (uint32_t i = 0; i < hashTable->size; i++)
     {
         if (hashTable->data[i].key != NULL)
         {
             uint32_t pos = hashTable->data[i].hash[0] % size;
+
             while (newData[pos].key != NULL)
             {
                 pos++;
                 if (pos >= size)
                     pos = 0;
             }
+
             newData[pos] = hashTable->data[i];
         }
     }
+
     free(hashTable->data);
     hashTable->data = newData;
     hashTable->size = size;
@@ -105,37 +122,50 @@ void resize(struct HashTable *hashTable, uint32_t size)
 
 uint32_t getIndex(struct HashTable *hashTable, char *key)
 {
-    uint32_t *res = (uint32_t *)calloc(4, sizeof(uint32_t));
-    if (res == NULL)
+    uint32_t *hash = (uint32_t *)calloc(4, sizeof(uint32_t));
+
+    if (hash == NULL)
     {
-        printf("Insufficient memory\n");
+        printf(memoryErrorMessage);
         exit(4);
     }
-    md5((uint8_t *)key, strlen(key), (uint8_t *)res);
-    uint32_t pos = res[0] % hashTable->size;
+
+    md5((uint8_t *)key, strlen(key), (uint8_t *)hash);
+    uint32_t pos = hash[0] % hashTable->size;
+
     while (hashTable->data[pos].key != NULL && strcmp(key, hashTable->data[pos].key) != 0)
     {
         pos++;
         if (pos == hashTable->size)
             pos = 0;
     }
-    free(res);
+
+    free(hash);
+
     if (hashTable->data[pos].key == NULL)
+    {
         return hashTable->size;
+    }
+
     return pos;
 }
 
 uint32_t get(struct HashTable *hashTable, char *key)
 {
     uint32_t pos = getIndex(hashTable, key);
+
     if (pos == hashTable->size)
+    {
         return 0;
+    }
+
     return hashTable->data[pos].value;
 }
 
 void add(struct HashTable *hashTable, char *key, uint32_t value)
 {
     uint32_t index = getIndex(hashTable, key);
+
     if (index < hashTable->size)
     {
          hashTable->data[index].value = value;
@@ -143,37 +173,44 @@ void add(struct HashTable *hashTable, char *key, uint32_t value)
          hashTable->data[index].key = key;
          return;
     }
+
     hashTable->numberOfElements++;
+
     if (hashTable->numberOfElements > hashTable->size / 2)
     {
         resize(hashTable, hashTable->size * 2);
     }
-    uint32_t *res = (uint32_t *)calloc(4, sizeof(uint32_t));
-    if (res == NULL)
+
+    uint32_t *hash = (uint32_t *)calloc(4, sizeof(uint32_t));
+
+    if (hash == NULL)
     {
-        printf("Insufficient memory\n");
+        printf(memoryErrorMessage);
         exit(4);
     }
-    md5((uint8_t *)key, strlen(key), (uint8_t *)res);
-    uint32_t pos = res[0] % hashTable->size;
+
+    md5((uint8_t *)key, strlen(key), (uint8_t *)hash);
+    uint32_t pos = hash[0] % hashTable->size;
+
     while (hashTable->data[pos].key != NULL)
     {
         pos++;
         if (pos >= hashTable->size)
             pos = 0;
     }
-    hashTable->data[pos].hash = res;
+
+    hashTable->data[pos].hash = hash;
     hashTable->data[pos].key = key;
     hashTable->data[pos].value = value;
 }
 
 int main()
 {
-
     struct HashTable hashTable = newHashTable(256);
     uint32_t wordLength = 100;
     char word[wordLength];
     char *buffer;
+
     while (scanf("%s", word) != EOF)
     {
         removePunctuation(word);
@@ -182,15 +219,18 @@ int main()
             buffer = (char *)calloc(wordLength, sizeof(char));
             if (buffer == NULL)
             {
-                printf("Why though?\n");
+                printf(memoryErrorMessage);
                 return 1;
             }
+
             strcpy(buffer, word);
             add(&hashTable, buffer, get(&hashTable, buffer) + 1);
             //the buffer pointer is not lost, it's still accessible via hashTable.data[???].key
         }
     }
+
     uint32_t maxWordCount = 0;
+
     for (uint32_t i = 0; i < hashTable.size; i++)
     {
         if (hashTable.data[i].key != NULL)
@@ -202,6 +242,7 @@ int main()
             }
         }
     }
+
     for (uint32_t i = 0; i < hashTable.size; i++)
     {
         if (hashTable.data[i].key != NULL && hashTable.data[i].value == maxWordCount)
@@ -209,6 +250,7 @@ int main()
             fprintf(stderr, "%s %d\n", hashTable.data[i].key, hashTable.data[i].value);
         }
     }
+
     clear(&hashTable);
     return 0;
 }
