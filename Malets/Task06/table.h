@@ -8,7 +8,7 @@ struct tagEntry
     Entry* next;
     char* key;
     uint64_t keySize;
-    int64_t value;
+    int value;
 };
 
 typedef struct tagTable
@@ -20,27 +20,18 @@ typedef struct tagTable
     uint64_t used;
 } Table;
 
-typedef struct tagStatistics
-{
-    Entry* maximumEntry;
-    uint64_t maximumChainLength;
-    uint64_t chainsCount;
-} Statistics;
+typedef void (*Iterator)( const char* key, int value, void* dataPointer );
 
-typedef void (*Iterator)( Entry* entry, void* dataPointer );
+extern Table* createTable( uint64_t count );
 
-Table* createTable( uint64_t count );
+extern void resizeTable( Table* table, uint64_t count, Bool needCleansing );
 
-void resizeTable( Table* table, uint64_t count, Bool needCleansing );
+extern void insertValue( Table* table, const char* key, uint64_t keySize, int value );
 
-void insertValue( Table* table, const char* key, uint64_t keySize, int64_t value );
+extern int getValue( Table* table, const char* key, uint64_t keySize );
 
-int64_t getValue( Table* table, const char* key, uint64_t keySize );
+extern int* getValuePointer( Table* table, const char* key, uint64_t keySize );
 
-int64_t* getValuePointer( Table* table, const char* key, uint64_t keySize );
+extern void iterateTable( Table* table, Iterator iterator, void* dataPointer );
 
-void getStatistics( Table* table, Statistics* statistics );
-
-void iterateTable( Table* table, Iterator iterator, void* dataPointer );
-
-void destroyTable( Table* table );
+extern void destroyTable( Table* table );

@@ -1,70 +1,77 @@
 #include <stdio.h>
+#include <string.h>
 #include <ctype.h>
 
 #include "text.h"
 
-#define MIN_BEGIN_SIZE (1 << 10)
-#define MAX_BEGIN_SIZE (1 << 30)
+#define TEXT_SIZE 1024
+#define BEGIN_SIZE 1024
 
-static uint64_t readText( const char* text, uint64_t textSize, Table* table )
+static void processText( const char* text, Table* table )
 {
-    uint64_t wordsCount = 0;
-    uint64_t wordBegin = 0;
+    uint64_t textSize = strlen(text);
+
+    char word[textSize];
+    uint64_t wordSize = 0;
 
     for (uint64_t i = 0; i <= textSize; i++)
     {
-        if (i == textSize || (!isalpha(text[i]) && !isdigit(text[i])))
+        if (!isalpha(text[i]))
         {
-            if (i != wordBegin)
+            if (wordSize != 0)
             {
-                const char* word = text + wordBegin;
-                uint64_t wordSize = i - wordBegin;
-
-                int64_t* frequency = getValuePointer(table, word, wordSize);
+                int* frequency = getValuePointer(table, word, wordSize);
 
                 if (frequency == NULL)
                     insertValue(table, word, wordSize, 1);
                 else
                     *frequency += 1;
 
-                wordsCount++;
+                wordSize = 0;
             }
-
-            wordBegin = i + 1;
+        }
+        else
+        {
+            word[wordSize] = text[i];
+            wordSize++;
         }
     }
-
-    return wordsCount;
 }
 
-void analizeText( const char* text, uint64_t textSize )
+static void readText( Table* table )
 {
-    Table* table = createTable(0);
+    char text[TEXT_SIZE];
 
-    for (uint64_t i = MIN_BEGIN_SIZE; i <= MAX_BEGIN_SIZE; i += i >> 1)
+    while (scanf("%s", text) == 1)
     {
-        resizeTable(table, i, TRUE);
-
-        uint64_t wordsCount = readText(text, textSize, table);
-
-        Statistics statistics;
-        getStatistics(table, &statistics);
-
-        if (i == MIN_BEGIN_SIZE)
-        {
-            printf("Total count of words: %lu\n", wordsCount);
-            printf("Count of different words: %lu\n", table->used);
-            printf("Most frequent word: \"%s\" (%ld times)\n",
-                   statistics.maximumEntry->key, statistics.maximumEntry->value);
-        }
-        printf("\nBegin table size: %lu\n", i);
-        printf("Final table size: %lu\n", table->count);
-        printf("Count of chains: %lu\n", statistics.chainsCount);
-        printf("Maximum chain length: %lu\n", statistics.maximumChainLength);
-
-        if (statistics.maximumChainLength <= 2)
-            break;
+        processText(text, table);
     }
+}
+
+static void printAll( const char* key, int value, int* maximum )
+{
+    if (value > *maximum)
+        *maximum = value;
+
+    printf("%s %d\n", key, value);
+}
+
+static void printMostFrequent( const char* key, int value, int* maximum )
+{
+    if (value == *maximum)
+        fprintf(stderr, "%s %d\n", key, value);
+}
+
+void analizeText()
+{
+    Table* table = createTable(BEGIN_SIZE);
+
+    readText(table);
+
+    int maximum = 0;
+
+    iterateTable(table, (Iterator) printAll, &maximum);
+    iterateTable(table, (Iterator) printMostFrequent, &maximum);
 
     destroyTable(table);
 }

@@ -22,3 +22,5 @@ extern void suicide( const char* suicideNote, Reason suicideReason );
 extern void* reallocateMemory( void* memory, uint64_t size );
 
 #define allocateMemory(size) reallocateMemory(NULL, size)
+
+#define freeMemory(memory) reallocateMemory(memory, 0)
