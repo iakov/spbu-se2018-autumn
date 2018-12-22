@@ -2,11 +2,8 @@
 #include "table.h"
 #include "book.h"
 
+
 #define MAXSTR 32
-
-
-void manage_table();
-long long int get_key( unsigned char * );
 
 
 int main(int argc, char *argv[])
