@@ -34,7 +34,7 @@ void merge(int left, int middle, int right, char **base) {
         base[i] = buffer[i - left];
     }
     free(buffer);
-    
+
 }
 
 void merge_sort(int left, int right, char **base) {
@@ -127,7 +127,7 @@ int main(int argc, char **argv) {
     FILE *f = fopen(argv[2], "r");
     char *algorithm_name = argv[3];
     if (f == NULL) {
-        printf("Cannot open file");
+        printf("Cannot open file\n");
         exit(2);
     }
 
@@ -143,7 +143,7 @@ int main(int argc, char **argv) {
         printf("Do not have enough memory\n");
         exit(4);
     }
-    for (int i = 0; i < n; str_cnt = ++i) {      
+    for (int i = 0; i < n; str_cnt = ++i) {
         if (fgets(buf, MAX_STR_LEN, f) == NULL) {
             --str_cnt;
             break;
@@ -155,7 +155,7 @@ int main(int argc, char **argv) {
             for(int i = 0; i < str_cnt; ++i) {
                 free(arr_of_str[i]);
             }
-            free(arr_of_str);    
+            free(arr_of_str);
             exit(4);
         }
         strcpy(arr_of_str[i], buf);
@@ -184,4 +184,3 @@ int main(int argc, char **argv) {
     }
     free(arr_of_str);
 }
-
