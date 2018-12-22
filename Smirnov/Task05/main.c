@@ -82,11 +82,9 @@ void insertionSort(char **array, int size)
 {
     for (int i = 1; i < size; ++i)
     {
-        int j = i;
-        while (j > 0 && strcmp(data[j], data[j - 1]) < 0)
+        for (int j = i; j > 0 && strcmp(array[j - 1], array[j]) > 0; --j)
         {
             swapStrings(&array[j - 1], &array[j]);
-            j--;
         }
     }
 }
