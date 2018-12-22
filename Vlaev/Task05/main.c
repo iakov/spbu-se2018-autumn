@@ -77,7 +77,7 @@ void insertionSort(long long int  n)
     {
         long long int  j = i;
         while ((j > 0) &&
-              (cmp(strings[j],strings[j-1],lengths[j],lengths[ j - 1])))
+              (1-cmp(strings[j],strings[j-1],lengths[j],lengths[ j - 1])))
         {
             swap(j, j - 1);
             j = j - 1;
@@ -409,7 +409,7 @@ int main(int argc, char **argv)
     while(n<true_n)
     {
         c = getc(fptr);
-        if (c==EOF || ferror(fptr))
+        if (c==EOF && ferror(fptr))
         {
             printf("Error! Unexpected EOF");
             fclose(fptr);
@@ -421,6 +421,10 @@ int main(int argc, char **argv)
             free(strings);
             free(current_string);
             exit(3);
+        }
+        if (c==EOF)
+        {
+            break;
         }
         if (c == '\n')
         {
@@ -623,6 +627,6 @@ int main(int argc, char **argv)
         free(strings[i]);
     }
     free(strings);
-    free(current_string);
+    //free(current_string);
     return 0;
 }
