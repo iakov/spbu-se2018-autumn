@@ -354,7 +354,7 @@ int main(int argc, char **argv)
     if (argc != 4)
     {
         printf("Error! Incorrect number of parameters");
-        return 1;
+        exit(1);
     }
     long long int  true_n=(long long int )atoi(argv[1]);
 
@@ -364,7 +364,7 @@ int main(int argc, char **argv)
     {
         printf("Error! Incorrect file name %s",argv[2]);
         fclose(fptr);
-        return 2;
+        exit(2);
     }
 
     long long int  current_n_for_malloc = startn;
@@ -374,7 +374,7 @@ int main(int argc, char **argv)
     {
         printf("Memory allocation error!");
         fclose(fptr);
-        return 4;
+        exit(4);
     }
     char *current_string = malloc(startlen* sizeof(char));
     if (current_string==NULL)
@@ -388,7 +388,7 @@ int main(int argc, char **argv)
         }
         free(strings);
         free(current_string);
-        return 4;
+        exit(4);
     }
     lengths = malloc(current_n_for_malloc * sizeof(long long int ));
     if (lengths==NULL)
@@ -402,7 +402,7 @@ int main(int argc, char **argv)
         }
         free(strings);
         free(current_string);
-        return 4;
+        exit(4);
     }
     long long int  current_string_list_len = 0;
     char c;
@@ -420,7 +420,7 @@ int main(int argc, char **argv)
             }
             free(strings);
             free(current_string);
-            return 3;
+            exit(3);
         }
         if (c == '\n')
         {
@@ -445,7 +445,7 @@ int main(int argc, char **argv)
                     }
                     free(strings);
                     free(current_string);
-                    return 4;
+                    exit(4);
                 }
                 lengths = realloc(lengths, current_n_for_malloc * sizeof(long long int ));
                 if (lengths==NULL)
@@ -459,7 +459,7 @@ int main(int argc, char **argv)
                     }
                     free(strings);
                     free(current_string);
-                    return 4;
+                    exit(4);
                 }
             }
         }
@@ -482,7 +482,7 @@ int main(int argc, char **argv)
                     }
                     free(strings);
                     free(current_string);
-                    return 4;
+                    exit(4);
                 }
             }
         }
@@ -513,7 +513,7 @@ int main(int argc, char **argv)
                 }
                 free(strings);
                 free(current_string);
-                return 1;
+                exit(1);
             }
             break;
         }
@@ -534,7 +534,7 @@ int main(int argc, char **argv)
                 }
                 free(strings);
                 free(current_string);
-                return 1;
+                exit(1);
             }
             break;
         }
@@ -555,7 +555,7 @@ int main(int argc, char **argv)
                 }
                 free(strings);
                 free(current_string);
-                return 1;
+                exit(1);
             }
             break;
         }
@@ -576,7 +576,7 @@ int main(int argc, char **argv)
                 }
                 free(strings);
                 free(current_string);
-                return 1;
+                exit(1);
             }
             break;
         }
@@ -597,7 +597,7 @@ int main(int argc, char **argv)
                 }
                 free(strings);
                 free(current_string);
-                return 1;
+                exit(1);
             }
             break;
         }
@@ -612,7 +612,7 @@ int main(int argc, char **argv)
             }
             free(strings);
             free(current_string);
-            return 1;
+            exit(1);
         }
     }
     print(n);
