@@ -68,11 +68,11 @@ void bubbleSort(char **array, int size)
 {
     for (int i = 0; i < size; ++i)
     {
-        for (int j = 0; j < size - i - 1; ++j)
+        for (int j = 0; j < size; ++j)
         {
-            if (strcmp(array[j], array[j + 1]) == 1)
+            if (strcmp(array[i], array[j]) < 0)
             {
-                swapStrings(&array[j], &array[j + 1]);
+                swapStrings(&array[i], &array[j]);
             }
         }
     }
@@ -217,13 +217,13 @@ int main(int argc, char *argv[])
 {
     if (argc != 4)
     {
-        fprintf(stderr, "Invalid number of arguments");
+        fprintf(stderr, "Invalid number of arguments\n");
         exit(1);
     }
     FILE *file = fopen(argv[2], "r");
     if (file == NULL)
     {
-        fprintf(stderr, "Unable to open file");
+        fprintf(stderr, "Unable to open file\n");
         exit(2);
     }
     int n = atoi(argv[1]);
@@ -240,7 +240,7 @@ int main(int argc, char *argv[])
             }
             free(data);
             free(input);
-            fprintf(stderr, "Invalid data");
+            fprintf(stderr, "Invalid data\n");
             exit(3);
         }
         data[i] = malloc(wordLen * sizeof(char));
