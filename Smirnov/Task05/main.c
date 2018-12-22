@@ -228,41 +228,32 @@ int main(int argc, char *argv[])
     }
     int n = atoi(argv[1]);
     data = malloc(n * sizeof(char*));
-    int strCount = 0;
     int wordLen = 500;
-    char input[wordLen];
-    char *buffer;
-    for ( ; fgets(input, wordLen, file) != NULL; )
+    char *input = malloc(wordLen * sizeof(char*));
+    for (int i = 0; i < n ; i++)
     {
-        if (strCount == n)
+        if (fgets(input, wordLen, file) == NULL)
         {
-            for (int i = 0; i < n; ++i)
+            for (int j = 0; j < n; ++j)
             {
-                free(data[i]);
+                free(data[j]);
             }
             free(data);
-            fprintf(stderr, "Incorrect data");
+            free(input);
+            fprintf(stderr, "Invalid data");
             exit(3);
         }
-        buffer = malloc(wordLen * sizeof(char));
-        if (buffer == NULL)
+        data[i] = malloc(wordLen * sizeof(char));
+        if (data[i] == NULL)
         {
-            fprintf(stderr, "Memory allocation error");
+            for (int j = 0; j < n; j++)
+                free(data[j]);
+            free(data);
+            free(input);
+            printf("Memory allocation error\n");
             exit(4);
         }
-        strcpy(buffer, input);
-        buffer[strlen(buffer) - 1] = '\0';
-        data[strCount++] = buffer;
-    }
-    if (strCount < n)
-    {
-        for (int i = 0; i < n; ++i)
-        {
-            free(data[i]);
-        }
-        free(data);
-        fprintf(stderr, "Incorrect data");
-        exit(3);
+        strcpy(data[i], input);
     }
 
     if (strcmp(argv[3], "bubble") == 0)
@@ -290,17 +281,19 @@ int main(int argc, char *argv[])
         for (int i = 0; i < n; ++i)
             free(data[i]);
         free(data);
-        fprintf(stderr, "Invalid algo name");
+        free(input);
+        fprintf(stderr, "Invalid algorithm name\n");
         exit(1);
     }
 
 
     for (int i = 0; i < n; ++i)
     {
-        printf("%s\n", data[i]);
+        printf("%s", data[i]);
         free(data[i]);
     }
     free(data);
+    free(input);
     fflush(stdout);
     fclose(file);
     return 0;
