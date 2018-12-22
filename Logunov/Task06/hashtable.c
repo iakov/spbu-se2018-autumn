@@ -136,15 +136,13 @@ char *nextWord() {
         // searching fot the first letter of the word in the file
     }
     while (nextChar != EOF && isLetter(nextChar, true)) {
-        if (nextChar >= 'A' && nextChar <= 'Z') {
+        /*if (nextChar >= 'A' && nextChar <= 'Z') {
             nextChar = nextChar - 'A' + 'a'; // lowering upper-case char
-        }
+        } */
         word[wordSize] = nextChar;
         wordSize++;
         nextChar = fgetc(stdin);
     }
-    if (!isLetter(word[wordSize - 1], false))
-        wordSize--; // to delete extra symbols if they are at the end of word
     word[wordSize] = '\0';
     if (wordSize == 0) { // found end of file
         free(word);
