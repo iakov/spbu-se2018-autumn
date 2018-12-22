@@ -167,7 +167,7 @@ int main() {
         fprintf(stdout, "%s %d\n", currentElement->key, currentElement->value);
         currentElement = nextHashTableElement(&hashTable);
     }
-    fprintf(stdout, "\n");
+    //fprintf(stdout, "\n");
     currentElement = nextHashTableElement(&hashTable);
     while (currentElement != NULL) {
         if (currentElement->value == maxCount) {
@@ -175,6 +175,6 @@ int main() {
         }
         currentElement = nextHashTableElement(&hashTable);
     }
-    fprintf(stderr, "\n");
+    //fprintf(stderr, "\n");
     delHashTable(&hashTable);
 }
