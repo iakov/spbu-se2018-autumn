@@ -225,7 +225,7 @@ int main(int argc, char *argv[])
     }
     int n = atoi(argv[1]);
     data = malloc(n * sizeof(char*));
-    int wordLen = 500;
+    int wordLen = 20;
     char *input = malloc(wordLen * sizeof(char*));
     for (int i = 0; i < n ; i++)
     {
