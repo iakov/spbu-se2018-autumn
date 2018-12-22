@@ -1,9 +1,14 @@
 #!/bin/bash
 . $(dirname $(readlink -f "${BASH_SOURCE[0]}"))/logger
 compile(){
-  TEST_CFLAGS_GENERAL="-g -Wall -Wextra -pedantic -std=c99 -x c"
+  TEST_CFLAGS_GENERAL="-ggdb -Wall -Wextra -pedantic -std=c99 -x c -march=native"
   TEST_CFLAGS_RELAXED="${TEST_CFLAGS_GENERAL}"
-  TEST_CFLAGS_SANITIZED="-fsanitize=address -fsanitize=undefined -fsanitize-undefined-trap-on-error -O2"
+#gcc-8  TEST_CFLAGS_SANITIZED="-fsanitize=address -fsanitize=pointer-subtract -fsanitize=pointer-compare -fsanitize=undefined -fsanitize-undefined-trap-on-error -fsanitize-address-use-after-scope -fsanitize=pointer-overflow -fsanitize=enum -fsanitize=bounds-strict -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fsanitize=signed-integer-overflow -fsanitize=return -fsanitize=null -fsanitize=integer-divide-by-zero -fsanitize=shift -ftrapv -O2"
+
+  #gcc-5
+  TEST_CFLAGS_SANITIZED="-fsanitize=undefined -fno-sanitize=bounds -fsanitize-undefined-trap-on-error -fcheck-pointer-bounds -mmpx -ftrapv -O2 -fno-sanitize-recover"
+
+
   TEST_CFLAGS_STRICT="${TEST_CFLAGS_GENERAL} -Werror -Wno-error=sign-compare"
   local sources=$(find $TEST_SRCDIR -name '*.c' ! -path "*/$TEST_TMPDIR/*" )
   local exitCode=0
@@ -20,6 +25,7 @@ compile(){
     logError "Failed to compile"
   fi
   unset cc
+  export ASAN_OPTIONS=detect_invalid_pointer_pairs=2
   return $exitCode
 }
 
