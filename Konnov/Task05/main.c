@@ -35,7 +35,7 @@ int SortSelection(char *name)
 
 void ErrorMessage(char *message)
 {
-	printf("//\n%s\n//", message);
+	printf("//\n%s\n//\n", message);
 }
 
 void BubbleSort(char **bubbleText)
@@ -245,10 +245,21 @@ int main(int argc, char *argv[])
 	} 
 	free(buf);
 	sizeFile = realSize;
-	if(NULL == realloc(text, sizeFile * sizeof(char *)))
+	if(sizeFile != 0)
 	{
-		ErrorMessage("Cant reallocate memory for text in main function");
-		exit(4);
+		if(NULL == realloc(text, (sizeFile) * sizeof(char *)))
+		{
+			ErrorMessage("Cant reallocate memory for text in main function");
+			exit(4);
+		}
+	}
+	else
+	{
+		if(NULL == realloc(text, sizeof(char *)))
+		{
+			ErrorMessage("Cant reallocate memory for 0 str text in main function");
+			exit(4);
+		}
 	}
 
 	switch(SortSelection(argv[3]))
