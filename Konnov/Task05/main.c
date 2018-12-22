@@ -238,13 +238,18 @@ int main(int argc, char *argv[])
 		text[i] =(char *) malloc((strlen(buf) + 1) * sizeof(char));
 		if(NULL == text[i])
 		{
-			ErrorMessage("cant allocate memory for a string of text");
+			ErrorMessage("cant allocate memory for a string of text in main function");
 			exit(4);
 		}
 		strcpy(text[i], buf);
 	} 
 	free(buf);
 	sizeFile = realSize;
+	if(NULL == realloc(text, sizeFile * sizeof(char *)))
+	{
+		ErrorMessage("Cant reallocate memory for text in main function");
+		exit(4);
+	}
 
 	switch(SortSelection(argv[3]))
 	{
