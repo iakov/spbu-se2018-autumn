@@ -4,24 +4,28 @@ compile(){
   TEST_CFLAGS_GENERAL="-ggdb -Wall -Wextra -pedantic -std=c99 -x c -march=native -O1 -fno-omit-frame-pointer" 
   TEST_CFLAGS_RELAXED="${TEST_CFLAGS_GENERAL}"
   local cc=${CC:-cc}
-  local -A TEST_CFLAGS_SANITIZE
-  TEST_CFLAGS_SANITIZE["generic"]="-fsanitize=address -ftrapv"
-  TEST_CFLAGS_SANITIZE["extra"]=""
-  TEST_CFLAGS_SANITIZE["cc"]="${TEST_CFLAGS_SANITIZE[generic]}"
-  TEST_CFLAGS_SANITIZE["clang"]="${TEST_CFLAGS_SANITIZE[generic]}"
-  TEST_CFLAGS_SANITIZE["gcc-4.8"]=" ${TEST_CFLAGS_SANITIZE[generic]}"
-  TEST_CFLAGS_SANITIZE["gcc-4.9"]="${TEST_CFLAGS_SANITIZE['gcc-4.8']}  -fsanitize=undefined -fsanitize=enum -fsanitize=signed-integer-overflow -fsanitize=return -fsanitize=null -fsanitize=integer-divide-by-zero -fsanitize=shift"
-  TEST_CFLAGS_SANITIZE["gcc-5"]="${TEST_CFLAGS_SANITIZE['gcc-4.9']}  -fsanitize-undefined-trap-on-error  -fno-sanitize-recover=all -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow "
-  TEST_CFLAGS_SANITIZE["gcc-8"]="${TEST_CFLAGS_SANITIZE['gcc-5']}  -fsanitize=pointer-subtract -fsanitize=pointer-compare -fsanitize-address-use-after-scope -fsanitize=pointer-overflow  -fsanitize=bounds-strict"
-  TEST_CFLAGS_SANITIZE["gcc-8-mpx"]="-fno-sanitize=address,bounds-strict,pointer-compare,pointer-subtract -fcheck-pointer-bounds -mmpx -Wchkp"
-
-  export CHKP_RT_VERBOSE=2
-  export CHKP_RT_MODE=stop
   local cc_ver="$(${cc} --version |  gawk 'NR==1 && // { split($1, name, "-"); split($3, ver, "-"); split(ver[1], ver, "."); print (name[1]"-"ver[1]"."ver[2])}' FS='[ ]+')"
   local cc_ver_major="${cc_ver%.*}"
   local cc_name="${cc_ver%-*}"
 
-  TEST_CFLAGS_SANITIZED="${TEST_CFLAGS_SANITIZE[$cc_ver]:-${TEST_CFLAGS_SANITIZE[$cc_ver_major]:-${TEST_CFLAGS_SANITIZE[$cc_name]}}} ${TEST_CFLAGS_SANITIZE[${TEST_SANITIZE_MODE:-extra}]}"
+  local bash_has_no_assoc_arrays=0
+  local -A TEST_CFLAGS_SANITIZE || bash_has_no_assoc_arrays=1
+  if [[ ! $bash_has_no_assoc_arrays ]] ; then
+      TEST_CFLAGS_SANITIZE["generic"]="-fsanitize=address -ftrapv"
+      TEST_CFLAGS_SANITIZE["extra"]=""
+      TEST_CFLAGS_SANITIZE["cc"]="${TEST_CFLAGS_SANITIZE[generic]}"
+      TEST_CFLAGS_SANITIZE["clang"]="${TEST_CFLAGS_SANITIZE[generic]}"
+      TEST_CFLAGS_SANITIZE["gcc-4.8"]=" ${TEST_CFLAGS_SANITIZE[generic]}"
+      TEST_CFLAGS_SANITIZE["gcc-4.9"]="${TEST_CFLAGS_SANITIZE['gcc-4.8']}  -fsanitize=undefined -fsanitize=enum -fsanitize=signed-integer-overflow -fsanitize=return -fsanitize=null -fsanitize=integer-divide-by-zero -fsanitize=shift"
+      TEST_CFLAGS_SANITIZE["gcc-5"]="${TEST_CFLAGS_SANITIZE['gcc-4.9']}  -fsanitize-undefined-trap-on-error  -fno-sanitize-recover=all -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow "
+      TEST_CFLAGS_SANITIZE["gcc-8"]="${TEST_CFLAGS_SANITIZE['gcc-5']}  -fsanitize=pointer-subtract -fsanitize=pointer-compare -fsanitize-address-use-after-scope -fsanitize=pointer-overflow  -fsanitize=bounds-strict"
+      TEST_CFLAGS_SANITIZE["gcc-8-mpx"]="-fno-sanitize=address,bounds-strict,pointer-compare,pointer-subtract -fcheck-pointer-bounds -mmpx -Wchkp"
+
+
+      TEST_CFLAGS_SANITIZED="${TEST_CFLAGS_SANITIZE[$cc_ver]:-${TEST_CFLAGS_SANITIZE[$cc_ver_major]:-${TEST_CFLAGS_SANITIZE[$cc_name]}}} ${TEST_CFLAGS_SANITIZE[${TEST_SANITIZE_MODE:-extra}]}"
+  else
+      TEST_CFLAGS_SANITIZED=""
+  fi
   TEST_CFLAGS_STRICT="${TEST_CFLAGS_GENERAL} -Werror -Wno-error=sign-compare"
   local sources=$(find $TEST_SRCDIR -name '*.c' ! -path "*/$TEST_TMPDIR/*" )
   local exitCode=0
@@ -37,6 +41,8 @@ compile(){
     logError "Failed to compile"
   fi
   unset cc
+  export CHKP_RT_VERBOSE=2
+  export CHKP_RT_MODE=stop
   export ASAN_OPTIONS=detect_invalid_pointer_pairs=2
   return $exitCode
 }

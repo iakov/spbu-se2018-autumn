@@ -13,25 +13,35 @@ git:
 #    - binutils
 #    - gcc-6
 #    - colordiff
-before_install:
- - '"$CC" || sudo add-apt-repository ppa:jonathonf/gcc-8.0 && sudo apt-get update && sudo apt-get install -y binutils gcc-8'
 install:
  - .scripts/travis/install.sh
 script:
-  - gcc --version
+  - '$CC --version'
   - .scripts/travis/test_all.sh
+
+env:
+  - CC=gcc
+
 matrix:
+  fast_finish: true
   include:
     - os: linux
       name: "Some GNU/Linux (Light checks)"
     - os: linux
-      distro: xenial
-      name: "Xenial GCC 8 sanitized & with Intel MPX"
+      dist: xenial
+      name: "Xenial /GCC 8.1/ sanitized & with Intel MPX"
       env: CC=gcc-8 TEST_SANITIZE_MODE=gcc-8-mpx
+      addons:
+        apt:
+          update: true
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - binutils
       sudo: required
 
     - os: linux
-      distro: xenial
+      dist: xenial
       name: "Xenial GCC 8 sanitized"
       env: CC=gcc-8
       addons:
