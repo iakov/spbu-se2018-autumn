@@ -80,11 +80,14 @@ void bubbleSort(char **array, int size)
 
 void insertionSort(char **array, int size)
 {
-    for (int i = 1; i < size; ++i)
+    for (int i = 0; i < size; ++i)
     {
-        for (int j = i; j > 0 && strcmp(array[j - 1], array[j]) > 0; --j)
+        for (int j = 0; j < size; ++j)
         {
-            swapStrings(&array[j - 1], &array[j]);
+            if (strcmp(array[i], array[j]) < 0)
+            {
+                swapStrings(&array[i], &array[j]);
+            }
         }
     }
 }
