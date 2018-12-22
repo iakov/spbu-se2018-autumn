@@ -8,9 +8,10 @@ compile(){
   local cc_ver_major="${cc_ver%.*}"
   local cc_name="${cc_ver%-*}"
 
-  local bash_has_no_assoc_arrays=0
-  local -A TEST_CFLAGS_SANITIZE || bash_has_no_assoc_arrays=1
-  if [[ ! $bash_has_no_assoc_arrays ]] ; then
+
+  if (( ${BASH_VERSION%%.*} >= 4 )) ; then
+     #we have assoc arrays
+      local -A TEST_CFLAGS_SANITIZE
       TEST_CFLAGS_SANITIZE["generic"]="-fsanitize=address -ftrapv"
       TEST_CFLAGS_SANITIZE["extra"]=""
       TEST_CFLAGS_SANITIZE["cc"]="${TEST_CFLAGS_SANITIZE[generic]}"
