@@ -493,6 +493,19 @@ int main(int argc, char **argv)
         lengths[n] = (current_string_list_len);
         n++;
     }
+    if (n<true_n)
+    {
+        printf("File is too small!");
+        fclose(fptr);
+        free(lengths);
+        for (long long int  i=0;i<n;i++)
+        {
+            free(strings[i]);
+        }
+        free(strings);
+        free(current_string);
+        exit(3);
+    }
     char sort_name_first_symbol=argv[3][0];
     switch (sort_name_first_symbol)
     {
