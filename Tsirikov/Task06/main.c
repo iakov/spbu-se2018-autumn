@@ -11,14 +11,28 @@ int main(int argc, char *argv[])
 	size = 100;
 	set_hash_name('m');
 	Table = make_table();
+	char filename[MAXSTR];
+
 	if( 1 < argc )
 	{
 		analyse_book( ( argv[1] ) );
 	}
 	else
 	{
-		printf("Book name wasn`t given.\n");
-		exit(7);
+		if( EOF == scanf( "%s", filename ) )
+		{
+			printf("Reading error\n");
+			exit(4);
+		}
+		if( NULL != filename )
+		{
+			analyse_book( filename );
+		}
+		else
+		{
+			printf("Book name wasn`t given.\n");
+			exit(1);
+		}
 	}
 
 	iterate();
