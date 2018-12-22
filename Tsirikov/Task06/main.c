@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 	else
 	{
 		printf("Book name wasn`t given.\n");
-		exit(1);
+		exit(7);
 	}
 
 	iterate();
