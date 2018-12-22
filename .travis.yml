@@ -21,8 +21,16 @@ script:
 matrix:
   include:
     - os: linux
-      name: "Some GNU/Linux"
-      dist: xenial
-#      env: CC=gcc-6
+      name: "Some GNU/Linux (Light checks)"
+    - os: linux
+      name: "Xenial GCC 8 sanitized"
+      env: CC=gcc-8 TEST_SANITIZE_MODE=gcc-8-mpx
+      apt:
+        update: true
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+          - gcc-8
+
     - os: osx
       name: "macOS"
