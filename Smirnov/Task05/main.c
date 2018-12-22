@@ -243,7 +243,7 @@ int main(int argc, char *argv[])
             fprintf(stderr, "Invalid data\n");
             exit(3);
         }
-        data[i] = malloc(wordLen * sizeof(char));
+        data[i] = malloc((strlen(input) + 1) * sizeof(char));
         if (data[i] == NULL)
         {
             for (int j = 0; j < n; j++)
@@ -253,6 +253,8 @@ int main(int argc, char *argv[])
             printf("Memory allocation error\n");
             exit(4);
         }
+        if (input[strlen(input) - 1] == '\n')
+            input[strlen(input) - 1] = '\0';
         strcpy(data[i], input);
     }
     if (strcmp(argv[3], "bubble") == 0)
@@ -288,7 +290,7 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < n; ++i)
     {
-        printf("%s", data[i]);
+        printf("%s\n", data[i]);
         free(data[i]);
     }
     free(data);
