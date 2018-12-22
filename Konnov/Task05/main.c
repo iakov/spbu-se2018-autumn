@@ -264,6 +264,8 @@ int main(int argc, char *argv[])
 				HeapSort(text, sizeFile);
 				break;
 		default:
+				ErrorMessage("Unknown algorithm");
+				exit(1);
 				break;
 	}
 
