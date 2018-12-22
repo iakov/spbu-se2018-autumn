@@ -12,7 +12,7 @@ int main()
 	Table = make_table();
 
 	char localbuf[MAXSTR];
-	while( NULL != fgets( localbuf, MAXSTR, stdin ) )
+	while( EOF != scanf( "%s", localbuf ) )
 	{
 		insert_key( (unsigned char *)( localbuf ), strlen( localbuf ) );
 	}
