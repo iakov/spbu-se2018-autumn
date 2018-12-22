@@ -3,6 +3,8 @@
 #include <malloc.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdbool.h>
+
 #define max(X, Y) (((X) > (Y)) ? (X) : (Y))
 #define startn 200
 #define startlen 10
@@ -11,7 +13,7 @@
 char **strings;
 int *lengths;
 //used to compare strings with different lengths
-char get_i(char* a,int len ,int i)
+char get_ith_symbol(char* a,int len ,int i)
 {
     if (i>=len)
     {
@@ -21,26 +23,26 @@ char get_i(char* a,int len ,int i)
 }
 
 //swapping strings and their lengths
-void swap(int a, int b)
+void swap(int index1, int index2)
 {
-    char* temp = strings[a];
-    strings[a] = strings[b];
-    strings[b] = temp;
-    int t=lengths[a];
-    lengths[a]=lengths[b];
-    lengths[b]=t;
+    char* temp = strings[index1];
+    strings[index1] = strings[index2];
+    strings[index2] = temp;
+    int temp_len=lengths[index1];
+    lengths[index1]=lengths[index2];
+    lengths[index2]=temp_len;
 }
 // strlen is not viable,because unused memory is malloced, so it doesnt work properly
 // hence cmp is used
-char cmp(char* a, char* b,int lena,int lenb)
+char cmp(char* a, char* b,int len_a,int len_b)
 {
-    for (int i = 0; i < max(lena,lenb); i++)
+    for (int i = 0; i < max(len_a,len_b); i++)
     {
-        if (get_i(a,lena,i) > get_i(b,lenb,i))
+        if (get_ith_symbol(a,len_a,i) > get_ith_symbol(b,len_b,i))
         {
         return 1;
         }
-        if (get_i(b,lenb,i) > get_i(a,lena,i))
+        if (get_ith_symbol(b,len_b,i) > get_ith_symbol(a,len_a,i))
         {
         return 0;
         }
@@ -51,21 +53,21 @@ char cmp(char* a, char* b,int lena,int lenb)
 void bubbleSort(int n)
 {
     int n1 = n - 1;
-    char f = 1;
+    bool swapped = 1;
     do
     {
-        f = 0;
+        swapped = 0;
         for (int i = 0; i < n1; i++)
         {
             if (cmp(strings[i],strings[i+1],lengths[i],lengths[ i + 1]))
             {
                 swap(i, i + 1);
-                f = 1;
+                swapped = 1;
             }
         }
         n1--;
     }
-    while (f);
+    while (swapped);
 }
 
 void insertionSort(int n)
@@ -74,7 +76,8 @@ void insertionSort(int n)
     while (i < n)
     {
         int j = i;
-        while ((j > 0) && (cmp(strings[j],strings[j-1],lengths[j],lengths[ j - 1])))
+        while ((j > 0) &&
+              (cmp(strings[j],strings[j-1],lengths[j],lengths[ j - 1])))
         {
             swap(j, j - 1);
             j = j - 1;
@@ -104,7 +107,7 @@ int partition(int low, int high)
     return (i + 1);
 }
 
-void StartQuickSort(int low, int high)
+void startQuickSort(int low, int high)
 {
     if (low < high)
     {
@@ -113,14 +116,14 @@ void StartQuickSort(int low, int high)
 
         // Separately sort elements before
         // partition and after partition
-        StartQuickSort(low, pi - 1);
-        StartQuickSort(pi + 1, high);
+        startQuickSort(low, pi - 1);
+        startQuickSort(pi + 1, high);
     }
 }
 
 void quickSort(int low, int high)
 {
-    StartQuickSort(low, high);
+    startQuickSort(low, high);
 }
 
 void merge(int l, int m, int r)
@@ -133,21 +136,21 @@ void merge(int l, int m, int r)
     char** L=malloc(n1*sizeof(char*));
     if (L==NULL)
     {
-        printf("Error!");
-        exit(1);
+        printf("Memory allocation error!");
+        exit(4);
     }
     char** R=malloc(n2*sizeof(char*));
     if (R==NULL)
     {
-        printf("Error!");
-        exit(1);
+        printf("Memory allocation error!");
+        exit(4);
     }
     int* len1=malloc(n1*sizeof(int));
     int* len2=malloc(n2*sizeof(int));
     if (len1==NULL || len2==NULL)
     {
-        printf("Error!");
-        exit(1);
+        printf("Memory allocation error!");
+        exit(4);
     }
 
     for (i = 0; i < n1; i++)
@@ -205,7 +208,7 @@ void merge(int l, int m, int r)
     free(len2);
 }
 
-void StartMergeSort( int l, int r)
+void startMergeSort( int l, int r)
 {
     if (l < r)
     {
@@ -214,8 +217,8 @@ void StartMergeSort( int l, int r)
        int m = l + (r - l) / 2;
 
         // Sort first and second halves
-        StartMergeSort(l, m);
-        StartMergeSort(m + 1, r);
+        startMergeSort(l, m);
+        startMergeSort(m + 1, r);
 
         merge(l, m, r);
     }
@@ -224,7 +227,7 @@ void StartMergeSort( int l, int r)
 
 void mergeSort(int l, int r)
 {
-    StartMergeSort(l, r);
+    startMergeSort(l, r);
 }
 
 // A function to do counting sort of strings[] according to
@@ -235,15 +238,15 @@ void countSort(int n, int num)
     output=malloc(sizeof(char*)*n);
     if (output==NULL)
     {
-        printf("Error!");
-        exit(1);
+        printf("Memory allocation error!");
+        exit(4);
     }
     int i, count[256] = {0};
 
     // Store count of occurrences in count[]
     for (i = 0; i < n; i++)
     {
-        count[get_i(strings[i],lengths[i],num)]++;
+        count[get_ith_symbol(strings[i],lengths[i],num)]++;
     }
     // Change count[i] so that count[i] now contains actual
     //  position of this digit in output[]
@@ -254,16 +257,16 @@ void countSort(int n, int num)
     int* lens=malloc(n*sizeof(int));
     if (lens==NULL)
     {
-        printf("Error!");
-        exit(1);
+        printf("Memory allocation error!");
+        exit(4);
     }
     // Build the output array
     for (i = n - 1; i >= 0; i--)
     {
-        int index=get_i(strings[i],lengths[i],num);
+        int index=get_ith_symbol(strings[i],lengths[i],num);
         output[count[index] - 1] = strings[i];
         (lens[count[index]-1])=lengths[i];
-        count[get_i(strings[i],lengths[i],num)]--;
+        count[get_ith_symbol(strings[i],lengths[i],num)]--;
     }
 
     // Copy the output array to strings[], so that strings[] now
@@ -294,11 +297,9 @@ int getMax(int n)
 void radixsort(int n)
 {
 
-    // Find the maximum number to know number of digits
+    // Find the maximum number to know number of symbols
     int maxlen = getMax(n);
-    // Do counting sort for every digit. Note that instead
-    // of passing digit number, exp is passed. exp is 10^i
-    // where i is current digit number
+    // Do counting sort for every symbol.
     for (int num = maxlen - 1; num >= 0; num--)
     {
         countSort(n, num);
@@ -319,18 +320,21 @@ void print(int n)
 }
 
 // Driver program to test above functions
-int main(int argc, /*byte_char*/char **argv)
+int main(int argc, char **argv)
 {
-
+    if (argc != 4)
+    {
+        printf("Error! Incorrect number of parameters");
+        return 1;
+    }
     int true_n=atoi(argv[1]);
     int n = 0;
-//    setlocale(LC_ALL, "Rus");
     FILE *fptr;
     fptr = fopen(argv[2], "r");
     if (fptr == NULL)
     {
-        printf("Error!");
-        return 1;
+        printf("Error! Incorrect file name %s",argv[2]);
+        return 2;
     }
     char c;
     unsigned long long int current_n_for_malloc = startn;
@@ -338,20 +342,20 @@ int main(int argc, /*byte_char*/char **argv)
     strings = malloc(current_n_for_malloc * sizeof(char *));
     if (strings==NULL)
     {
-        printf("Error!");
-        return 1;
+        printf("Memory allocation error!");
+        return 4;
     }
     char *current_string = malloc(startlen* sizeof(char));
     if (current_string==NULL)
     {
-        printf("Error!");
-        return 1;
+        printf("Memory allocation error!");
+        return 4;
     }
     lengths = malloc(current_n_for_malloc * sizeof(int));
     if (lengths==NULL)
     {
-        printf("Error!");
-        return 1;
+        printf("Memory allocation error!");
+        return 4;
     }
     int current_string_list_len = 0;
     while(n<true_n)
@@ -359,8 +363,8 @@ int main(int argc, /*byte_char*/char **argv)
         c = getc(fptr);
         if (c==EOF)
         {
-            printf("Error!");
-            return 1;
+            printf("Error! Unexpected EOF");
+            return 3;
         }
         if (c == '\n')
         {
@@ -376,14 +380,14 @@ int main(int argc, /*byte_char*/char **argv)
                 strings = realloc(strings, current_n_for_malloc * sizeof(char *));
                 if (strings==NULL)
                 {
-                    printf("Error!");
-                    exit(1);
+                    printf("Memory allocation error!");
+                    return 4;
                 }
                 lengths = realloc(lengths, current_n_for_malloc * sizeof(int));
                 if (lengths==NULL)
                 {
-                    printf("Error!");
-                    exit(1);
+                    printf("Memory allocation error!");
+                    return 4;
                 }
             }
         }
@@ -397,8 +401,8 @@ int main(int argc, /*byte_char*/char **argv)
                 current_string = realloc(current_string, current_string_len);
                 if (current_string==NULL)
                 {
-                    printf("Error!");
-                    exit(1);
+                    printf("Memory allocation error!");
+                    return 4;
                 }
             }
         }
@@ -409,32 +413,78 @@ int main(int argc, /*byte_char*/char **argv)
         lengths[n] = (current_string_list_len);
         n++;
     }
-    switch (argv[3][0])
+    char sort_name_first_symbol=argv[3][0];
+    switch (sort_name_first_symbol)
     {
         case 'b':
         {
-            bubbleSort(n);
+            if (strcmp(argv[3], "bubble") == 0)
+            {
+                bubbleSort(n);
+            }
+            else
+            {
+                printf("Error: Sort %s was not found.", argv[3]);
+                return 1;
+            }
             break;
         }
         case 'i':
         {
-            insertionSort(n);
+            if (strcmp(argv[3], "insertion") == 0)
+            {
+                insertionSort(n);
+            }
+            else
+            {
+                printf("Error: Sort %s was not found.", argv[3]);
+                return 1;
+            }
             break;
         }
         case 'm':
         {
-            mergeSort(0, n - 1);
+            if (strcmp(argv[3], "merge") == 0)
+            {
+                mergeSort(0, n - 1);
+            }
+            else
+            {
+                printf("Error: Sort %s was not found.", argv[3]);
+                return 1;
+            }
             break;
         }
         case 'q':
         {
-            quickSort(0, n - 1);
+            if (strcmp(argv[3], "quick") == 0)
+            {
+                quickSort(0, n - 1);
+            }
+            else
+            {
+                printf("Error: Sort %s was not found.", argv[3]);
+                return 1;
+            }
             break;
         }
         case 'r':
         {
-            radixsort(n);
+            if (strcmp(argv[3], "radix") == 0)
+            {
+                radixsort(n);
+            }
+            else
+            {
+                printf("Error: Sort %s was not found.", argv[3]);
+                return 1;
+            }
             break;
+        }
+        default:
+        {
+            printf("Error: Sort %s was not found.", argv[3]);
+            return 1;
         }
     }
     print(n);
