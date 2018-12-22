@@ -143,6 +143,8 @@ char *nextWord() {
         wordSize++;
         nextChar = fgetc(stdin);
     }
+    if (!isLetter(word[wordSize - 1], false))
+        wordSize--; // to delete extra symbols if they are at the end of word
     word[wordSize] = '\0';
     if (wordSize == 0) { // found end of file
         free(word);
