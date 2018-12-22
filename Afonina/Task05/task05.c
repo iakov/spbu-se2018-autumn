@@ -34,7 +34,6 @@ void merge(int left, int middle, int right, char **base) {
         base[i] = buffer[i - left];
     }
     free(buffer);
-
 }
 
 void merge_sort(int left, int right, char **base) {
@@ -64,7 +63,6 @@ void bubble_sort(char **str, int cnt) {
         }
     }
 }
-
 
 void quick_sort(int left, int right, char **base) {
     if (left >= right) {
