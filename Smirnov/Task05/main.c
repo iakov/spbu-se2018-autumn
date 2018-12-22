@@ -229,14 +229,20 @@ int main(int argc, char *argv[])
     int n = atoi(argv[1]);
     data = malloc(n * sizeof(char*));
     int strCount = 0;
-    int wordLen = 100;
+    int wordLen = 500;
     char input[wordLen];
     char *buffer;
     for ( ; fgets(input, wordLen, file) != NULL; )
     {
         if (strCount == n)
         {
-            break;
+            for (int i = 0; i < n; ++i)
+            {
+                free(data[i]);
+            }
+            free(data);
+            fprintf(stderr, "Incorrect data");
+            exit(1);
         }
         buffer = malloc(wordLen * sizeof(char));
         if (buffer == NULL)
@@ -248,7 +254,7 @@ int main(int argc, char *argv[])
         buffer[strlen(buffer) - 1] = '\0';
         data[strCount++] = buffer;
     }
-    if (strCount != n)
+    if (strCount < n)
     {
         for (int i = 0; i < n; ++i)
         {
