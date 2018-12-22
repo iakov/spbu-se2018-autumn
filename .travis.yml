@@ -1,20 +1,28 @@
-language: c
+language: generic
 git:
   depth: 1
-addons:
-  apt:
-    update: false
-    packages:
-    - clang-format
-    - colordiff
+#addons:
+#  apt:
+#    update: false
+#    sources:
+#    - ubuntu-toolchain-r-test
+#    packages:
+#      - gcc
+#      - coreutils
+#      - diffutils
+#    - binutils
+#    - gcc-6
+#    - colordiff
 install:
  - .scripts/travis/install.sh
 script:
- - .scripts/travis/test_all.sh
+  - gcc --version
+  - .scripts/travis/test_all.sh
 matrix:
   include:
     - os: linux
-      dist: bionic
       name: "Some GNU/Linux"
+      dist: xenial
+#      env: CC=gcc-6
     - os: osx
       name: "macOS"
