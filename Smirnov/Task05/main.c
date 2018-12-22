@@ -228,47 +228,35 @@ int main(int argc, char *argv[])
     }
     int n = atoi(argv[1]);
     data = malloc(n * sizeof(char*));
-    for (int i = 0; i < n; ++i)
+    int strCount = 0;
+    int wordLen = 100;
+    char input[wordLen];
+    char *buffer;
+    for ( ; fscanf(file, "%s", input) != EOF; )
     {
-        data[i] = malloc(sizeof(char));
-        if (data[i] == NULL)
+        if (strCount == n)
         {
-            free(data);
+            break;
+        }
+        buffer = malloc(wordLen * sizeof(char));
+        if (buffer == NULL)
+        {
             fprintf(stderr, "Memory allocation error");
             exit(4);
         }
-
-        char input;
-        int len = 0;
-        int size = 1;
-        while ((input = fgetc(file)) != '\n')
-        {
-            if (input == EOF)
-            {
-                break;
-            }
-            len++;
-            if (size <= len)
-            {
-                size <<= 1;
-                data[i] = (char*) realloc(data[i], size * sizeof(char));
-                if (data[i] == NULL)
-                {
-                    free(data);
-                    fprintf(stderr, "Memory allocation error");
-                    exit(4);
-                }
-            }
-            data[i][len - 1] = input;
-            data[i][len] = '\0';
-        }
+        strcpy(buffer, input);
+        data[strCount++] = buffer;
     }
-    if (fgetc(file) != EOF)
+    if (strCount != n)
     {
+        for (int i = 0; i < n; ++i)
+        {
+            free(data[i]);
+        }
+        free(data);
         fprintf(stderr, "Incorrect data");
         exit(1);
     }
-
 
     if (strcmp(argv[3], "bubble") == 0)
     {
