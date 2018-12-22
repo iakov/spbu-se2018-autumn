@@ -78,11 +78,6 @@ void bubbleSort(char **array, int size)
     }
 }
 
-void insertionSort(char **array, int size)
-{
-    mergeSort(array, 0, size);
-}
-
 void quickSort(char **array, int left, int right)
 {
     if (left >= right)
@@ -120,6 +115,11 @@ void quickSort(char **array, int left, int right)
     {
         quickSort(array, leftPtr, right);
     }
+}
+
+void insertionSort(char **array, int size)
+{
+    quickSort(array, 0, size - 1);
 }
 
 void radixSort(char **array, int size)
@@ -219,34 +219,35 @@ int main(int argc, char *argv[])
     }
     int n = atoi(argv[1]);
     data = malloc(n * sizeof(char*));
-    int wordLen = 20;
-    char *input = malloc(wordLen * sizeof(char*));
+    int wordLen = 16;
+    char *input = malloc(wordLen * sizeof(char));
     for (int i = 0; i < n ; i++)
     {
         if (fgets(input, wordLen, file) == NULL)
         {
-            for (int j = 0; j < i; ++j)
+            /*for (int j = 0; j < i; ++j)
             {
                 free(data[j]);
             }
             free(data);
-            free(input);
+            free(input);*/
             fprintf(stderr, "Invalid data\n");
             exit(3);
         }
         data[i] = malloc((strlen(input) + 1) * sizeof(char));
         if (data[i] == NULL)
         {
-            for (int j = 0; j < n; j++)
+            /*for (int j = 0; j < n; j++)
                 free(data[j]);
             free(data);
-            free(input);
+            free(input);*/
             printf("Memory allocation error\n");
             exit(4);
         }
-        if (input[strlen(input) - 1] == '\n')
-            input[strlen(input) - 1] = '\0';
         strcpy(data[i], input);
+        int len = strlen(data[i]);
+        if (data[i][len - 1] == '\n')
+            data[i][len - 1] = '\0';
     }
     if (strcmp(argv[3], "bubble") == 0)
     {
@@ -286,7 +287,6 @@ int main(int argc, char *argv[])
     }
     free(data);
     free(input);
-    fflush(stdout);
     fclose(file);
     return 0;
 }
