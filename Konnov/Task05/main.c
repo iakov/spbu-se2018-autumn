@@ -235,7 +235,7 @@ int main(int argc, char *argv[])
 			break;
 		}
 		realSize++;
-		text[i] =(char *) malloc((strlen(buf) + 1) * sizeof(char));
+		text[i] =(char *) malloc((strlen(buf)) * sizeof(char));
 		if(NULL == text[i])
 		{
 			ErrorMessage("cant allocate memory for a string of text");
