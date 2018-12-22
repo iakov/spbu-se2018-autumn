@@ -8,7 +8,6 @@
 #define max(X, Y) (((X) > (Y)) ? (X) : (Y))
 #define startn 200
 #define startlen 10
-#define char unsigned char
 
 char **strings;
 int *lengths;
@@ -53,7 +52,7 @@ char cmp(char* a, char* b,int len_a,int len_b)
 void bubbleSort(int n)
 {
     int n1 = n - 1;
-    bool swapped = 1;
+    bool swapped;
     do
     {
         swapped = 0;
