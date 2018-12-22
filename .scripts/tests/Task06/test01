@@ -27,7 +27,7 @@ runTest(){
   < $test_input runTestCase ./1line.out
 
   test_input="$(mktemp -p . testInputXXXX)"
-  find "$TEST_SRCDIR" -name '*.h' -o -name '*.c' | xargs cat | sed 's/[^a-zA-Z \t]//g;s/\b[[:alpha:]]\b//g' > $test_input
+  find "$TEST_SRCDIR" -name '*.h' -o -name '*.c' | xargs cat | sed -r 's/[^a-zA-Z \t]//g;s/\b[[:alpha:]]\b//g' > $test_input
   gawk '/^.{2,}$/{a[$0]++ } END{for (k in a) { print k,a[k]} }' RS='[[:space:]]+' "$test_input" | sort -k 1,1 > "$test_input.out"
   < "$test_input" runTestCase "$test_input.out"
 
