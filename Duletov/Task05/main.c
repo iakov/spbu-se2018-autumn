@@ -223,8 +223,6 @@ int main(int argc, char **argv)
 	for(i=0;i<N;i++){
 		fwrite(&text[Strings[i][0]], Strings[i][1], 1, stdout);
 	}
-	if(N>1)
-	printf("error");
 	free(text);
 	return(0);
 }
