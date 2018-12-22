@@ -1,0 +1,2 @@
+#!/bin/bash
+>/dev/null echo "Running common $TESTNAME for task $TASKNAME of user $USERNAME in $PWD with $# parameters: $*"
