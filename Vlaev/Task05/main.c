@@ -323,7 +323,7 @@ long long int  getMax(long long int  n)
     }
     return mx;
 }
-void radixsort(long long int  n)
+void myradixsort(long long int  n)
 {
 
     // Find the maximum number to know number of symbols
@@ -587,7 +587,7 @@ int main(int argc, char **argv)
         {
             if (strcmp(argv[3], "radix") == 0)
             {
-                radixsort(n);
+                myradixsort(n);
             }
             else
             {
