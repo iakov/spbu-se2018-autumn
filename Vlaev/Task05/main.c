@@ -138,7 +138,7 @@ void merge(long long int  l, long long int  m, long long int  r)
     {
         printf("Memory allocation error!");
         free(lengths);
-        for (long long int  i=0;i<n;i++)
+        for (i=0;i<n;i++)
         {
             free(strings[i]);
         }
@@ -150,7 +150,7 @@ void merge(long long int  l, long long int  m, long long int  r)
     {
         printf("Memory allocation error!");
         free(lengths);
-        for (long long int  i=0;i<n;i++)
+        for (i=0;i<n;i++)
         {
             free(strings[i]);
         }
@@ -283,7 +283,7 @@ void countSort(long long int  n, long long int  num)
     {
         printf("Memory allocation error!");
         free(lengths);
-        for (long long int  i=0;i<n;i++)
+        for (i=0;i<n;i++)
         {
             free(strings[i]);
         }
