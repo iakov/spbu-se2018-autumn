@@ -148,7 +148,7 @@ void heapSort(char *text, int N){
 void FunctionDef(char *text, int N, char Name){
 	switch (Name)
     {
-    case 'h':
+    case 'b':
         bubbleSort(text, N);
         break;
     case 'i':
@@ -160,7 +160,7 @@ void FunctionDef(char *text, int N, char Name){
     case 'q':
         quickSort(text, 0, N);
         break;
-    case 'b':
+    case 'h':
         heapSort(text, N);
         break;
     case 'r':
@@ -221,9 +221,7 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 	for(i=0;i<N;i++){
-		for(j=0;j<Strings[i][1];j++){
-			printf("%c",text[Strings[i][0]+j]);
-		}
+		fwrite(&text[Strings[i][0]], Strings[i][1], 1, stdout);
 	}
 	free(text);
 	return(0);
