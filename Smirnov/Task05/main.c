@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
             }
             free(data);
             fprintf(stderr, "Incorrect data");
-            exit(1);
+            exit(3);
         }
         buffer = malloc(wordLen * sizeof(char));
         if (buffer == NULL)
@@ -262,7 +262,7 @@ int main(int argc, char *argv[])
         }
         free(data);
         fprintf(stderr, "Incorrect data");
-        exit(1);
+        exit(3);
     }
 
     if (strcmp(argv[3], "bubble") == 0)
