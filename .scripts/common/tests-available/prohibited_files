@@ -9,9 +9,9 @@ checkProhibitedFiles() {
     local type="$(file -b --mime-type $x)"
       [[ "$x" =~ ^[!-z]*$ ]] &&\
       case "$type" in
-        image/*) true;;
-        text/x-*) [ $(wc -l < $x) -lt 300 ] ;;
-        text/plain) [ $(wc -l < $x) -lt 200 ] ;;
+        image/*) [ $(wc -c < "$x") -lt 200000 ] ;;
+        text/x-*) [ $(wc -l < "$x") -lt 300 ] ;;
+        text/plain) [ $(wc -l < "$x") -lt 200 ] && [ $(wc -c < "$x") -lt 20000 ] ;;
 
         *) false;;
       esac \
