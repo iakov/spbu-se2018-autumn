@@ -1,9 +1,6 @@
 #pragma once
 
-#include <stdint.h>
-
-#define TRUE  1
-#define FALSE 0
+#include "utils.h"
 
 typedef void (* SortingMethod)();
 
@@ -18,7 +15,7 @@ extern int64_t g_linesCount;
 
 extern SortingMethod sort;
 
-extern int64_t initialize( int argumentsCount, char** arguments );
+extern void initialize( int argumentsCount, char** arguments );
 
 extern void print();
 

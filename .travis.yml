@@ -1,20 +1,57 @@
-language: c
+language: generic
 git:
   depth: 1
-addons:
-  apt:
-    update: false
-    packages:
-    - clang-format
-    - colordiff
+#addons:
+#  apt:
+#    update: false
+#    sources:
+#    - ubuntu-toolchain-r-test
+#    packages:
+#      - gcc
+#      - coreutils
+#      - diffutils
+#    - binutils
+#    - gcc-6
+#    - colordiff
 install:
  - .scripts/travis/install.sh
 script:
- - .scripts/travis/test_all.sh
+  - '$CC --version'
+  - .scripts/travis/test_all.sh
+
+env:
+  - CC=gcc
+
 matrix:
+  fast_finish: true
   include:
     - os: linux
-      dist: bionic
-      name: "Some GNU/Linux"
+      name: "Some GNU/Linux (Light checks)"
+    - os: linux
+      dist: xenial
+      name: "Xenial /GCC 8.1/ sanitized & with Intel MPX"
+      env: CC=gcc-8 TEST_SANITIZE_MODE=gcc-8-mpx
+      addons:
+        apt:
+          update: true
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - binutils
+      sudo: required
+
+    - os: linux
+      dist: xenial
+      name: "Xenial GCC 8 sanitized"
+      env: CC=gcc-8
+      addons:
+        apt:
+          update: true
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - gcc-8
+          - binutils
+
     - os: osx
       name: "macOS"
