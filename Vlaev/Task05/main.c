@@ -409,7 +409,7 @@ int main(int argc, char **argv)
     while(n<true_n)
     {
         c = getc(fptr);
-        if (c==EOF)
+        if (c==EOF || ferror(fptr))
         {
             printf("Error! Unexpected EOF");
             fclose(fptr);
@@ -492,19 +492,6 @@ int main(int argc, char **argv)
         strings[n] = current_string;
         lengths[n] = (current_string_list_len);
         n++;
-    }
-    if (n<true_n)
-    {
-        printf("File is too small!");
-        fclose(fptr);
-        free(lengths);
-        for (long long int  i=0;i<n;i++)
-        {
-            free(strings[i]);
-        }
-        free(strings);
-        free(current_string);
-        exit(3);
     }
     char sort_name_first_symbol=argv[3][0];
     switch (sort_name_first_symbol)
