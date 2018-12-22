@@ -5,6 +5,7 @@
 int main()
 {
     int *arr = calloc( 28, sizeof( int ) );
+
     for( short i = 0; 10 > i; i++ )
     {
         for( short j = 0; 10 > j; j++ )
@@ -17,6 +18,7 @@ int main()
     }
 
     int answer = 0;
+
     for( short i = 0; 28 > i; i++ )
     {
         answer += arr[i] * arr[i];
