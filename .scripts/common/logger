@@ -1,0 +1,24 @@
+#!/bin/bash
+#set -xuevo pipefail
+. $(dirname $(readlink -f "${BASH_SOURCE[0]}"))/functions
+
+totalErrors=0
+
+TESTNAME=${TESTNAME:-"UNINITIALIZED"}
+TASKNAME=${TASKNAME:-"UNINITIALIZED"}
+USERNAME=${USERNAME:-"UNINITIALIZED"}
+
+logOk() {
+   echoColor GREEN "$USERNAME/$TASKNAME:${TESTNAME:-} $*"
+   #((totalErrors += 1))
+}
+
+logWarn() {
+   echoColor YELLOW "$USERNAME/$TASKNAME:${TESTNAME:-} $*"
+}
+
+logError() {
+   echoColor RED "$USERNAME/$TASKNAME:${TESTNAME:-} $*"
+   ((totalErrors += 1))
+}
+

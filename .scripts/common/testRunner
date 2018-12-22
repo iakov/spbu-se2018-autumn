@@ -1,0 +1,75 @@
+#!/bin/bash
+. $(dirname $(readlink -f "${BASH_SOURCE[0]}"))/logger
+performTests() {
+  local task_dir=$2
+  local tests_dir=$1
+  pushd $task_dir > /dev/null
+  if [ -x $tests_dir/setup ] ; then $tests_dir/setup ; fi
+  for t in $tests_dir/test*; do 
+    export TESTNAME=$(basename $t)
+    if [ -x $t ] ; then
+      if $t ; then
+        logOk "PASSED"
+      else
+        local errCode=$?
+        local msg="!!!no explanation!!!"
+        case $errCode in
+        139) msg="access violation (invalid pointer?)";;
+        141) msg="SIGPIPE was issued, please, ask your teacher for an explanation";;
+        143) msg="killed on timeout (waiting for data input or too slow?)";;
+        155) msg="expecting exit codes 1..5 for incorrect input/parameters, got something else";;
+        171) msg="no binary (compilation issues?)";;
+        200) msg="unexpected output/result (incorrect program?)";;
+          *) msg="process exited with unexpected code: $errCode";;
+
+        esac
+        logError "FAILED - $msg"
+      fi
+    else
+      logWarn "SKIPPED"
+    fi
+  done
+  unset TESTNAME
+  popd > /dev/null
+}
+
+forTask() {
+  local task_src_dir="$1"
+  export TASKNAME=$(basename $task_src_dir)
+  local tests="$TESTS_ROOT_DIR"/"$TASKNAME"
+  if ! [ -d $tests ] ; then
+    logWarn "SKIPPED incorrect task directory name"
+  else
+    performTests "$tests" "$task_src_dir"
+  fi
+  unset TASKNAME
+}
+
+forAllTasks() {
+  # cd "$1" && pwd
+  for t in $(allDirsIn "$1") ; do 
+    forTask "$t"
+  done 
+}
+
+isUserDir() {
+  [ -d "$1" ]
+}
+
+forUser() {
+  local u="$1"
+  export USERNAME=$(basename $u)
+  if isUserDir "$u" ; then  forAllTasks "$u" ; fi
+  unset USERNAME
+}
+
+forAllUsers() {
+  local IFS=$'\n'
+  for u in $(allDirsIn "$1");    do  forUser "$u" ; done
+}
+
+setStatus() {
+  local errorsCnt=$1
+  ((errorsCnt > 0)) && echo 123 || echo 0
+}
+

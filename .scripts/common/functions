@@ -1,0 +1,76 @@
+#!/bin/bash
+#set -xuevo pipefail
+set -ueo pipefail
+
+export LC_ALL=C
+
+[ -n "${TS_COMMON:-}" ] && {  2>/dev/null return || exit ; } || TS_COMMON=1
+CURRENT_SCRIPT_DIR=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+ROOT_SOURCES_DIR=$(readlink -f $CURRENT_SCRIPT_DIR/../..)
+TESTS_ROOT_DIR=$(readlink -f $ROOT_SOURCES_DIR/.scripts/tests)
+
+CONSOLE_COLOR_GREEN='\033[0;32m'
+CONSOLE_COLOR_YELLOW='\033[0;33m'
+CONSOLE_COLOR_RED='\033[0;31m'
+CONSOLE_COLOR_DEFAULT='\033[0m'
+
+echoColor() {
+  local color=CONSOLE_COLOR_${1}
+  shift
+  echo -en "${!color}"
+  echo -en $*
+  echo -e "$CONSOLE_COLOR_DEFAULT"
+}
+
+allDirsIn() {
+  find "$1" -maxdepth 1 -mindepth 1 -type d ! -name '.*' | sort
+}
+
+performTests() {
+  local task_dir=$2
+  local tests_dir=$1
+  cd $task_dir
+  echoColor DEFAULT "Running tests from \"$tests_dir\" in \"$task_dir\""
+  if [ -x $tests_dir/setup ] ; then $tests_dir/setup ; fi
+  for t in $tests_dir/test*; do $t; done
+}
+
+forTask() {
+  local task_src_dir="$1"
+  TASK=$(basename $task_src_dir)
+  local tests="$TESTS_ROOT_DIR"/"$TASK"
+  if ! [ -d $tests ] ; then
+    logError "Incorrect task directory name"
+  else
+    performTests "$tests" "$task_src_dir"
+    logOk "PASSED"
+  fi
+}
+
+forAllTasks() {
+  # cd "$1" && pwd
+  for t in $(allDirsIn "$1") ; do 
+    forTask "$t"
+  done 
+}
+
+isUserDir() {
+  [ -d "$1" ]
+}
+
+forUser() {
+  local u="$1"
+  USERNAME=$(basename $u)
+  if isUserDir "$u" ; then  forAllTasks "$u" ; fi
+}
+
+forAllUsers() {
+  local IFS=$'\n'
+  for u in $(allDirsIn "$1");    do  forUser "$u" ; done
+}
+
+setStatus() {
+  local errorsCnt=$1
+  ((errorsCnt > 1)) && echo 123 || echo 0
+}
+

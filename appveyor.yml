@@ -1,5 +1,17 @@
+environment:
+  global:
+    PATH: 'C:\MinGW\msys\1.0\bin;c:\MinGW\bin;%PATH%'
+
+clone_depth: 1
+
+init:
+  - git config --global core.autocrlf input
+  - git config --global core.filemode false
 build_script:
   - dir > dir.txt
+  - set PATH
+  - sh -c '.scripts/travis/test_all.sh' || ver
+
 artifacts:
   - path: dir.txt
     name: dir-listing.txt
