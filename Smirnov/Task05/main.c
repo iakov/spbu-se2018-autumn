@@ -119,7 +119,15 @@ void quickSort(char **array, int left, int right)
 
 void insertionSort(char **array, int size)
 {
-    quickSort(array, 0, size - 1);
+    for (int i = 1; i < size; i++)
+    {
+        int j = i;
+        while (j > 0 && strcmp(array[j], array[j - 1]) < 0)
+        {
+            swapStrings(&array[j - 1], &array[j]);
+            j--;
+        }
+    }
 }
 
 void radixSort(char **array, int size)
