@@ -42,6 +42,11 @@ void forcedExit(char* message) {
     exit(-1);
 }
 
+int getStringChar(int stringId, int charId, int size) {
+    if (charId < size) return (int)input[stringId][charId];
+    return 0;
+}
+
 void radixSort(int fileSize, int stringSize) {
     int dictSize = 256;
     int numOfWords[dictSize];
@@ -53,24 +58,18 @@ void radixSort(int fileSize, int stringSize) {
     for (int i = 0; i < fileSize; i++) {
         stringLen[i] = strlen(input[i]);
     }
-    
-    int getStringChar(int stringId, int charId) {
-        if (charId < stringLen[stringId]) return (int)input[stringId][charId];
-        return 0;
-    }
-
     for (int digit = stringSize - 1; digit >= 0; digit--) {
         for (int i = 0; i < dictSize; i++) numOfWords[i] = 0;
         for (int i = 0; i < fileSize; i++) {
-            numOfWords[getStringChar(i, digit)]++;
+            numOfWords[getStringChar(i, digit, stringLen[i])]++;
         }
         nextWordIndex[0] = 0;
         for (int i = 1; i < dictSize; i++) {
                 nextWordIndex[i] = nextWordIndex[i - 1] + numOfWords[i - 1];
         }
         for (int i = 0; i < fileSize; i++) {
-            sortedIndexes[i] = nextWordIndex[getStringChar(i, digit)];
-            nextWordIndex[getStringChar(i, digit)]++;
+            sortedIndexes[i] = nextWordIndex[getStringChar(i, digit, stringLen[i])];
+            nextWordIndex[getStringChar(i, digit, stringLen[i])]++;
         }
         for (int i = 0; i < fileSize; i++) {
             while (i != sortedIndexes[i]) {
@@ -177,7 +176,7 @@ void quickSort(int left, int right, int strLen) {
 
 int main(int argc, char* argv[]) {
     if (argc < 4) {
-        ForcedExit("incorrect number of arguments");
+        forcedExit("incorrect number of arguments");
     }
     FILE *file = fopen(argv[2], "r");
     int maxStringLen = 16;
