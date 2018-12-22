@@ -17,7 +17,7 @@ compile(){
 
   export CHKP_RT_VERBOSE=2
   export CHKP_RT_MODE=stop
-  local cc_ver="$(${CC} --version |  gawk 'NR==1 && // { split($1, name, "-"); split($3, ver, "-"); split(ver[1], ver, "."); print (name[1]"-"ver[1]"."ver[2])}' FS='[ ]+')"
+  local cc_ver="$(${cc} --version |  gawk 'NR==1 && // { split($1, name, "-"); split($3, ver, "-"); split(ver[1], ver, "."); print (name[1]"-"ver[1]"."ver[2])}' FS='[ ]+')"
   local cc_ver_major="${cc_ver%.*}"
   local cc_name="${cc_ver%-*}"
 
