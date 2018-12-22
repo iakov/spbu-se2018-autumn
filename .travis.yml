@@ -1,15 +1,15 @@
 language: generic
 git:
   depth: 1
-addons:
-  apt:
-    update: false
+#addons:
+#  apt:
+#    update: false
 #    sources:
 #    - ubuntu-toolchain-r-test
-    packages:
-      - gcc
-      - coreutils
-      - diffutils
+#    packages:
+#      - gcc
+#      - coreutils
+#      - diffutils
 #    - binutils
 #    - gcc-6
 #    - colordiff
