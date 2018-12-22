@@ -11,6 +11,7 @@
 
 char **strings;
 long long int  *lengths;
+long long int  n = 0;
 //used to compare strings with different lengths
 char get_ith_symbol(char* a,long long int  len ,long long int  i)
 {
@@ -136,12 +137,24 @@ void merge(long long int  l, long long int  m, long long int  r)
     if (L==NULL)
     {
         printf("Memory allocation error!");
+        free(lengths);
+        for (long long int  i=0;i<n;i++)
+        {
+            free(strings[i]);
+        }
+        free(strings);
         exit(4);
     }
     char** R=malloc(n2*sizeof(char*));
     if (R==NULL)
     {
         printf("Memory allocation error!");
+        free(lengths);
+        for (long long int  i=0;i<n;i++)
+        {
+            free(strings[i]);
+        }
+        free(strings);
         exit(4);
     }
     long long int * len1=malloc(n1*sizeof(long long int ));
@@ -149,6 +162,12 @@ void merge(long long int  l, long long int  m, long long int  r)
     if (len1==NULL || len2==NULL)
     {
         printf("Memory allocation error!");
+        free(lengths);
+        for (i=0;i<n;i++)
+        {
+            free(strings[i]);
+        }
+        free(strings);
         exit(4);
     }
 
@@ -238,6 +257,12 @@ void countSort(long long int  n, long long int  num)
     if (output==NULL)
     {
         printf("Memory allocation error!");
+        free(lengths);
+        for (long long int  i=0;i<n;i++)
+        {
+            free(strings[i]);
+        }
+        free(strings);
         exit(4);
     }
     long long int  i, count[256] = {0};
@@ -257,6 +282,12 @@ void countSort(long long int  n, long long int  num)
     if (lens==NULL)
     {
         printf("Memory allocation error!");
+        free(lengths);
+        for (long long int  i=0;i<n;i++)
+        {
+            free(strings[i]);
+        }
+        free(strings);
         exit(4);
     }
     // Build the output array
@@ -317,8 +348,7 @@ void print(long long int  n)
         printf("\n");
     }
 }
-
-// Driver program to test above functions
+//Driver program to test above functions
 int main(int argc, char **argv)
 {
     if (argc != 4)
@@ -327,12 +357,13 @@ int main(int argc, char **argv)
         return 1;
     }
     long long int  true_n=(long long int )atoi(argv[1]);
-    long long int  n = 0;
+
     FILE *fptr;
     fptr = fopen(argv[2], "r");
     if (fptr == NULL)
     {
         printf("Error! Incorrect file name %s",argv[2]);
+        fclose(fptr);
         return 2;
     }
 
@@ -342,18 +373,35 @@ int main(int argc, char **argv)
     if (strings==NULL)
     {
         printf("Memory allocation error!");
+        fclose(fptr);
         return 4;
     }
     char *current_string = malloc(startlen* sizeof(char));
     if (current_string==NULL)
     {
         printf("Memory allocation error!");
+        fclose(fptr);
+        free(lengths);
+        for (long long int  i=0;i<n;i++)
+        {
+            free(strings[i]);
+        }
+        free(strings);
+        free(current_string);
         return 4;
     }
     lengths = malloc(current_n_for_malloc * sizeof(long long int ));
     if (lengths==NULL)
     {
         printf("Memory allocation error!");
+        fclose(fptr);
+        free(lengths);
+        for (long long int  i=0;i<n;i++)
+        {
+            free(strings[i]);
+        }
+        free(strings);
+        free(current_string);
         return 4;
     }
     long long int  current_string_list_len = 0;
@@ -364,6 +412,14 @@ int main(int argc, char **argv)
         if (c==EOF)
         {
             printf("Error! Unexpected EOF");
+            fclose(fptr);
+            free(lengths);
+            for (long long int  i=0;i<n;i++)
+            {
+                free(strings[i]);
+            }
+            free(strings);
+            free(current_string);
             return 3;
         }
         if (c == '\n')
@@ -381,12 +437,28 @@ int main(int argc, char **argv)
                 if (strings==NULL)
                 {
                     printf("Memory allocation error!");
+                    fclose(fptr);
+                    free(lengths);
+                    for (long long int  i=0;i<n;i++)
+                    {
+                        free(strings[i]);
+                    }
+                    free(strings);
+                    free(current_string);
                     return 4;
                 }
                 lengths = realloc(lengths, current_n_for_malloc * sizeof(long long int ));
                 if (lengths==NULL)
                 {
                     printf("Memory allocation error!");
+                    fclose(fptr);
+                    free(lengths);
+                    for (long long int  i=0;i<n;i++)
+                    {
+                        free(strings[i]);
+                    }
+                    free(strings);
+                    free(current_string);
                     return 4;
                 }
             }
@@ -402,6 +474,14 @@ int main(int argc, char **argv)
                 if (current_string==NULL)
                 {
                     printf("Memory allocation error!");
+                    fclose(fptr);
+                    free(lengths);
+                    for (long long int  i=0;i<n;i++)
+                    {
+                        free(strings[i]);
+                    }
+                    free(strings);
+                    free(current_string);
                     return 4;
                 }
             }
@@ -425,6 +505,14 @@ int main(int argc, char **argv)
             else
             {
                 printf("Error: Sort %s was not found.", argv[3]);
+                fclose(fptr);
+                free(lengths);
+                for (long long int  i=0;i<n;i++)
+                {
+                    free(strings[i]);
+                }
+                free(strings);
+                free(current_string);
                 return 1;
             }
             break;
@@ -438,6 +526,14 @@ int main(int argc, char **argv)
             else
             {
                 printf("Error: Sort %s was not found.", argv[3]);
+                fclose(fptr);
+                free(lengths);
+                for (long long int  i=0;i<n;i++)
+                {
+                    free(strings[i]);
+                }
+                free(strings);
+                free(current_string);
                 return 1;
             }
             break;
@@ -451,6 +547,14 @@ int main(int argc, char **argv)
             else
             {
                 printf("Error: Sort %s was not found.", argv[3]);
+                fclose(fptr);
+                free(lengths);
+                for (long long int  i=0;i<n;i++)
+                {
+                    free(strings[i]);
+                }
+                free(strings);
+                free(current_string);
                 return 1;
             }
             break;
@@ -464,6 +568,14 @@ int main(int argc, char **argv)
             else
             {
                 printf("Error: Sort %s was not found.", argv[3]);
+                fclose(fptr);
+                free(lengths);
+                for (long long int  i=0;i<n;i++)
+                {
+                    free(strings[i]);
+                }
+                free(strings);
+                free(current_string);
                 return 1;
             }
             break;
@@ -477,6 +589,14 @@ int main(int argc, char **argv)
             else
             {
                 printf("Error: Sort %s was not found.", argv[3]);
+                fclose(fptr);
+                free(lengths);
+                for (long long int  i=0;i<n;i++)
+                {
+                    free(strings[i]);
+                }
+                free(strings);
+                free(current_string);
                 return 1;
             }
             break;
@@ -484,6 +604,14 @@ int main(int argc, char **argv)
         default:
         {
             printf("Error: Sort %s was not found.", argv[3]);
+            fclose(fptr);
+            free(lengths);
+            for (long long int  i=0;i<n;i++)
+            {
+                free(strings[i]);
+            }
+            free(strings);
+            free(current_string);
             return 1;
         }
     }
