@@ -19,10 +19,8 @@ typedef enum
 
 extern void suicide( const char* suicideNote, Reason suicideReason );
 
-extern void* allocateMemory( uint64_t size );
+extern void* reallocateMemory( void* memory, uint64_t size );
 
-extern void freeMemory( void* pointer );
+#define allocateMemory(size) reallocateMemory(NULL, size)
 
-extern const char* skipWhiteSpaces( const char* string );
-
-#define isWhiteString(string) (*skipWhiteSpaces(string) == '\0')
+#define freeMemory(memory) reallocateMemory(memory, 0)
