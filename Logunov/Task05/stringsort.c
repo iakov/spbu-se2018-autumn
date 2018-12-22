@@ -6,7 +6,7 @@ const int MAX = 10000000;
 const int hMOD = 1000000007;
 const int hP = 357;
 
-char *input[MAX];
+char *input[10000000];
 
 int _Myhash(char *str) {
     long long hashStr = 0;
@@ -54,8 +54,8 @@ void radixSort(int fileSize, int stringSize) {
         stringLen[i] = strlen(input[i]);
     }
     
-    char getStringChar(int stringId, int charId) {
-        if (charId < stringLen[stringId]) return input[stringId][charId];
+    int getStringChar(int stringId, int charId) {
+        if (charId < stringLen[stringId]) return (int)input[stringId][charId];
         return 0;
     }
 
@@ -176,6 +176,9 @@ void quickSort(int left, int right, int strLen) {
 }
 
 int main(int argc, char* argv[]) {
+    if (argc < 4) {
+        ForcedExit("incorrect number of arguments");
+    }
     FILE *file = fopen(argv[2], "r");
     int maxStringLen = 16;
     int fileSize = atoi(argv[1]);
