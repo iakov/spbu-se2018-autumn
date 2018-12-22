@@ -53,7 +53,7 @@ void heapSort(char **array, int len)
         int pos = 1;
         while (pos < heapSize)
         {
-            if (2 * pos > heapSize || heap[2 * pos] == NULL)
+            if (2 * pos >= heapSize || heap[2 * pos] == NULL)
             {
                 if (2 * pos + 1 > heapSize || heap[2 * pos + 1] == NULL)
                 {
