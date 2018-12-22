@@ -15,11 +15,10 @@ void SwapStrings(int i, int j){
 }
 
 void bubbleSort(char *text, int N){
-	int i, j, z;
+	int i, j;
 	for(i=0; i<N; i++){
 		for(j=i+1; j<N; j++){
-			z = strcmp(&text[Strings[i][0]],&text[Strings[j][0]]);
-			if(z==1){
+			if(strcmp(&text[Strings[i][0]],&text[Strings[j][0]])==1){
 				SwapStrings(i,j);
 			}
 		}
@@ -149,7 +148,7 @@ void heapSort(char *text, int N){
 void FunctionDef(char *text, int N, char Name){
 	switch (Name)
     {
-    case 'b':
+    case 'h':
         bubbleSort(text, N);
         break;
     case 'i':
@@ -161,7 +160,7 @@ void FunctionDef(char *text, int N, char Name){
     case 'q':
         quickSort(text, 0, N);
         break;
-    case 'h':
+    case 'b':
         heapSort(text, N);
         break;
     case 'r':
