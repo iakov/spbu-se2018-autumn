@@ -6,7 +6,9 @@ compile(){
 #gcc-8  TEST_CFLAGS_SANITIZED="-fsanitize=address -fsanitize=pointer-subtract -fsanitize=pointer-compare -fsanitize=undefined -fsanitize-undefined-trap-on-error -fsanitize-address-use-after-scope -fsanitize=pointer-overflow -fsanitize=enum -fsanitize=bounds-strict -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow -fsanitize=signed-integer-overflow -fsanitize=return -fsanitize=null -fsanitize=integer-divide-by-zero -fsanitize=shift -ftrapv -O2"
 
   #gcc-5
-  TEST_CFLAGS_SANITIZED="-fsanitize=undefined -fno-sanitize=bounds -fsanitize-undefined-trap-on-error -fcheck-pointer-bounds -mmpx -ftrapv -O2 -fno-sanitize-recover"
+  #TEST_CFLAGS_SANITIZED="-fsanitize=undefined -fno-sanitize=bounds -fsanitize-undefined-trap-on-error -fcheck-pointer-bounds -mmpx -ftrapv -O2 -fno-sanitize-recover=all"
+  # general for Clang 5 & gcc 4.9+
+  TEST_CFLAGS_SANITIZED="-fsanitize=undefined -fsanitize=address -fsanitize-undefined-trap-on-error -ftrapv -O2 -fno-sanitize-recover=all"
 
 
   TEST_CFLAGS_STRICT="${TEST_CFLAGS_GENERAL} -Werror -Wno-error=sign-compare"
