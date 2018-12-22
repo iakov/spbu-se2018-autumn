@@ -214,7 +214,9 @@ int main(int argc, char **argv)
 	}
 	Strings[j][1]=z+1;
 	fclose(f);
+	if(N>1){
 	printf("%d %s", N, argv[3]);
+}
 	if(strcmp(argv[3],"bubble")==0 || strcmp(argv[3],"insertion")==0 || strcmp(argv[3],"heap")==0 || strcmp(argv[3],"merge")==0 || strcmp(argv[3],"radix")==0 || strcmp(argv[3],"quick")==0){
 	 FunctionDef(text, N, argv[3][0]);
 	}
