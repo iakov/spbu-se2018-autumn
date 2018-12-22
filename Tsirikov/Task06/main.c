@@ -21,17 +21,12 @@ int main(int argc, char *argv[])
 	{
 		if( EOF == scanf( "%s", filename ) )
 		{
-			printf("Reading error\n");
-			exit(4);
-		}
-		if( NULL != filename )
-		{
-			analyse_book( filename );
+			printf("Book name wasn`t given.\n");
+			exit(1);
 		}
 		else
 		{
-			printf("Book name wasn`t given.\n");
-			exit(1);
+			analyse_book( filename );
 		}
 	}
 
