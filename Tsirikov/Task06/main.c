@@ -2,7 +2,7 @@
 #include "table.h"
 
 
-#define MAXSTR 32
+#define MAXSTR 64
 
 
 int main()
@@ -11,10 +11,10 @@ int main()
 	set_hash_name('m');
 	Table = make_table();
 
-	char buf[MAXSTR];
-	while( EOF != scanf( "%s", buf ) )
+	char localbuf[MAXSTR];
+	while( NULL != fgets( localbuf, MAXSTR, stdin ) )
 	{
-		insert_key( (unsigned char *)( buf ), strlen( buf ) );
+		insert_key( (unsigned char *)( localbuf ), strlen( localbuf ) );
 	}
 
 	iterate();
