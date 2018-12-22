@@ -6,11 +6,9 @@ const int MAX = 10000000;
 const int hMOD = 1000000007;
 const int hP = 357;
 
-char *input[10000000];
-
 int _Myhash(char *str) {
     long long hashStr = 0;
-    for (int i = 0; i < strlen(str); i++) {
+    for (int i = 0; i < (int)strlen(str); i++) {
         hashStr = (hashStr * hP + str[i]) % hMOD;
     }
     return (int)hashStr;
@@ -39,15 +37,15 @@ void swapInt(int *a, int *b) {
 
 void forcedExit(char* message) {   
     printf("%s\n\n", message);
-    exit(-1);
+    exit(1);
 }
 
-int getStringChar(int stringId, int charId, int size) {
+int getStringChar(int stringId, int charId, char **input, int size) {
     if (charId < size) return (int)input[stringId][charId];
     return 0;
 }
 
-void radixSort(int fileSize, int stringSize) {
+void radixSort(char **input, int fileSize, int stringSize) {
     int dictSize = 256;
     int numOfWords[dictSize];
     int nextWordIndex[dictSize];
@@ -61,15 +59,15 @@ void radixSort(int fileSize, int stringSize) {
     for (int digit = stringSize - 1; digit >= 0; digit--) {
         for (int i = 0; i < dictSize; i++) numOfWords[i] = 0;
         for (int i = 0; i < fileSize; i++) {
-            numOfWords[getStringChar(i, digit, stringLen[i])]++;
+            numOfWords[getStringChar(i, digit, input, stringLen[i])]++;
         }
         nextWordIndex[0] = 0;
         for (int i = 1; i < dictSize; i++) {
                 nextWordIndex[i] = nextWordIndex[i - 1] + numOfWords[i - 1];
         }
         for (int i = 0; i < fileSize; i++) {
-            sortedIndexes[i] = nextWordIndex[getStringChar(i, digit, stringLen[i])];
-            nextWordIndex[getStringChar(i, digit, stringLen[i])]++;
+            sortedIndexes[i] = nextWordIndex[getStringChar(i, digit, input, stringLen[i])];
+            nextWordIndex[getStringChar(i, digit, input, stringLen[i])]++;
         }
         for (int i = 0; i < fileSize; i++) {
             while (i != sortedIndexes[i]) {
@@ -83,7 +81,7 @@ void radixSort(int fileSize, int stringSize) {
     free(stringLen);
 }
 
-void bubbleSort(int fileSize) {
+void bubbleSort(char **input, int fileSize) {
     for (int i = 0; i < fileSize; i++) {
         for (int j = 0; j < fileSize; j++) {
             if (strcmp(input[i], input[j]) < 0) {
@@ -93,7 +91,7 @@ void bubbleSort(int fileSize) {
     }
 }
 
-void insertionSort(int fileSize) {
+void insertionSort(char **input, int fileSize) {
     for (int i = 1; i < fileSize; i++) {
         int j = i;
         while (j > 0 && strcmp(input[j], input[j - 1]) < 0) {
@@ -103,13 +101,13 @@ void insertionSort(int fileSize) {
     }
 }
 
-void mergeSort(int left, int right) {
+void mergeSort(char **input, int left, int right) {
     if (right - left <= 1) {
         return;
     }
     int mid = (left + right) / 2;
-    mergeSort(left, mid);
-    mergeSort(mid, right);
+    mergeSort(input, left, mid);
+    mergeSort(input, mid, right);
     int *sortedIndexes = malloc((right - left) * sizeof(int));
     if (sortedIndexes == NULL)
         forcedExit("no memory");
@@ -147,7 +145,7 @@ void mergeSort(int left, int right) {
     free(sortedIndexes);
 }
 
-void quickSort(int left, int right, int strLen) {
+void quickSort(char **input, int left, int right, int strLen) {
     if (right - left <= 1)
         return;
     char *sep = (char*)malloc(strLen * sizeof(char));
@@ -170,8 +168,8 @@ void quickSort(int left, int right, int strLen) {
         }
     }
     free(sep);
-    quickSort(left, rSepIndex + 1, strLen);
-    quickSort(rSepIndex + 1, right, strLen);
+    quickSort(input, left, rSepIndex + 1, strLen);
+    quickSort(input, rSepIndex + 1, right, strLen);
 }
 
 int main(int argc, char* argv[]) {
@@ -184,11 +182,14 @@ int main(int argc, char* argv[]) {
     if (file == NULL) {
         forcedExit("File name is incorrect");
     }
+    char **input = (char**)malloc(fileSize * sizeof(char**));
+    if (input == NULL)
+        forcedExit("no memory");
     char *buf = (char*)malloc((maxStringLen) * sizeof(char));
     for (int i = 0; i < fileSize; i++) {
         if (fgets(buf, maxStringLen, file) == NULL)
             forcedExit("Failed when reading");
-        input[i] = (char*)malloc((strlen(buf)) * sizeof(char));
+        input[i] = (char*)malloc((strlen(buf) + 1) * sizeof(char));
         if (input[i] == NULL) 
             forcedExit("no memory");
         strcpy(input[i], buf);
@@ -199,19 +200,19 @@ int main(int argc, char* argv[]) {
     free(buf); 
     switch (_Myhash(argv[3])) {
         case radix:
-            radixSort(fileSize, maxStringLen);
+            radixSort(input, fileSize, maxStringLen);
             break;
         case merge:
-            mergeSort(0, fileSize);
+            mergeSort(input, 0, fileSize);
             break;
         case bubble:
-            bubbleSort(fileSize);
+            bubbleSort(input, fileSize);
             break;
         case insertion:
-            insertionSort(fileSize);
+            insertionSort(input, fileSize);
             break;
         case quick:
-            quickSort(0, fileSize, maxStringLen);
+            quickSort(input, 0, fileSize, maxStringLen);
             break;
         case __debug:  
             //__debug
@@ -224,6 +225,7 @@ int main(int argc, char* argv[]) {
         printf("%s\n", input[i]);
         free(input[i]);
     }
+    free(input);
     fclose(file);
     return 0;
 }               
