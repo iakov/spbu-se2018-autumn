@@ -232,7 +232,7 @@ int main(int argc, char *argv[])
     int wordLen = 100;
     char input[wordLen];
     char *buffer;
-    for ( ; fscanf(file, "%s", input) != EOF; )
+    for ( ; fgets(input, wordLen, file) != NULL; )
     {
         if (strCount == n)
         {
@@ -245,6 +245,7 @@ int main(int argc, char *argv[])
             exit(4);
         }
         strcpy(buffer, input);
+        buffer[strlen(buffer) - 1] = '\0';
         data[strCount++] = buffer;
     }
     if (strCount != n)
