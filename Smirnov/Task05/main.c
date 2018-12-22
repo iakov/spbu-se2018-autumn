@@ -234,7 +234,7 @@ int main(int argc, char *argv[])
     {
         if (fgets(input, wordLen, file) == NULL)
         {
-            for (int j = 0; j < n; ++j)
+            for (int j = 0; j < i; ++j)
             {
                 free(data[j]);
             }
@@ -255,7 +255,6 @@ int main(int argc, char *argv[])
         }
         strcpy(data[i], input);
     }
-
     if (strcmp(argv[3], "bubble") == 0)
     {
         bubbleSort(data, n);
