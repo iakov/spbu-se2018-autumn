@@ -16,14 +16,15 @@ runTest(){
     cat compile.log
     return 171
   fi
-  local test_input=./one_liner
+  local test_input=./1line
   echo "xxxx" > $test_input
+  echo "xxxx 1" > ./1line.out
   touch empty
   local exitCode
   TESTSTEP=0
   exitCode=0
   < /dev/null runTestCase empty
-  < $test_input runTestCase <(echo "xxxx 1")
+  < $test_input runTestCase ./1line.out
 
   test_input="$(mktemp -p . testInputXXXX)"
   find "$TEST_SRCDIR" -name '*.h' -o -name '*.c' | xargs cat | sed -r 's/[^a-zA-Z \t]//g;s/\b[[:alpha:]]\b//g' > $test_input
