@@ -120,6 +120,7 @@ void insert_key( unsigned char *key, long long int length )
   }
 }
 
+/*	unused in final realisation
 
 long long int key_search_in_chain( Item *socket, unsigned char *key, long long int length )
 {
@@ -154,6 +155,8 @@ void find_key( unsigned char *key, long long int length )
     printf( "Taken %lld key%s\n", value, LETTER( value ) );
   }
 }
+
+*/
 
 
 void show_items_in_chain( Item *socket )
