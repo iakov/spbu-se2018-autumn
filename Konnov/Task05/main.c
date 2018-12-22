@@ -38,11 +38,11 @@ void ErrorMessage(char *message)
 	printf("//\n%s\n//\n", message);
 }
 
-void BubbleSort(char **bubbleText)
+void BubbleSort(char **bubbleText,int n)
 {
-	for (i = 0; i < sizeFile; i++)
+	for (i = 0; i < n; i++)
 	{
-		for(j = 0; j < sizeFile - i - 1; j++)
+		for(j = 0; j < n - i - 1; j++)
 		{
 			if (strcmp(bubbleText[j], bubbleText[j + 1]) == 1)
 			{
@@ -54,9 +54,9 @@ void BubbleSort(char **bubbleText)
 	}
 }
 
-void InsertionSort(char **insertionText)
+void InsertionSort(char **insertionText, int n)
 {
-	for(i = 1; i < sizeFile; i++)
+	for(i = 1; i < n; i++)
 	{
 		for (j = i - 1; j >= 0; j--)
 		{
@@ -212,7 +212,7 @@ int main(int argc, char *argv[])
 		exit(2);
 	}
 	sizeFile = atoi(argv[1]);
-	int strLength = 10000;
+	int strLength = 20;
 
 	char **text = (char **) malloc(sizeFile * sizeof(char *));
 	char *buf = (char *) malloc(strLength * sizeof(char));
@@ -244,40 +244,23 @@ int main(int argc, char *argv[])
 		strcpy(text[i], buf);
 	} 
 	free(buf);
-	sizeFile = realSize;
-	if(sizeFile != 0)
-	{
-		if(NULL == realloc(text, (sizeFile) * sizeof(char *)))
-		{
-			ErrorMessage("Cant reallocate memory for text in main function");
-			exit(4);
-		}
-	}
-	else
-	{
-		if(NULL == realloc(text, sizeof(char *)))
-		{
-			ErrorMessage("Cant reallocate memory for 0 str text in main function");
-			exit(4);
-		}
-	}
-
+	
 	switch(SortSelection(argv[3]))
 	{
 		case 1:
-				BubbleSort(text);
+				BubbleSort(text, realSize);
 				break;
 		case 2:
-				InsertionSort(text);
+				InsertionSort(text, realSize);
 				break;
 		case 3:
-				MergeSort(text, sizeFile);
+				MergeSort(text, realSize);
 				break;
 		case 4:
-				QuickSort(text, 0, sizeFile - 1);
+				QuickSort(text, 0, realSize - 1);
 				break;
 		case 5:
-				HeapSort(text, sizeFile);
+				HeapSort(text, realSize);
 				break;
 		default:
 				ErrorMessage("Unknown algorithm");
@@ -285,11 +268,15 @@ int main(int argc, char *argv[])
 				break;
 	}
 
-	for(i = 0; i < sizeFile; i++)
+	for(i = 0; i < realSize; i++)
 	{
 		printf("%s", text[i]);
 	}
 
+	for(i = 0; i < sizeFile; i++)
+	{
+		free(text[i]);
+	}	
 	free(text);
 	fclose(file);
 
