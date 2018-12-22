@@ -26,22 +26,24 @@ matrix:
       distro: xenial
       name: "Xenial GCC 8 sanitized & with Intel MPX"
       env: CC=gcc-8 TEST_SANITIZE_MODE=gcc-8-mpx
-      apt:
-        update: true
-        sources:
-        - ubuntu-toolchain-r-test
-        packages:
+      addons:
+        apt:
+          update: true
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
           - gcc-8
 
     - os: linux
       distro: xenial
       name: "Xenial GCC 8 sanitized"
       env: CC=gcc-8
-      apt:
-        update: true
-        sources:
-        - ubuntu-toolchain-r-test
-        packages:
+      addons:
+        apt:
+          update: true
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
           - gcc-8
 
     - os: osx
