@@ -85,8 +85,7 @@ int main(int argc, char * inputstring[])
 	}
 	else if(!strcmp(inputstring[3], "quick"))
 	{
-		Sort_Bubble(strings, Numberoflines);
-		//Sort_Quick(strings, 0, Numberoflines-1);
+		Sort_Quick(strings, 0, Numberoflines-1);
 	}
 	else if(!strcmp(inputstring[3], "radix"))
 	{
