@@ -128,11 +128,11 @@ void quickSort(char **quickText, int left, int right)
 
 	while(ptrL <= ptrR)
 	{
-		while(strcmp(mid, quickText[ptrL]) == 1)
+		while(strcmp(mid, quickText[ptrL]) > 0)
 		{
 			ptrL++;
 		}
-		while(strcmp(quickText[ptrR], mid) == 1)
+		while(strcmp(quickText[ptrR], mid) > 0)
 		{
 			ptrR--;
 		}
@@ -145,16 +145,9 @@ void quickSort(char **quickText, int left, int right)
 			ptrR--;
 		}
 	}
-
-	if(left < ptrR)
-	{
-		quickSort(quickText, left, ptrR);
-	}
-
-	if(ptrL < right)
-	{
-		quickSort(quickText, ptrL, right);
-	}
+	
+	quickSort(quickText, left, ptrR);
+	quickSort(quickText, ptrL, right);
 }
 
 void heap(char **textInHeap, int amount, int i)
