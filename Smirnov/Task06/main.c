@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <time.h>
-#include "md5.h"
+#include "md5_new.h"
 
 const int MD5_SIZE = 64;
 
@@ -30,6 +29,7 @@ HashMap map;
 
 int getHash(char input[], int size)
 {
+    /*
     MD5_CTX hashGenerator;
     char *md5 = calloc(MD5_SIZE, sizeof(char));
 
@@ -41,8 +41,20 @@ int getHash(char input[], int size)
     for (int i = 0; i < (int) strlen(md5); ++i)
         hash = ( ( hash * 16 + (int) md5[i] ) % size + size) % size;
     free(md5);
+    */
+    int *md5_hash = calloc(4, sizeof(int));
 
-    return hash;
+    if (md5_hash == NULL)
+    {
+        printf("Memory allocation error\n");
+        exit(4);
+    }
+
+    md5((uint8_t *) input, strlen(input), (uint8_t *) md5_hash);
+    uint32_t hash = md5_hash[0];
+    free(md5_hash);
+
+    return hash % size;
 }
 
 
@@ -118,7 +130,6 @@ void clear(HashMap *map)
             free(temp->key);
             free(temp);
         }
-        map->table[i] = NULL;
     }
     free(map->table);
 }
@@ -255,7 +266,7 @@ int main()
     char *buffer;
     for ( ; scanf("%s", word) != EOF; )
     {
-        //if (strcmp(word, "!!!") == 0) break;
+        if (strcmp(word, "!!!") == 0) break;
         if (strlen(word) != 0)
         {
             int i = 0;
