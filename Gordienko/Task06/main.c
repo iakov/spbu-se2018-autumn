@@ -50,7 +50,9 @@ uint32_t getHash(char *key)
         exit(4);
     }
     md5((uint8_t *)key, strlen(key), (uint8_t *)res);
-    return res[0];
+    uint32_t hash = res[0];
+    free(res);
+    return hash;
 }
 
 void clear(hashTable table)
@@ -228,6 +230,7 @@ int main(int argc, char *argv[])
             strcpy(buffer, word);
             add(&table, buffer);
             count = 0;
+            free(buffer);
         }
     }
 
