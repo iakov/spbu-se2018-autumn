@@ -18,7 +18,9 @@ void swap(char *str1, char *str2)
 
 void bubbleSort(char *arr[], int num)
 {
-   for (int i = 0; i < num-1; i++)
+    if (num < 2)
+        return;
+    for (int i = 0; i < num-1; i++)
        for (int j = 0; j < num-i-1; j++)
            if (strcmp(arr[j], arr[j+1]) > 0)
             swap(arr[j], arr[j+1]);
@@ -225,7 +227,6 @@ int main(int argc, char *argv[])
         }
         strcpy(array[i], temp);
     }
-    if (strnum > 1)
         sort(algorithm, array, strnum);
     for(i = 0; i < strnum; ++i)
     {
