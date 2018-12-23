@@ -81,12 +81,12 @@ int main(int argc, char * inputstring[])
 	}
 	else if(!strcmp(inputstring[3], "merge"))
 	{
-		Sort_Bubble(strings, Numberoflines);
-		//Sort_Merge(strings, Numberoflines);
+		Sort_Merge(strings, Numberoflines);
 	}
 	else if(!strcmp(inputstring[3], "quick"))
 	{
-		Sort_Quick(strings, 0, Numberoflines-1);
+		Sort_Bubble(strings, Numberoflines);
+		//Sort_Quick(strings, 0, Numberoflines-1);
 	}
 	else if(!strcmp(inputstring[3], "radix"))
 	{
