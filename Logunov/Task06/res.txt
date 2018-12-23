@@ -1,0 +1,13 @@
+Found 20657 different words (627571 total) in "War_and_Peace.txt".
+The most frequent words are:
+ - "the", found 40025 times;
+ - "and", found 22237 times;
+ - "to", found 18031 times;
+ - "of", found 16284 times;
+ - "in", found 10890 times.
+The most frequent words with length at least 5 are:
+ - "which", found 2311 times;
+ - "pierre", found 2265 times;
+ - "prince", found 2253 times;
+ - "there", found 1958 times;
+ - "about", found 1446 times.
