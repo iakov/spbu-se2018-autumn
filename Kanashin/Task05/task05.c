@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define LENGTH_BUFF 10000
 char **str;
 
 void swapLines(char* str[], int firstInd, int secondInd)
@@ -208,47 +209,32 @@ int main(int argc, char *argv[])
         exit(2);
     }
 
-    str = malloc(amountString*sizeof(char*));
+    char **str = malloc(amountString*sizeof(char*));
     if (str == NULL)
     {
         printf("Cannot allocate memory for array of lines");
         exit(4);
     }
+    char buffer[LENGTH_BUFF] ;
 
     for (int numStr = 0; numStr < amountString; numStr++){
+
         int lenOfStr = 1;
-        str[numStr] = (char*) malloc(lenOfStr*sizeof(char));
+
+        int currLenOfCurrStr;
+        if (fgets(buffer, LENGTH_BUFF, myFile) == NULL)
+        {
+            amountString = numStr;
+            break;
+        }
+
+        str[numStr] = malloc((strlen(buffer)+1)*sizeof(char));
         if (str[numStr] == NULL)
         {
-            printf("Cannot allocate memory for line firstly");
+            printf("Cannot allocate memory for line");
             exit(4);
         }
-        char symbBuff;
-        for (int currLenOfCurrStr=0; (symbBuff = fgetc(myFile)) != '\n'; currLenOfCurrStr++){
-            if  (symbBuff == EOF && ferror(myFile))
-            {
-                printf("Error of reading file");
-                exit(3);
-            }
-            else if (symbBuff == EOF)
-            {
-                amountString = numStr;
-                break;
-            }
-
-            if (currLenOfCurrStr+1>=lenOfStr)
-            {
-                lenOfStr *=2;
-                str[numStr] = (char*) realloc(str[numStr], lenOfStr*sizeof(char));
-                if (str[numStr] == NULL)
-                {
-                    printf("Cannot allocate memory for line");
-                    exit(4);
-                }
-            }
-            str[numStr][currLenOfCurrStr] = symbBuff;
-            str[numStr][currLenOfCurrStr+1] = '\0';
-        }
+        strcpy(str[numStr], buffer);
     }
     fclose(myFile);
 
@@ -285,7 +271,7 @@ int main(int argc, char *argv[])
 
     for (int numStr=0; numStr<amountString; numStr++)
     {
-        printf("%s\n", str[numStr]);
+        printf("%s", str[numStr]);
         free(str[numStr]);
     }
     free(str);
