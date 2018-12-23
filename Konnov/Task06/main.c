@@ -209,7 +209,7 @@ int main(int argc, char *argv[])
 	{
 		if(table.item[i].key != NULL)
 		{
-			printf("\n%s %i", table.item[i].key, table.item[i].value);
+			printf("%s %i\n", table.item[i].key, table.item[i].value);
 			if(table.item[i].value > maxWord)
 			{
 				maxWord = table.item[i].value;
@@ -220,7 +220,7 @@ int main(int argc, char *argv[])
 	{
 		if(table.item[i].key != NULL && table.item[i].value == maxWord)
 		{
-			fprintf(stderr, "\n%s %i", table.item[i].key, table.item[i].value);
+			fprintf(stderr, "%s %i\n", table.item[i].key, table.item[i].value);
 		}
 	}
 	FreeTable(&table);
