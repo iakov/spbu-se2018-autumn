@@ -272,8 +272,8 @@ int main(int argc, char *argv[])
     }
     else if (strcmp(argv[3], "radix") == 0)
     {
-        radixSort(data, n);
-        //quickSort(data, 0, n - 1);
+        //radixSort(data, n);
+        quickSort(data, 0, n - 1);
     }
     else
     {
