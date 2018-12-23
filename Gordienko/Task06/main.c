@@ -39,7 +39,7 @@ hashTable newHashTable(int size)
     }
     newTable.wordsCount = 0;
     return newTable;
-};
+}
 
 uint32_t getHash(char *key)
 {
@@ -162,10 +162,10 @@ void printStat(hashTable table)
 
 void printStatAdvanced(hashTable table)
 {
-    int maxValue;
+    int maxValue = 0;
     int maxListLength = 0;
     int totalWordsValue = 0;
-    node *maxNode;
+    node *maxNode = NULL;
     for (int i = 0; i < table.size; i++)
     {
         node *currNode = table.listArr[i];
