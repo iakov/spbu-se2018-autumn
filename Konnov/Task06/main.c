@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include "MD5.h"
 
-void StopProgram(char *message, int value)
+void stopProgram(char *message, int value)
 {
 	printf("%s", message);
 	exit(value);
@@ -23,19 +23,19 @@ struct HashTable
 	uint32_t realSize;
 };
 
-struct HashTable NewTable(int size)
+struct HashTable newTable(int size)
 {
-	struct HashTable newTable;
-	newTable.size = size;
-	newTable.realSize = 0;
-	if(NULL == (newTable.item = calloc(size, sizeof(struct HashTableItem))))
+	struct HashTable table;
+	table.size = size;
+	table.realSize = 0;
+	if(NULL == (table.item = calloc(size, sizeof(struct HashTableItem))))
 	{
-		StopProgram("cant allocate memory for item of a table in NewTable function",4);
+		stopProgram("cant allocate memory for item of a table in NewTable function",4);
 	}
-	return newTable;
+	return table;
 }
 
-void FreeTable(struct HashTable *table)
+void freeTable(struct HashTable *table)
 {
 	uint32_t i;
 	for(i = 0; i < table->size; i++)
@@ -50,12 +50,12 @@ void FreeTable(struct HashTable *table)
 	table->realSize = 0;
 }
 
-int Get(struct HashTable *table, char *key)
+int get(struct HashTable *table, char *key)
 {
 	uint32_t *hash = calloc(4, sizeof(int));
 	if(NULL == hash)
 	{
-		StopProgram("cant allocate memory for hash in Get function",4);
+		stopProgram("cant allocate memory for hash in Get function",4);
 	}
 	md5((uint8_t *) key, strlen(key), (uint8_t *) hash);
 	uint32_t pos = hash[0] % table->size;
@@ -75,12 +75,12 @@ int Get(struct HashTable *table, char *key)
 	return table->item[pos].value;
 }
 
-void IncreaseTable(struct HashTable *table, uint32_t newSize)
+void increaseTable(struct HashTable *table, uint32_t newSize)
 {
 	struct HashTableItem *newTableItem = calloc(newSize, sizeof(struct HashTableItem));
 	if(NULL == newTableItem)
 	{
-		StopProgram("cant allocate memory for a table in IncreaseTable function",4);
+		stopProgram("cant allocate memory for a table in IncreaseTable function",4);
 	}
 	uint32_t i;
 	for(i = 0; i < table->size; i++)
@@ -90,7 +90,7 @@ void IncreaseTable(struct HashTable *table, uint32_t newSize)
 			uint32_t *hash = calloc(4, sizeof(int));
 			if(NULL == hash)
 			{
-				StopProgram("cant allocate memory for hash in IncreaseTable function",4);
+				stopProgram("cant allocate memory for hash in IncreaseTable function",4);
 			}
 			md5((uint8_t *) table->item[i].key, strlen(table->item[i].key), (uint8_t *) hash);
 			uint32_t pos = hash[0] % newSize;
@@ -111,12 +111,12 @@ void IncreaseTable(struct HashTable *table, uint32_t newSize)
 	table->size = newSize;
 }
 
-void Add(struct HashTable *table, char *key, int value)
+void add(struct HashTable *table, char *key, int value)
 {
 	uint32_t *hash = calloc(4, sizeof(int));
 	if(NULL == hash)
 	{
-		StopProgram("cant allocate memory for a hash in Add function",4);
+		stopProgram("cant allocate memory for a hash in Add function",4);
 	}
 	md5((uint8_t *) key, strlen(key), (uint8_t *) hash);
 	uint32_t pos = hash[0] % table->size;
@@ -139,12 +139,12 @@ void Add(struct HashTable *table, char *key, int value)
 	table->realSize++;
 	if(table->realSize >= table->size / 2)
 	{
-		IncreaseTable(table, table->size * 2);
+		increaseTable(table, table->size * 2);
 	}
 	hash = calloc(4, sizeof(int));
 	if(NULL == hash)
 	{
-		StopProgram("cant allocate memory for a hash in Add function",4);
+		stopProgram("cant allocate memory for a hash in Add function",4);
 	}
 	md5((uint8_t *) key, strlen(key), (uint8_t *) hash);
 	pos = hash[0] % table->size;
@@ -169,9 +169,9 @@ int main(int argc, char *argv[])
 	uint32_t i;
 	if(argc != 1)
 	{
-		StopProgram("wrong number of args", 1);
+		stopProgram("wrong number of args", 1);
 	}
-	struct HashTable table = NewTable(512);
+	struct HashTable table = newTable(512);
 	char input;
 	int len = 0;
 	char word[100000];
@@ -195,10 +195,10 @@ int main(int argc, char *argv[])
 			word[len] = '\0';
 			if(NULL == (buf = (char *) calloc(strlen(word) + 1, sizeof(char))))
 			{
-				StopProgram("cant allocate memory for buffer in main function",4);
+				stopProgram("cant allocate memory for buffer in main function",4);
 			}
 			strcpy(buf,word);
-			Add(&table, buf, Get(&table, buf) + 1);
+			add(&table, buf, get(&table, buf) + 1);
 			len = 0;
 		}
 	}
@@ -221,6 +221,6 @@ int main(int argc, char *argv[])
 			fprintf(stderr, "%s %i\n", table.item[i].key, table.item[i].value);
 		}
 	}
-	FreeTable(&table);
+	freeTable(&table);
 	return 0;
 }
