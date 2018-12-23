@@ -36,24 +36,20 @@ jobs:
       script:
       - '$CC --version'
       - .scripts/travis/test_all.sh
-    - stage: full
-      install:
-      - .scripts/travis/install.sh
-      script:
-      - '$CC --version'
-      - .scripts/travis/test_all.sh
-      os: linux
-      dist: xenial
-      name: "Xenial /GCC 8.1/ sanitized & with Intel MPX"
-      env: CC=gcc-8 TEST_SANITIZE_MODE=gcc-8-mpx
-      addons:
-        apt:
-          update: true
-          sources:
-          - ubuntu-toolchain-r-test
-          packages:
-          - binutils
-          sudo: required
+        #    - stage: full
+        #      install:
+        #      - .scripts/travis/install.sh
+        #      script:
+        #      - '$CC --version'
+        #      - .scripts/travis/test_all.sh
+        #      os: linux
+        #      dist: xenial
+        #      sudo: required
+        #      name: "Xenial /GCC 8.1/ sanitized & with Intel MPX"
+        #      env: CC=gcc-8 TEST_SANITIZE_MODE=gcc-8-mpx
+        #      addons:
+        #        apt:
+        #          update: true
 
     - stage: full
       install:
