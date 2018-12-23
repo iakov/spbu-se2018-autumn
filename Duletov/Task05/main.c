@@ -85,7 +85,6 @@ void quickSort(char *text, int start, int N){
         while(M!=R && strcmp(&text[Strings[R][0]],&text[Strings[M][0]])>0){
             R--;
         }
-            //printf("%d %d\n", L, R);
         if (L <= R){
             SwapStrings(L,R);
             if(M==L){
@@ -111,9 +110,6 @@ void quickSort(char *text, int start, int N){
 		quickSort(text, start, R);
     }
     if (L < N){
-	    if(L==start){
-				return;
-			}
 			quickSort(text, L, N);
 	}
 }
@@ -165,7 +161,7 @@ void FunctionDef(char *text, int N, char Name){
         mergeSort(text, N-1, 0);
         break;
     case 'q':
-        bubbleSort(text, N);
+        quickSort(text, 0, N-1);
         break;
     case 'h':
         heapSort(text, N);
