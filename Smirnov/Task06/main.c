@@ -245,6 +245,7 @@ int print(char *key, int value)       // example function for filter()
     return value;
 }
 
+
 int main()
 {
     int size = 1000000;
@@ -254,23 +255,37 @@ int main()
     char *buffer;
     for ( ; scanf("%s", word) != EOF; )
     {
-        for (int i = 0; i < (int) strlen(word); ++i)
-        {
-            if (!isLetter(word[i]))
-            {
-                exit(1);
-            }
-        }
+        //if (strcmp(word, "!!!") == 0) break;
         if (strlen(word) != 0)
         {
-            buffer = malloc(wordLength * sizeof(char));
-            if (buffer == NULL)
+            int i = 0;
+            for ( ; i < (int) strlen(word); i++)
             {
-                fprintf(stderr, "Memory allocation error");
-                exit(4);
+                buffer = malloc(wordLength * sizeof(char));
+                if (buffer == NULL)
+                {
+                    fprintf(stderr, "Memory allocation error");
+                    exit(4);
+                }
+                int bufLen = 0;
+                while (isLetter(word[i]) && i < (int) strlen(word))
+                {
+                    buffer[bufLen++] = word[i];
+                    i++;
+                }
+
+
+                if (bufLen > 0)
+                {
+                    buffer[bufLen] = '\0';
+                    add(&map, buffer, 1);
+                }
+                else
+                {
+                    free(buffer);
+                }
             }
-            strcpy(buffer, word);
-            add(&map, buffer, 1);
+
         }
     }
     filter(&map, print);
