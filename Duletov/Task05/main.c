@@ -217,8 +217,8 @@ int main(int argc, char **argv)
 	}
 	text[i]='\n';
 	Strings[j][1]=z+1;
-	if(j<N){
-		N=j+1;
+	if(j<N-1){
+		N=j;
 	}
 	fclose(f);
 	if(strcmp(argv[3],"bubble")==0 || strcmp(argv[3],"insertion")==0 || strcmp(argv[3],"heap")==0 || strcmp(argv[3],"merge")==0 || strcmp(argv[3],"radix")==0 || strcmp(argv[3],"quick")==0){
