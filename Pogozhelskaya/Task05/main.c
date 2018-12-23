@@ -173,6 +173,8 @@ int main(int argc, char* argv[]) {
                     exit(4);
                 }       
                 strcpy(strings[i], buffer);
+                if (strings[i][length - 1] == '\n')
+                    strings[i][strlen(strings[i]) - 1] = '\0';
 	        }
             free(buffer);
         } else {
@@ -194,7 +196,7 @@ int main(int argc, char* argv[]) {
             exit(1);
         }
         for(int i = 0; i < N; i++)
-            printf("%s", strings[i]);
+            printf("%s\n", strings[i]);
         fclose(f);
         for(int i = 0; i < N; i++)
             free(strings[i]);
