@@ -166,7 +166,7 @@ void add(HashTable *hashTable, char *key)
 	}
 	else
 	{
-		previous->ptr = (Node *) malloc(sizeof(Node *));
+		previous->ptr = (Node *) malloc(sizeof(Node));
 		if (previous->ptr == NULL)
 		{
 			fprintf(stderr, "Out of memory (previous->ptr");
@@ -174,6 +174,7 @@ void add(HashTable *hashTable, char *key)
 		}
 		present = previous->ptr;
 	}
+	present->value = 1;
 	present->key = (char *) malloc((strlen(key)+1)*sizeof(char));
 	if (present->key == NULL)
 	{
@@ -181,7 +182,6 @@ void add(HashTable *hashTable, char *key)
 		exit(4);
 	}
 	strcpy(present->key, key);
-	present->value = 1;
 	present->ptr = NULL;
 	hashTable->depth[index]++;
 
