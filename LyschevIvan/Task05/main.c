@@ -1,38 +1,44 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-int n;
-void message(char *m)
+int strAmount;//
+void string_swp(char **string1,char **string2)
 {
-    printf("!%s\n", m);
-}
-void string_swp(char **string1,char **string2){
     char *swp;
-    swp=*string1;
-    *string1=*string2;
-    *string2=swp;
+    swp = *string1;
+    *string1 = *string2;
+    *string2 = swp;
 
 }
-void bubble_sort(char **str){
+void bubble_sort(char **str)
+{
 
-    for(int i=1;i<n;i++){
-        for(int j=1;j<n;j++){
-            if((strcmp(str[j],str[j-1]))<0){
-                string_swp(&str[j],&str[j-1]);
+    for(int i = 1; i < strAmount; i++)
+    {
+        for(int j = 1; j < strAmount; j++)
+        {
+            if((strcmp(str[j] , str[j-1])) < 0)
+            {
+                string_swp(&str[j] , &str[j-1]);
             }
         }
     }
 
 }
 
-void insertion_sort(char **str){
+void insertion_sort(char **str)
+{
     char *tmp;
-    for (int i = 1; i < n; i++){
-    tmp = str[i];
-    for (int j = i - 1; j >= 0; j--){
-        if(strcmp(tmp, str[j]) <= 0){
-        str[j + 1] = str[j];
-        str[j] = tmp;}
+    for (int i = 1; i < strAmount; i++)
+    {
+        tmp = str[i];
+        for (int j = i - 1; j >= 0; j--)
+        {
+            if(strcmp(tmp , str[j]) <= 0)
+            {
+                str[j + 1] = str[j];
+                str[j] = tmp;
+            }
         }
     }
 }
@@ -44,15 +50,17 @@ void merge_sort(char **str, int len)
     if (len <= 1)
         return;
     int middle = len / 2;
-    merge_sort(str, middle);
-    merge_sort(str + middle, len - middle);
+    merge_sort(str , middle);
+    merge_sort(str + middle , len - middle);
     char ** tmp = malloc(len * sizeof(char *));
-    if (tmp == NULL) {
-        message("memory err");
-        exit(0);
+    if (tmp == NULL)
+    {
+        printf("Unable to allocate enough memory\n");
+        exit(5);
     }
     int ptr_l = 0, ptr_r = middle, ptr = 0;
-    while (ptr_l < middle) {
+    while (ptr_l < middle)
+    {
         if ((ptr_r >= len) || (strcmp(str[ptr_r], str[ptr_l]) > 0))
             tmp[ptr++] = str[ptr_l++];
         else
@@ -66,37 +74,44 @@ void merge_sort(char **str, int len)
 
 }
 
-void quick_sort(char **str,int l, int r) {
-    if (l >= r) {
+void quick_sort(char **str,int l, int r)
+{
+    if (l >= r)
+    {
         return;
     }
-    int left2 = l, right2 = r;
+    int left = l, right = r;//local iterators
     int middle = (r + l) / 2;
     char *tmp = str[middle];
-    while (left2 <= right2) {
-        while (strcmp(str[left2], tmp) < 0) {
-            left2++;
+    while (left <= right) {
+        while (strcmp(str[left], tmp) < 0)
+        {
+            left++;
         }
-        while (strcmp(str[right2], tmp) > 0) {
-            right2--;
+        while (strcmp(str[right], tmp) > 0)
+        {
+            right--;
         }
-        if (left2 <= right2) {
-            string_swp(&str[left2++], &str[right2--]);
+        if (left <= right)
+        {
+            string_swp(&str[left++], &str[right--]);
         }
     }
-    if(l<right2) quick_sort(str,l, right2);
-    if(left2<r) quick_sort(str,left2, r);
+    if(l < right) quick_sort(str, l, right);
+    if(left < r) quick_sort(str, left, r);
 }
 
 void heap(char **str, int strCount, int i)
 {
     int maxV = i;
-    int left = 2*i + 1;
-    int right = 2*i + 2;
-    if (left < strCount && strcmp(str[left], str[maxV]) > 0) {
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+    if (left < strCount && strcmp(str[left], str[maxV]) > 0)
+    {
         maxV = left;
     }
-    if (right < strCount && strcmp(str[right], str[maxV]) > 0) {
+    if (right < strCount && strcmp(str[right], str[maxV]) > 0)
+    {
         maxV = right;
     }
     if (maxV != i) {
@@ -106,76 +121,100 @@ void heap(char **str, int strCount, int i)
 }
 void heap_sort(char **str, int n)
 {
-    for (int i = n / 2 - 1; i >= 0; i--) {
+    for (int i = n / 2 - 1; i >= 0; i--)
+    {
         heap(str, n, i);
     }
-    for (int i = n - 1; i >= 0; i--) {
+    for (int i = n - 1; i >= 0; i--)
+    {
         string_swp(&str[i], &str[0]);
         heap(str, i, 0);
     }
 }
-int main(int argc,char* argv[]) {
-    FILE *file=NULL;
-    file=fopen(argv[2],"r");
-    if(file == NULL) {
-        message("open err");
-        exit(0);}
+int main(int argc,char* argv[])
+{
+    if(argc!=4)
+    {
+        printf("parameters amount error\n");
+        exit(1);
+    }
+    FILE *file = NULL;
+    file = fopen(argv[2],"r");
+    if(file == NULL)
+    {
+        printf("Unable to open input file\n");
+        exit(2);
+    }
 
     int strLength = 100;
-    n=atoi(argv[1]);
-    char **strings = (char **) malloc(n * sizeof(char *));
-    char *inpStr = (char *) malloc(strLength * sizeof(char));
-    if((NULL == strings)||(NULL == inpStr))
+    strAmount = atoi(argv[1]);
+    char **strings = (char **) malloc(strAmount * sizeof(char *));
+    char *inpStr= (char *) malloc(strLength * sizeof(char));
+    if((strings == NULL)||(inpStr == NULL))
     {
-        message("strings allocate err");
-        exit(0);
+        printf("Unable to allocate memory for input\n");
+        exit(4);
     }
-    for(int i = 0; i < n; i++)
+    for(int i = 0; i < strAmount; i++)
     {
-        if(NULL == fgets(inpStr, strLength, file))
+        if(fgets(inpStr, strLength, file) == NULL)
         {
-            message("read err");
-            exit(0);
+            printf("Unable to read file\n");
+            exit(4);
         }
-        strings[i] =(char *) malloc((strlen(inpStr) + 1) * sizeof(char));
-        if(NULL == strings[i])
-        {
-            message("array of strings allocate err");
-            exit(0);
+        strings[i] = (char *) malloc((strlen(inpStr) + 1) * sizeof(char));
+        if(strings[i] == NULL)
+        {   printf("Unable to allocate memory for strings\n");
+            exit(4);
         }
         strcpy(strings[i], inpStr);
     }
     free(inpStr);
     fclose(file);
-    char sort_type=argv[3][0];
-    switch(sort_type){
-        case 'b':
-            bubble_sort(strings);
-            break;
-        case 'i':
-            insertion_sort(strings);
-            break;
-        case 'm':
-            merge_sort(strings, n);
-            break;
-        case 'q':
-
-            quick_sort(strings,0,n-1);
-            break;
-        case 'h':
-            heap_sort(strings, n);
-            break;
-        default:
-            message("algorithm type err");
-            break;
+    char *sort_type = argv[3];
+    if (strcmp(sort_type, "bubble") == 0)
+    {
+        bubble_sort(strings);
     }
-
+    else
+        if (strcmp(sort_type, "insertion") == 0)
+    {
+        insertion_sort(strings);
+    }
+    else if (strcmp(sort_type, "merge") == 0)
+    {
+        merge_sort(strings, strAmount);
+    }
+    else if (strcmp(sort_type, "heap") == 0)
+    {
+        heap_sort(strings, strAmount);
+    }
+    else if (strcmp(sort_type, "radix") == 0)
+    {
+        heap_sort(strings, strAmount);
+    }
+    else if (strcmp(sort_type, "quick") == 0)
+    {
+        quick_sort(strings, 0, strAmount-1);
+    }
+    else
+    {
+        printf("Algorithm type error\n");
+        exit(1);
+    }
 
     FILE *out_file;
     out_file=fopen("out.txt","w");
-    for(int i=0;i<n;i++){
-        fputs(strings[i],out_file);
+    if(out_file == NULL)
+    {
+        printf("Unable to open out.txt for write\n");
+        exit(4);
     }
+    for(int i = 0; i < strAmount; i++)
+    {
+        fputs(strings[i], out_file);
+    }
+    free(strings);
     fclose(out_file);
     return 0;
 }
