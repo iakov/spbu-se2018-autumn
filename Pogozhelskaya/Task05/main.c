@@ -127,11 +127,15 @@ int num_of_strings(const char* filename) {
    FILE* f;
     int num = 0;
     f = fopen(filename, "r");
-    while (! feof(f)) {
-        if (fgetc(f) == '\n')
-            num++;
+    if ( f != NULL) {
+        while (! feof(f)) {
+            if (fgetc(f) == '\n')
+                num++;
+        }
+    } else {
+        printf("Unable to open the file\n"); 
+        exit(2);
     }
-    //num++;
     fclose(f);
     return num;
 }
@@ -157,8 +161,7 @@ int main(int argc, char* argv[]) {
                 exit(4);
             }
             for (int i = 0; i < N; i++) {
-                if (fgets(buffer, max_string, f) == NULL)
-                    break;
+                fgets(buffer, max_string, f);
                 int length = strlen(buffer);
 		        strings[i] = (char*)malloc((length + 1) * sizeof(char));
                 if (strings[i] == NULL) {
