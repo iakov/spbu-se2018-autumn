@@ -243,13 +243,13 @@ int main(int argc, char *argv[])
     {
         printErrors("Incorrect parameters input", 1);
     }
-    FILE *bookFile;
+    /*FILE *bookFile;
     bookFile = fopen("book.txt", "r");
     if (NULL == bookFile)
     {
         printf("Error: cannot open file");
         return 1;
-    }
+    }*/
     uint32_t numberOfReplies = 1;
     char word[MAX_WORD_LENGTH];
     HashTable table = newHashTable(MAX_SIZE_ARR);
