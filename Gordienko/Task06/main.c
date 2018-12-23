@@ -1,8 +1,8 @@
-#include "MD5.c"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "MD5.h"
 
 #define MAX_WORD_LENGTH 100
 #define MAX_ARRAY_SIZE 10000
