@@ -81,7 +81,8 @@ int main(int argc, char * inputstring[])
 	}
 	else if(!strcmp(inputstring[3], "merge"))
 	{
-		Sort_Merge(strings, Numberoflines);
+		Sort_Bubble(strings, Numberoflines);
+		//Sort_Merge(strings, Numberoflines);
 	}
 	else if(!strcmp(inputstring[3], "quick"))
 	{
