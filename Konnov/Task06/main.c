@@ -127,7 +127,6 @@ void Add(struct HashTable *table, char *key, int value)
 			pos = 0;
 		}
 	}
-	free(hash);
 	if(table->item[pos].key != NULL)
 	{
 		table->item[pos].value = value;
