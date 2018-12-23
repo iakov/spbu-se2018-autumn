@@ -1,0 +1,4 @@
+I took the "Alice in Wonderland" by Lewis Carroll:
+Amount of different words = 7673
+Most frequent word = the has met 446 times
+Max depth of list is 5 for size = 1000
