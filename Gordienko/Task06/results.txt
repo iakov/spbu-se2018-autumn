@@ -1,6 +1,6 @@
 Book: "1984" by George Orwell
 
-Total amount of words: 100147
-Max word frequency: 5562 for word the
-Avg word frequency: 10.272541
+Total amount of words: 100986
+Max word frequency: 5573 for word the
+Avg word frequency: 11.033104
 Max list length: 6 for table size of 10000

@@ -197,40 +197,38 @@ int main(int argc, char *argv[])
 {
     if (argc > 1 || argv[0] == NULL)
     {
-        fprintf(stderr, "Wrong arguments");
+        printf("Wrong arguments\n");
         exit(1);
     }
 
     int size = MAX_ARRAY_SIZE;
     hashTable table = newHashTable(size);
-    char word[MAX_WORD_LENGTH];
     char input;
-    char *buffer;
+    char buffer[MAX_WORD_LENGTH];
     int count = 0;
 
     while ((input = getchar()) != EOF)
     {
-        if ((input <= 'Z' && input >= 'A') || (input <= 'z' && input >= 'a') || (input == '-' || input == '\''))
+        if ((input <= 'Z' && input >= 'A') || (input <= 'z' && input >= 'a'))
         {
-            word[count++] = input;
+            buffer[count] = input;
+            count++;
         }
-        else if (count != 0)
+        else if (count > 0)
         {
-            while (word[count - 1] == '-' || word[count - 1] == '\'' )
-                word[count--] = '\0';
-            word[count] = '\0';
+            buffer[count] = '\0';
 
-            buffer = (char *)calloc(strlen(word) + 1, sizeof(char));
-            if (buffer == NULL)
+            char *word = (char*) malloc((strlen(buffer) + 1) * sizeof(char));
+            if (word == NULL)
             {
-                printf("Cannot allocate memory for buffer\n");
+                printf("Cannot allocate memory for word\n");
                 exit(4);
             }
 
-            strcpy(buffer, word);
-            add(&table, buffer);
+            strcpy(word, buffer);
+            add(&table, word);
             count = 0;
-            free(buffer);
+            free(word);
         }
     }
 
