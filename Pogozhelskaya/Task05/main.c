@@ -123,6 +123,19 @@ void heap_sort(char** strings, int n) {
     }
 }
 
+int num_of_strings(const char* filename) {
+    FILE* f;
+    int num = 0;
+    f = fopen(filename, "r");
+    while (! feof(f)) {
+        if (fgetc(f) == '\n')
+            num++;
+    }
+    //num++;
+    fclose(f);
+    return num;
+}
+
 int main(int argc, char* argv[]) {
     if (argc == 4) {
         FILE* f;
@@ -130,6 +143,11 @@ int main(int argc, char* argv[]) {
         const char* file = (const char*)argv[2];
         char* sort_name = argv[3];
         f = fopen(file, "r");
+        //printf("%d\n", num_of_strings(file));
+        if(N > num_of_strings(file)) {
+            printf("Invalid number of strings\n");
+            exit(3);
+        }
         char** strings = (char**)malloc(N * sizeof(char*));
         if (strings == NULL) {
             printf("Allocation error\n");
@@ -148,10 +166,6 @@ int main(int argc, char* argv[]) {
                     if (strings[i] == NULL) {
                         printf("Allocation error\n");
                         exit(4);
-                    }
-                    if (feof(f)) {
-                        printf("Error of reading file\n");
-                        exit(3);
                     }
                 }
 		        if (j > max_string)
@@ -187,4 +201,5 @@ int main(int argc, char* argv[]) {
     }
     return 0;
 }
+
 
