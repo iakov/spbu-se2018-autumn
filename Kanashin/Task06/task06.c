@@ -153,7 +153,7 @@ void getStat(HashTable *table)
         while (currElemList != NULL)
         {
             //currLenghList++;
-            int currNumberReplies = getValueWord(table, currElemList->key);
+            //int currNumberReplies = getValueWord(table, currElemList->key);
             //amountWords ++;
             //totalWords += currNumberReplies;
             if (currElemList->numberReplies > maxNumberReplies)
@@ -174,7 +174,6 @@ void getStat(HashTable *table)
         List *currElemList = table->lists[i];
         while (currElemList != NULL)
         {
-            int currNumberReplies = getValueWord(table, currElemList->key);
             if (currElemList->numberReplies == maxNumberReplies)
             {
                 fprintf(stderr, "%s %d\n", currElemList->key, currElemList->numberReplies);
