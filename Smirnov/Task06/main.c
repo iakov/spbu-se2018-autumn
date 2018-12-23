@@ -248,9 +248,9 @@ int print(char *key, int value)       // example function for filter()
 
 int main()
 {
-    int size = 1000000;
+    int size = 1000;
     init(&map, size);
-    int wordLength = 100;
+    int wordLength = 500;
     char word[wordLength];
     char *buffer;
     for ( ; scanf("%s", word) != EOF; )
