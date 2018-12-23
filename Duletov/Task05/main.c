@@ -85,7 +85,7 @@ void quickSort(char *text, int start, int N){
         while(M!=R && strcmp(&text[Strings[R][0]],&text[Strings[M][0]])>0){
             R--;
         }
-            printf("%d %d\n", L, R);
+            //printf("%d %d\n", L, R);
         if (L <= R){
             SwapStrings(L,R);
             if(M==L){
@@ -217,6 +217,9 @@ int main(int argc, char **argv)
 	}
 	text[i]='\n';
 	Strings[j][1]=z+1;
+	if(j<N){
+		N=j+1;
+	}
 	fclose(f);
 	if(strcmp(argv[3],"bubble")==0 || strcmp(argv[3],"insertion")==0 || strcmp(argv[3],"heap")==0 || strcmp(argv[3],"merge")==0 || strcmp(argv[3],"radix")==0 || strcmp(argv[3],"quick")==0){
 	 FunctionDef(text, N, argv[3][0]);
