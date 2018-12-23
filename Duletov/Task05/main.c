@@ -16,8 +16,8 @@ void SwapStrings(int i, int j){
 
 void bubbleSort(char *text, int N){
 	int i, j;
-	for(i=0; i<=N; i++){
-		for(j=i+1; j<=N; j++){
+	for(i=0; i<N; i++){
+		for(j=i+1; j<N; j++){
 			if(strcmp(&text[Strings[i][0]],&text[Strings[j][0]])==1){
 				SwapStrings(i,j);
 			}
@@ -27,7 +27,7 @@ void bubbleSort(char *text, int N){
 
 void insertionSort(char *text, int N){
 	int i, j;
-    for (i=0; i<=N; i++){
+    for (i=0; i<N; i++){
         j=0;
         for (; j<i && strcmp(&text[Strings[i][0]],&text[Strings[j][0]])>0; j++){
         }
@@ -155,16 +155,16 @@ void FunctionDef(char *text, int N, char Name){
         insertionSort(text, N);
         break;
     case 'm':
-        mergeSort(text, N, 0);
+        mergeSort(text, N-1, 0);
         break;
     case 'q':
         quickSort(text, 0, N);
         break;
     case 'h':
-        heapSort(text, N+1);
+        heapSort(text, N);
         break;
     case 'r':
-        heapSort(text, N+1);
+        heapSort(text, N);
         break;
     default:
         printf("Invalid name of algorythm\n");
@@ -177,8 +177,9 @@ int main(int argc, char **argv)
 {
 	int i=0, N, j=0, z=0;
     if (argc != 4){
-        printf("Invalid number of arguments!\n");
-        exit(1);
+    	printf("%d ", argc);
+   		printf("Invalid number of arguments!\n");
+    	exit(1);
     }
     N = atoi(argv[1]);
   if(N==0){
@@ -197,7 +198,7 @@ int main(int argc, char **argv)
 	printf("Failed to malloc memory\n");
 	}
 	Strings[0][0]=0;
-	while (((text[i] = fgetc(f)) != EOF) && (j<N)) {
+	while ((text[i] = fgetc(f)) != EOF) {
 		z++;
 		if(text[i]=='\n'){
 			Strings[j+1][0]=i+1;
@@ -208,15 +209,7 @@ int main(int argc, char **argv)
 		i++;
 	}
 	text[i]='\n';
-	if(j<N){
-		N=j;
-	}
-	if(Strings[j][1]==0){
-		N -= 1;
-	}
-	else{
-		Strings[j][1]=z+1;
-	}
+	Strings[j][1]=z+1;
 	fclose(f);
 	if(strcmp(argv[3],"bubble")==0 || strcmp(argv[3],"insertion")==0 || strcmp(argv[3],"heap")==0 || strcmp(argv[3],"merge")==0 || strcmp(argv[3],"radix")==0 || strcmp(argv[3],"quick")==0){
 	 FunctionDef(text, N, argv[3][0]);
@@ -225,7 +218,7 @@ int main(int argc, char **argv)
 		printf("Invalid name of algorythm");
 		exit(1);
 	}
-	for(i=0;i<=N;i++){
+	for(i=0;i<N;i++){
 		fwrite(&text[Strings[i][0]], Strings[i][1], 1, stdout);
 	}
 	free(text);
