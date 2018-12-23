@@ -7,7 +7,7 @@ int max_string;
 void swap(char* str1, char* str2) {
     char* tmp = (char*)malloc(sizeof(char) * max_string);
     if (tmp == NULL) {
-    fprintf(stderr, "%s\n", "Allocation error in swap");
+    printf("Allocation error in swap\n");
     exit(4);
     }
     strcpy(tmp, str1);
@@ -34,13 +34,13 @@ void merge(char** strings, int left, int mid, int right) {
     int it1 = 0, it2 = 0;
     char** result = (char**)malloc((right - left) * sizeof(char*));
     if (result == NULL) {
-        fprintf(stderr, "%s\n", "Allocation error in merge");
+        printf("Allocation error in merge\n");
         exit(4);
     }
     for(int i = 0; i < (right - left); i++) {
         result[i] = (char*)malloc(sizeof(char) * max_string);
         if (result[i] == NULL) {
-            fprintf(stderr, "%s\n", "Allocation error in merge");
+            printf("Allocation error in merge\n");
             exit(4);
         }
     }
@@ -132,39 +132,33 @@ int main(int argc, char* argv[]) {
         f = fopen(file, "r");
         char** strings = (char**)malloc(N * sizeof(char*));
         if (strings == NULL) {
-            fprintf(stderr, "%s\n", "Allocation error");
-            fflush(stdout);
+            printf("Allocation error\n");
             exit(4);
         }
         if (f != NULL) {
             for (int i = 0; i < N; i++) {
 		        strings[i] = (char*)malloc(1 * sizeof(char));
                 if (strings[i] == NULL) {
-                    fprintf(stderr, "%s\n", "Allocation error");
-                    fflush(stdout);
+                    printf("Allocation error\n");
                     exit(4);
                 }
 		        int j = 0;
 		        while((strings[i][j++] = fgetc(f)) != '\n') {
 			        strings[i] = (char*)realloc(strings[i], (j + 1) * sizeof(char));
                     if (strings[i] == NULL) {
-                        fprintf(stderr, "%s\n", "Allocation error");
-                        fflush(stdout);
+                        printf("Allocation error\n");
                         exit(4);
                     }
                     if (feof(f)) {
-                        N = i;
-                        break;
+                        printf("Error of reading file\n");
+                        exit(3);
                     }
                 }
 		        if (j > max_string)
 			        max_string = j;
-                if(feof(f))
-                    break;
 	        }
         } else {
-            printf("%s\n", "Unable to open the file"); 
-            fflush(stdout);
+            printf("Unable to open the file\n"); 
             exit(2);
         }
         if (strcmp(sort_name, "bubble") == 0)
@@ -175,24 +169,20 @@ int main(int argc, char* argv[]) {
             merge_sort(strings, 0, N);
         else if (strcmp(sort_name, "quick") == 0)
             quick_sort(strings, 0, N - 1);
-        else if (strcmp(sort_name, "heap") == 0)
-            heap_sort(strings, N);
         else if (strcmp(sort_name, "radix") == 0)
             heap_sort(strings, N);
         else {
-            printf("%s\n", "invalid sort name");
-            fflush(stdout);
+            printf("Invalid sort name\n");
             exit(1);
         }
         for(int i = 0; i < N; i++)
             printf("%s", strings[i]);
-        fflush(stdout);
         fclose(f);
         for(int i = 0; i < N; i++)
             free(strings[i]);
         free(strings);
     } else {
-        printf("%s\n", "invalid number of arguments");
+        printf("Invalid number of arguments\n");
         exit(1);
     }
     return 0;
