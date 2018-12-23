@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include "MD5.h"
+#include "md5.h"
 
 #define MAX_SIZE_TABLE 500
 #define MAX_WORD_LENGTH 500
