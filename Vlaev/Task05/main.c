@@ -405,7 +405,7 @@ int main(int argc, char **argv)
     }
     long long int  current_string_list_len = 0;
     char c;
-    bool empty_file=true;
+    bool not_used_string=true;
     while(n<true_n)
     {
         c = getc(fptr);
@@ -469,7 +469,6 @@ int main(int argc, char **argv)
         }
         else
         {
-            empty_file=false;
             current_string[current_string_list_len] = c;
             (current_string_list_len)++;
             if ((current_string_list_len) + 1 > current_string_len)
@@ -496,6 +495,7 @@ int main(int argc, char **argv)
     {
         strings[n] = current_string;
         lengths[n] = (current_string_list_len);
+        not_used_string=false;
         n++;
     }
     char sort_name_first_symbol=argv[3][0];
@@ -628,7 +628,7 @@ int main(int argc, char **argv)
         free(strings[i]);
     }
     free(strings);
-    if (empty_file)
+    if (not_used_string)
     {
         free(current_string);
     }
