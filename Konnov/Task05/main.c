@@ -60,7 +60,7 @@ void insertionSort(char **insertionText, int n)
 	{
 		for (j = i - 1; j >= 0; j--)
 		{
-        	if(strcmp(insertionText[j], insertionText[j + 1]) == 1)
+        	if(strcmp(insertionText[j], insertionText[j + 1]) > 0)
 			{
 				char *tmp = insertionText[j];
 				insertionText[j] = insertionText[j + 1];
