@@ -1,8 +1,5 @@
 #include <stdio.h>
 
-#define igr(x) {__typeof__(x) __attribute__((unused)) d=(x);} 
-
-
 void other() {
     printf("Congratulations!\n");
     printf("You have entered in the secret function!\n");
