@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include <inttypes.h>
 #include <ctype.h>
 #include <stdbool.h>
 #define max(X, Y) (((X) > (Y)) ? (X) : (Y))
@@ -74,7 +73,7 @@ uint64_t md5(uint8_t *initial_msg, size_t initial_len) {
 
     // Process the message in successive 512-bit chunks:
     //for each 512-bit chunk of message:
-    int offset;
+    size_t offset;
     for(offset=0; offset<new_len; offset += (512/8)) {
 
         // break chunk into sixteen 32-bit words w[j], 0 ≤ j ≤ 15
@@ -154,8 +153,8 @@ uint64_t md5(uint8_t *initial_msg, size_t initial_len) {
         h[3] += d;
 
     }
-    uint64_t modulo = ULONG_MAX-1;
-    uint64_t delta = ULONG_MAX;
+    uint64_t modulo = (1<<30)-1;
+    uint64_t delta = 1<<30;
     uint64_t multiplier = delta;
     uint64_t result=0;
     for (int i=0;i<4;i++)
@@ -274,21 +273,26 @@ int getValue(struct HashTable * table, char * key)
     uint64_t pos=hsh%(table->size);
     bool found =false;
     struct Node* currentNode=table->data[pos];
+    int result=-1;
     while (found==false)
     {
         if (currentNode==NULL)
         {
             printf("Not found!");
             found=true;
-            return -1;
+            result=-1;
         }
-        else if (strcmp(key,currentNode->key)==0)
-             {
-                found=true;
-                return (currentNode->value);
-             }
-        currentNode=currentNode->next;
+        else
+        {
+            if (strcmp(key, currentNode->key) == 0)
+            {
+                found = true;
+                result = currentNode->value;
+            }
+            currentNode = currentNode->next;
+        }
     }
+    return result;
 }
 char * delete_punctuation(char * st)
 {
@@ -301,7 +305,7 @@ char * delete_punctuation(char * st)
         }
     }
     int cur_pos=0;
-    for (int i=0;i<strlen(st);i++)
+    for (unsigned int i=0;i<strlen(st);i++)
     {
         if (isalpha(st[i]))
         {
@@ -453,7 +457,7 @@ int average_chain_length(struct HashTable * table)
     }
     return sum/table->size;
 }
-int main(int argc, char **argv)
+int main(/*int argc, char **argv*/)
 {
 
    /* if (argc < 2)
