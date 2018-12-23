@@ -4,30 +4,24 @@
 
 const int max_string = 1000000;
 
-void swap(char* str1, char* str2) {
-    char* tmp = (char*)malloc(sizeof(char) * max_string);
-    if (tmp == NULL) {
-    printf("Allocation error in swap\n");
-    exit(4);
-    }
-    strcpy(tmp, str1);
-    strcpy(str1, str2);
-    strcpy(str2, tmp);
-    free(tmp);
+void swap(char** str1, char** str2) {
+    char* tmp = *str1;
+    *str1 = *str2;
+    *str2 = tmp;
 }
 
 void bubble_sort(char** strings, int N)  {
     for(int i = 0; i < N - 1; i++)
         for(int j = 0; j < N - i - 1; j++)
             if (strcmp(strings[j + 1], strings[j]) <  0)
-                swap(strings[j], strings[j + 1]);
+                swap(&strings[j], &strings[j + 1]);
 } 
 
 void insertion_sort(char** strings, int N) {
     for(int i  = 0; i < N - 1; i++)
         for(int j = i + 1; j < N; j++)
             if (strcmp(strings[i], strings[j]) > 0)
-                swap(strings[i], strings[j]);
+                swap(&strings[i], &strings[j]);
 }
 
 void merge(char** strings, int left, int mid, int right) {
@@ -88,7 +82,7 @@ int partition(char** strings, int left, int right) {
                 r--;
             } while (strcmp(strings[r], pivot) > 0);
             if (l >= r) return r;
-            swap(strings[l], strings[r]);
+            swap(&strings[l], &strings[r]);
         }
 }
 
@@ -108,7 +102,7 @@ void heapify(char** strings, int n, int i) {
         largest = r;
     if (largest != i) {
         if(strings[i] != strings[largest])       
-            swap(strings[i], strings[largest]);
+            swap(&strings[i], &strings[largest]);
         heapify(strings, n, largest);
     }
 }
@@ -118,7 +112,7 @@ void heap_sort(char** strings, int n) {
         heapify(strings, n, i);
     for (int i = n - 1; i >= 0; i--) {
         if(strings[0] != strings[i]) 
-            swap(strings[0], strings[i]);
+            swap(&strings[0], &strings[i]);
         heapify(strings, i, 0);
     }
 }
