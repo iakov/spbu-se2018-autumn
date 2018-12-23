@@ -4,6 +4,9 @@
 #include <ctype.h>
 #include "MD5.h"
 
+#define MAX_WORD_LENGTH 500
+#define MAX_TABLE_SIZE 1000
+
 /*
 void punctuationExtermination(char  word[])
 {
@@ -68,12 +71,12 @@ uint32_t getIndex(HashTable *hashTable, char *key)
 
 void createHashTable(HashTable *hashTable, int size)
 {
-	if ((hashTable->table = calloc(size, sizeof(Node *))) == NULL)
+	if ((hashTable->table = (Node **) calloc(size, sizeof(Node *))) == NULL)
 	{
 		fprintf(stderr, "Out of memory (hashTable.table)\n");
 		exit(4);
 	}
-	if ((hashTable->depth = calloc(size, sizeof(int))) == NULL)
+	if ((hashTable->depth = (int*) calloc(size, sizeof(int))) == NULL)
 	{
 		fprintf(stderr, "Out of memory (hashTable.depth)\n");
 		exit(4);
@@ -118,6 +121,7 @@ void freeHashTable(HashTable *hashTable)
 		}
 	}
 	free(hashTable->table);
+	free(hashTable->depth);
 }
 
 int find(HashTable *hashTable, char *key)
@@ -137,10 +141,12 @@ void add(HashTable *hashTable, char *key)
 {
 	uint32_t index = getIndex(hashTable, key);
 	Node* present = hashTable->table[index];
+	Node* previous = NULL;
 	while (present != NULL)
 	{
 		if (strcmp(present->key, key) == 0)
 			break;
+		previous = present;
 		present = present->ptr;
 	}
 	if (present != NULL)
@@ -148,25 +154,37 @@ void add(HashTable *hashTable, char *key)
 		present->value += 1;
 		return;
 	}
-	Node *newSlot = malloc(sizeof(Node));
-	if (newSlot == NULL)
+	if (previous == NULL)
 	{
-		fprintf(stderr, "Out of memory (newSlot)\n");
-		exit(4);
-	}
-	hashTable->depth[index]++;
-	newSlot->key = key;
-	newSlot->value = 1;
-	if (hashTable->table[index] == NULL)
-	{
-		newSlot->ptr = NULL;
-		hashTable->table[index] = newSlot;
+		hashTable->table[index] = (Node *) malloc(sizeof(Node));
+		if (hashTable->table[index] == NULL)
+		{
+			fprintf(stderr, "Out of memory (table[%s]", key);
+			exit(4);
+		}
+		present = hashTable->table[index];
 	}
 	else
 	{
-		newSlot->ptr = hashTable->table[index]->ptr;
-		hashTable->table[index]->ptr = newSlot;
+		previous->ptr = (Node *) malloc(sizeof(Node *));
+		if (previous->ptr == NULL)
+		{
+			fprintf(stderr, "Out of memory (previous->ptr");
+			exit(4);
+		}
+		present = previous->ptr;
 	}
+	present->key = (char *) malloc((strlen(key)+1)*sizeof(char));
+	if (present->key == NULL)
+	{
+		fprintf(stderr, "Out of memory (present>key)");
+		exit(4);
+	}
+	strcpy(present->key, key);
+	present->value = 1;
+	present->ptr = NULL;
+	hashTable->depth[index]++;
+
 }
 
 void printStats(HashTable *hashTable)
@@ -225,52 +243,15 @@ void printExtraStats(HashTable *hashTable)
 
 int main()
 {
-	int size = 1000;
-	char word[500];
+	int size = MAX_TABLE_SIZE;
+	char word[MAX_WORD_LENGTH];
 	char buffChar;
 	createHashTable(&hashTable , size);
-	int bufPos = 0;
-	//scanf("%s", word);
-	//FILE *f = fopen(word, "r");
-	//while (!feof(f))
-	/*for (; scanf("%s", word) != EOF; )
-	{
-		//if ((buffer = malloc(500*sizeof(char))) == NULL)
-        //{
-        //   fprintf(stderr, "Out of memory (buffer)\n");
-        //    exit(4);
-        //}
-        //fscanf(f, "%s", word);
-		if (strcmp(word, "stop") == 0)
-			break;
-		//punctuationExtermination(word); 
-		for (int i = 0; i < (int) strlen(word); i++)
-		{
-			if ((buffer =(char*) malloc(500*sizeof(char))) == NULL)
-	        {
-	            fprintf(stderr, "Out of memory (buffer)\n");
-	            exit(4);
-	        }
-	        int bufPos = 0;
-	        while ((i < (int) strlen(word)) &&
-	        	(((word[i] >= 'A') && (word[i] <='Z')) ||
-	        	((word[i] >= 'a') && (word[i] <= 'z'))))
-	        {
-	        	buffer[bufPos++] = word[i];
-	        	++i;
-	        }
-	       	if (strlen(buffer) > 0)
-	        {
-	            buffer[bufPos] = '\0';
-	            add(&hashTable, buffer);  
-			}
-		}
-		
-        //else
-          //  free(buffer);
-	}*/
+	int bufPos = 0;	
 	while ((buffChar = getchar()) != EOF)
 	{
+		if(buffChar == '=')
+			break;
 		if ((buffChar >= 'A'&& buffChar <= 'Z') || (buffChar >= 'a' && buffChar <= 'z'))
 		{
 			word[bufPos] = buffChar;
