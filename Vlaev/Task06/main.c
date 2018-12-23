@@ -203,6 +203,29 @@ struct HashTable* createHashTable(int size)
     newTable->size=size;
     return newTable;
 }
+void clearChainNotStrings(struct Node* node)
+{
+    if (node==NULL)
+    {
+        return;
+    }
+    else
+    {
+        clearChainNotStrings(node->next);
+        free(node);
+    }
+}
+void clearTableButNotStrings(struct HashTable * table)
+{
+
+    for (int i=0;i<table->size;i++)
+    {
+        clearChainNotStrings(table->data[i]);
+        table->data[i]=NULL;
+    }
+    free(table->data);
+    free(table);
+}
 struct HashTable * insertInTable(struct HashTable * table, char * key, int value);
 struct HashTable * resize(struct HashTable * table,int size)
 {
@@ -216,7 +239,7 @@ struct HashTable * resize(struct HashTable * table,int size)
             current=current->next;
         }
     }
-    free(table);
+    clearTableButNotStrings(table);
     return newTable;
 }
 struct HashTable * insertInTable(struct HashTable * table, char * key, int value)
