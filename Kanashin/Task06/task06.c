@@ -13,31 +13,6 @@ void printErrors(char *errorMessage, uint32_t numberError)
     exit(numberError);
 }
 
-/*void deletePunctuation(char *word)
-{
-    uint32_t currPosLetter;
-    char buffer[MAX_WORD_LENGTH];
-    uint32_t posWithoutPunct = 0;
-
-    for (currPosLetter = 0 ; currPosLetter <= strlen(word)-1; currPosLetter++)
-    {
-        buffer[currPosLetter] = word[currPosLetter];
-
-        if( ( (buffer[currPosLetter] >= 'a') && (buffer[currPosLetter] <= 'z') ) ||
-            ( (buffer[currPosLetter] >= 'A') && (buffer[currPosLetter] <= 'Z') ) ||
-            ( ( (buffer[currPosLetter] == '-') || (buffer[currPosLetter] == '\'') ) &&
-            ( ( (currPosLetter != 0) && (currPosLetter != strlen(word)-1) ) &&
-                strlen(buffer) != 1) ) )
-        {
-            word[posWithoutPunct] = buffer[currPosLetter];
-            posWithoutPunct++;
-        }
-    }
-
-
-    word[posWithoutPunct] = '\0';
-}*/
-
 typedef struct HashList
 {
     char* key;
@@ -228,7 +203,7 @@ int main(int argc, char *argv[])
 {
     if (argc > 1 || argv[0] == NULL)
     {
-        printErrors("Incorrect parameters input", 1);
+       printErrors("Incorrect parameters input", 1);
     }
 
     uint32_t numberOfReplies = 1;
@@ -269,7 +244,6 @@ int main(int argc, char *argv[])
 
 
     }
-
     getStat(&table);
     deleteTable(&table);
 
