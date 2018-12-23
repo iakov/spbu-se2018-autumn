@@ -181,6 +181,7 @@ void getStat(HashTable *table)
             {
                 maxNumberReplies = currNumberReplies;
             }
+            fprintf(stdout, "%s %d\n", currElemList->key, currElemList->numberReplies);
             currElemList = currElemList->ptrNext;
         }
     }
@@ -202,7 +203,7 @@ void getStat(HashTable *table)
     //printf("Average length of Lists is %d", avgLengthList/amountLists);
 
 }
-void printWords(char *key, uint32_t numReplies)
+/*void printWords(char *key, uint32_t numReplies)
 {
     fprintf(stdout, "%s %d\n", key, numReplies);
 }
@@ -218,7 +219,7 @@ void iterate(HashTable *table)
             currElemList = currElemList->ptrNext;
         }
     }
-}
+}*/
 
 void deleteTable(HashTable *table)
 {
@@ -264,7 +265,7 @@ int main(int argc, char *argv[])
         addWord(word, &table, numberOfReplies);
     }
 
-    iterate(&table);
+    //iterate(&table);
     getStat(&table);
     deleteTable(&table);
 
