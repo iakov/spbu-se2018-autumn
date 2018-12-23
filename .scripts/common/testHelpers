@@ -27,7 +27,7 @@ compile(){
   else
       TEST_CFLAGS_SANITIZED=""
   fi
-  TEST_CFLAGS_STRICT="${TEST_CFLAGS_GENERAL} -O2 -Werror -Wno-error=sign-compare"
+  TEST_CFLAGS_STRICT="${TEST_CFLAGS_GENERAL} -O3 -g -fno-omit-frame-pointer -Werror -Wno-error=sign-compare"
   local sources=$(find $TEST_SRCDIR -name '*.c' ! -path "*/$TEST_TMPDIR/*" )
   local exitCode=0
   if $cc ${TEST_CFLAGS_RELAXED} -o $1 $sources 2>compile.log ; then
