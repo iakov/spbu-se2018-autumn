@@ -71,23 +71,23 @@ int main(int argc, char * inputstring[])
 	Numberoflines = counter;
 
 
-	if(!strcasecmp(inputstring[3], "bubble"))
+	if(!strcmp(inputstring[3], "bubble"))
 	{
 		Sort_Bubble(strings, Numberoflines);
 	}
-	else if(!strcasecmp(inputstring[3], "insertion"))
+	else if(!strcmp(inputstring[3], "insertion"))
 	{
 		Sort_Insertion(strings, Numberoflines);
 	}
-	else if(!strcasecmp(inputstring[3], "merge"))
+	else if(!strcmp(inputstring[3], "merge"))
 	{
 		Sort_Merge(strings, Numberoflines);
 	}
-	else if(!strcasecmp(inputstring[3], "quick"))
+	else if(!strcmp(inputstring[3], "quick"))
 	{
 		Sort_Quick(strings, 0, Numberoflines-1);
 	}
-	else if(!strcasecmp(inputstring[3], "radix"))
+	else if(!strcmp(inputstring[3], "radix"))
 	{
 		unsigned int maxlength = strlen(strings[0]);
 		for(unsigned int i = 1; i < Numberoflines; ++i)
@@ -405,7 +405,7 @@ void CheckOption(char * options[], unsigned int *Numberoflines)
 	}
 	for(unsigned int j = 0; j < allowedOptionsLength; j++)
 	{
-		if(strcasecmp(options[3], allowedOptions[j]) == 0)
+		if(strcmp(options[3], allowedOptions[j]) == 0)
 		{
 			UnknownOptionIndex = -1;
 			break;
