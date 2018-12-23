@@ -13,16 +13,66 @@ git:
 #    - binutils
 #    - gcc-6
 #    - colordiff
-install:
- - .scripts/travis/install.sh
-script:
-  - gcc --version
-  - .scripts/travis/test_all.sh
-matrix:
+env:
+  - CC=gcc
+
+stages:
+- simple
+- full
+
+jobs:
   include:
-    - os: linux
+    - stage: simple
+      os: linux
       name: "Some GNU/Linux"
+      script:
+      - '$CC --version'
+      - .scripts/travis/test_all.sh
+    - stage: full
+      os: osx
+      name: "Simple macOS"
+      install:
+      - .scripts/travis/install.sh
+      script:
+      - '$CC --version'
+      - .scripts/travis/test_all.sh
+    - stage: full
+      install:
+      - .scripts/travis/install.sh
+      script:
+      - '$CC --version'
+      - .scripts/travis/test_all.sh
+      os: linux
       dist: xenial
-#      env: CC=gcc-6
-    - os: osx
-      name: "macOS"
+      name: "Xenial /GCC 8.1/ sanitized & with Intel MPX"
+      env: CC=gcc-8 TEST_SANITIZE_MODE=gcc-8-mpx
+      addons:
+        apt:
+          update: true
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - binutils
+          sudo: required
+
+    - stage: full
+      install:
+      - .scripts/travis/install.sh
+      script:
+      - '$CC --version'
+      - .scripts/travis/test_all.sh
+      os: linux
+      dist: xenial
+      name: "Xenial GCC 8 sanitized"
+      env: CC=gcc-8
+      addons:
+        apt:
+          update: true
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - gcc-8
+          - binutils
+
+
+
