@@ -6,6 +6,7 @@
 
 #define BLOCK_MD5 16
 #define WORD_MAX 1000
+#define CHAIN_INIT_SIZE 5
 
 void *callocCheck(size_t items, size_t size)
 {
@@ -74,7 +75,7 @@ struct hashTable new(uint32_t chainsCount)
 {
     struct hashTable table;
     table.keyChains = (struct chain *)callocCheck(chainsCount, sizeof(struct chain));
-    uint32_t initSize = 5;
+    uint32_t initSize = CHAIN_INIT_SIZE;
     for (uint32_t i = 0; i < chainsCount; i++)
     {
         initChain(&table.keyChains[i], initSize);
