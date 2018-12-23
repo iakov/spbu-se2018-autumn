@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "MD5.h"
+#include "Md5.c"
 
+/*
 void punctuationExtermination(char  word[])
 {
 	int length = strlen(word);
@@ -30,6 +31,7 @@ void punctuationExtermination(char  word[])
 	strcpy(word, buff);
 	free(buff);
 }
+*/
 
 typedef struct hashSlot
 {
@@ -109,10 +111,10 @@ void freeHashTable(HashTable *hashTable)
 	{
 		while (hashTable->table[i] != NULL)
 		{
+			Node *present = hashTable->table[i];
 			hashTable->table[i] = hashTable->table[i]->ptr;
-			free(hashTable->table[i]);
-			hashTable->table[i] = NULL;
-			hashTable->depth[i] = 0;
+			free(present->key);
+			free(present);
 		}
 	}
 	free(hashTable->table);
@@ -225,29 +227,69 @@ int main()
 {
 	int size = 1000;
 	char word[500];
-	char *buffer;
+	char buffChar;
 	createHashTable(&hashTable , size);
+	int bufPos = 0;
 	//scanf("%s", word);
 	//FILE *f = fopen(word, "r");
 	//while (!feof(f))
-	for (; scanf("%s", word) != EOF; )
+	/*for (; scanf("%s", word) != EOF; )
 	{
-		if ((buffer = malloc(500*sizeof(char))) == NULL)
-        {
-            fprintf(stderr, "Out of memory (buffer)\n");
-            exit(4);
-        }
+		//if ((buffer = malloc(500*sizeof(char))) == NULL)
+        //{
+        //   fprintf(stderr, "Out of memory (buffer)\n");
+        //    exit(4);
+        //}
         //fscanf(f, "%s", word);
-		//if (strcmp(word, "stop") == 0)
-		//	break;
-		punctuationExtermination(word);
-		strcpy(buffer, word);
-		if (strlen(buffer) > 0)
-        {
-            add(&hashTable, buffer);
-        }
-        else
-            free(buffer);
+		if (strcmp(word, "stop") == 0)
+			break;
+		//punctuationExtermination(word); 
+		for (int i = 0; i < (int) strlen(word); i++)
+		{
+			if ((buffer =(char*) malloc(500*sizeof(char))) == NULL)
+	        {
+	            fprintf(stderr, "Out of memory (buffer)\n");
+	            exit(4);
+	        }
+	        int bufPos = 0;
+	        while ((i < (int) strlen(word)) &&
+	        	(((word[i] >= 'A') && (word[i] <='Z')) ||
+	        	((word[i] >= 'a') && (word[i] <= 'z'))))
+	        {
+	        	buffer[bufPos++] = word[i];
+	        	++i;
+	        }
+	       	if (strlen(buffer) > 0)
+	        {
+	            buffer[bufPos] = '\0';
+	            add(&hashTable, buffer);  
+			}
+		}
+		
+        //else
+          //  free(buffer);
+	}*/
+	while ((buffChar = getchar()) != EOF)
+	{
+		if ((buffChar >= 'A'&& buffChar <= 'Z') || (buffChar >= 'a' && buffChar <= 'z'))
+		{
+			word[bufPos] = buffChar;
+			bufPos++;
+		}
+		else if (bufPos > 0)
+			{
+				word[bufPos] = '\0';
+				char *key = (char*) malloc((strlen(word)+1)*sizeof(char));
+				if (key == NULL)
+				{
+					fprintf(stderr, "Out of memory (key)\n");
+					exit(4);
+				}
+				strcpy(key, word);
+				add(&hashTable, key);
+				bufPos = 0;
+				free(key);
+			}
 	}
 	printStats(&hashTable);
 	//printExtraStats(&hashTable);
