@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int max_string;
+const int max_string = 1000000;
 
 void swap(char* str1, char* str2) {
     char* tmp = (char*)malloc(sizeof(char) * max_string);
@@ -124,7 +124,7 @@ void heap_sort(char** strings, int n) {
 }
 
 int num_of_strings(const char* filename) {
-    FILE* f;
+   FILE* f;
     int num = 0;
     f = fopen(filename, "r");
     while (! feof(f)) {
@@ -143,7 +143,6 @@ int main(int argc, char* argv[]) {
         const char* file = (const char*)argv[2];
         char* sort_name = argv[3];
         f = fopen(file, "r");
-        //printf("%d\n", num_of_strings(file));
         if(N > num_of_strings(file))
             N = num_of_strings(file);
         char** strings = (char**)malloc(N * sizeof(char*));
@@ -152,23 +151,25 @@ int main(int argc, char* argv[]) {
             exit(4);
         }
         if (f != NULL) {
+            char* buffer = (char*)malloc(max_string * sizeof(char));
+            if (buffer == NULL) {
+                printf("Allocation error\n");
+                exit(4);
+            }
             for (int i = 0; i < N; i++) {
-		        strings[i] = (char*)malloc(1 * sizeof(char));
+                fgets(buffer, max_string, f);
+                int length = strlen(buffer);
+		        strings[i] = (char*)malloc((length + 1) * sizeof(char));
                 if (strings[i] == NULL) {
+                    for(int i = 0; i < N; i++)
+                        free(strings[i]);
+                    free(strings);
                     printf("Allocation error\n");
                     exit(4);
-                }
-		        int j = 0;
-		        while((strings[i][j++] = fgetc(f)) != '\n') {
-			        strings[i] = (char*)realloc(strings[i], (j + 1) * sizeof(char));
-                    if (strings[i] == NULL) {
-                        printf("Allocation error\n");
-                        exit(4);
-                    }
-                }
-		        if (j > max_string)
-			        max_string = j;
+                }       
+                strcpy(strings[i], buffer);
 	        }
+            free(buffer);
         } else {
             printf("Unable to open the file\n"); 
             exit(2);
@@ -199,5 +200,4 @@ int main(int argc, char* argv[]) {
     }
     return 0;
 }
-
 
