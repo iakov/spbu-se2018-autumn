@@ -154,7 +154,7 @@ void MmapQuickSort (char* map, int* StrBegin, int* StrEnd, int Left, int Right) 
 	}
 }
 
-void MmapSort(int NumberStrings, const char* FileName, int FlagOutput) {
+void MmapSort(int NumberStrings, const char* FileName) {
 	int FileDescriptor = open(FileName, O_RDWR);
 	struct stat SizeBinary;
 	fstat(FileDescriptor, &SizeBinary);
@@ -171,16 +171,10 @@ void MmapSort(int NumberStrings, const char* FileName, int FlagOutput) {
 			begin = j + 1;
 		}
 	}
-	clock_t start = clock();
 	MmapQuickSort(map, StrBegin, StrEnd, 0, NumberStrings - 1);
-	clock_t end = clock();
-	if (FlagOutput > 0) {
-		for (int i = 0; i < NumberStrings; ++i)
-			for (int j = StrBegin[i]; j <= StrEnd[i]; ++j)
-				printf("%c", map[j]);
-	}
-	if (FlagOutput != 1) 
-		printf("Sort time exactly is: %.10f seconds\n", (double)(end - start) / CLOCKS_PER_SEC);
+	for (int i = 0; i < NumberStrings; ++i)
+		for (int j = StrBegin[i]; j <= StrEnd[i]; ++j)
+			printf("%c", map[j]);
 	free(StrBegin);
 	free(StrEnd);
 	munmap(map, SizeBinary.st_size);
@@ -201,6 +195,7 @@ int Sanitize(const char* FileName, int NumberStrings) {
         if (Count >= NumberStrings)
 			break;
     }
+    if (Count < NumberStrings) PrintError("Invalid Number of strings!", 1);
     if (Count < NumberStrings)
 		NumberStrings = Count;
     fclose(Input);
@@ -214,19 +209,9 @@ int main(int argc, char** argv) {
 	int NumberStrings = atoi(argv[1]);
 	const char* FileName = (const char*)argv[2];
 	char* SortName = argv[3];
-	char* ArgOutput = "None";
-	if (argc == 5) 
-		ArgOutput = argv[4];
-	int FlagOutput = 1;
-	if (strcmp(ArgOutput, "-full") == 0)
-		FlagOutput = 2;
-	else if (strcmp(ArgOutput, "-o") == 0)
-		FlagOutput = 1;
-	else if (strcmp(ArgOutput, "-t") == 0)
-		FlagOutput = 0;
 	NumberStrings = Sanitize(FileName, NumberStrings);
 	if (strcmp(SortName, "mmap") == 0)
-		MmapSort(NumberStrings, FileName, FlagOutput);
+		MmapSort(NumberStrings, FileName);
 	Input = fopen(FileName, "r");
 	if (Input == NULL) 
 		PrintError("Invalid argument #2 (File name)!", 2);
@@ -238,7 +223,6 @@ int main(int argc, char** argv) {
 		if (fgets(Strings[i], 256, Input) == NULL)
 			PrintError("Reading Error!", 4);
 	}
-	clock_t start = clock();
 	if (strcmp(SortName, "bubble") == 0)
 		BubbleSort(Strings, NumberStrings);
 	else if (strcmp(SortName, "insertion") == 0)
@@ -251,13 +235,8 @@ int main(int argc, char** argv) {
 		HeapSort(Strings, NumberStrings);
 	else
 		PrintError("Invalid argument #3 (Sorting algorithm name)!", 1);
-	clock_t end = clock();
-	if (FlagOutput > 0) {
-		for(int i = 0; i < NumberStrings; ++i)
-			printf("%s", Strings[i]);
-	}
-	if (FlagOutput != 1) 
-		printf("Sort time exactly is: %.10f seconds\n", (double)(end - start) / CLOCKS_PER_SEC);
+	for(int i = 0; i < NumberStrings; ++i)
+		printf("%s", Strings[i]);
 	fclose(Input);
 	for (int i = 0; i < NumberStrings; ++i)
 		free(Strings[i]);
