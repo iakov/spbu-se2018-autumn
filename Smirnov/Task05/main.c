@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 
-char **sorted, **data, **mergeBuffer;
+char **sorted, **data;
 int *len, *lenOfSorted;
 
 void swapStrings(char **first, char **second)
@@ -15,7 +15,7 @@ void swapStrings(char **first, char **second)
 
 void mergeSort(char **array, int left, int right)
 {
-    if (left == right - 1)
+    if (left >= right - 1)
     {
         return;
     }
@@ -23,20 +23,20 @@ void mergeSort(char **array, int left, int right)
     int mid = (left + right) / 2;
     mergeSort(array, left, mid);
     mergeSort(array, mid, right);
-
+    char **mergeBuffer = malloc((right - left + 1) * sizeof(char*));
     int leftPtr = left;
     int rightPtr = mid;
     int current = 0;
 
-    while (left + current < right && leftPtr < mid && rightPtr < right)
+    while (leftPtr < mid && rightPtr < right)
     {
-        if (strcmp(array[leftPtr], array[rightPtr]) == -1)
+        if (strcmp(array[leftPtr], array[rightPtr]) < 0)
         {
             mergeBuffer[current] = array[leftPtr];
             current++;
             leftPtr++;
         }
-        if (strcmp(array[rightPtr], array[leftPtr]) <= 0)
+        else
         {
             mergeBuffer[current] = array[rightPtr];
             current++;
@@ -56,10 +56,9 @@ void mergeSort(char **array, int left, int right)
         rightPtr++;
     }
 
-
     for (int i = 0; i < right - left; ++i)
         array[left + i] = mergeBuffer[i];
-
+    free(mergeBuffer);
 }
 
 void bubbleSort(char **array, int size)
@@ -250,8 +249,6 @@ int main(int argc, char *argv[])
             data[i][len - 1] = '\0';
     }
 
-    mergeBuffer = malloc(n * sizeof(char*));
-
     if (strcmp(argv[3], "bubble") == 0)
     {
         bubbleSort(data, n);
@@ -292,7 +289,6 @@ int main(int argc, char *argv[])
         printf("%s\n", data[i]);
         free(data[i]);
     }
-    free(mergeBuffer);
     free(data);
     free(input);
     fclose(file);
