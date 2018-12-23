@@ -266,7 +266,7 @@ int main(int argc, char *argv[])
 		printf("%s", text[i]);
 	}
 
-	for(i = 0; i < sizeFile; i++)
+	for(i = 0; i < realSize; i++)
 	{
 		free(text[i]);
 	}	
