@@ -15,7 +15,6 @@ void swapStrings(char **first, char **second)
 
 
 
-
 void mergeSort(char **array, int left, int right)
 {
     if (left >= right - 1)
