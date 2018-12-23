@@ -224,6 +224,5 @@ int main(int argc, char *argv[])
 		}
 	}
 	FreeTable(&table);
-	free(buf);
 	return 0;
 }
