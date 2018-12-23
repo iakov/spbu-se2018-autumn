@@ -2,7 +2,8 @@
 . $(dirname $(readlink -f "${BASH_SOURCE[0]}"))/../../common/testHelpers
 
 Task05_postcheck() {
-  sort -C $1
+  sed -i -e '/^$/d' "$1"
+  sort -C "$1"
 }
 
 runTest(){
