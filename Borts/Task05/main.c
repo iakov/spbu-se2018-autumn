@@ -215,8 +215,8 @@ void Sort_Quick(char * sortlines[], unsigned int first, unsigned int last)
 	}
 
     unsigned int i = first, j = last;
-    char pivot[strlen(sortlines[(first + (last-first)/2)])];
-    sprintf(pivot, "%s", sortlines[(first + (last-first)/2)]);
+    char pivot[strlen(sortlines[first])];
+    sprintf(pivot, "%s", sortlines[first]);
 
     do
     {
