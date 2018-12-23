@@ -250,6 +250,5 @@ int main(int argc, char *argv[])
         free(data[i]);
 
     free(data);
-
     return 0;
 }
