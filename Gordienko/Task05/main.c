@@ -200,7 +200,10 @@ int main(int argc, char *argv[])
     for (int i = 0; i < linesAmount; i++)
     {
         if (fgets(buffer, MAX_LENGTH, stringsFile) == NULL)
+        {
+            linesAmount = i;
             break;
+        }
         data[i] = (char*) malloc((strlen(buffer) + 1) * sizeof(char));
         if (data[i] == NULL)
         {
@@ -244,11 +247,11 @@ int main(int argc, char *argv[])
     }
 
     for (int i = 0; i < linesAmount; i++)
-    {
         printf("%s", data[i]);
-        free(data[i]);
-    }
-    free(data);
 
+    for (int i = 0; i < linesAmount; i++)
+        free(data[i]);
+
+    free(data);
     return 0;
 }
