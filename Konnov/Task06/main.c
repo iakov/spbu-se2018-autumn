@@ -139,7 +139,11 @@ void Add(struct HashTable *table, char *key, int value)
 	{
 		IncreaseTable(table, table->size * 2);
 	}
-	hash = calloc(4, sizeof(int));
+	uint32_t i;
+	for(i = 0; i < 4; i++)
+	{
+		hash[i] = 0;
+	}
 	if(NULL == hash)
 	{
 		StopProgram("cant allocate memory for a hash in Add function",4);
