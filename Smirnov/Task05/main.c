@@ -15,7 +15,7 @@ void swapStrings(char **first, char **second)
 
 void mergeSort(char **array, int left, int right)
 {
-    if (left == right - 1)
+    if (left >= right - 1)
     {
         return;
     }
@@ -23,45 +23,42 @@ void mergeSort(char **array, int left, int right)
     int mid = (left + right) / 2;
     mergeSort(array, left, mid);
     mergeSort(array, mid, right);
-
-    char **buffer = malloc((right - left) * sizeof(char*));
+    char **mergeBuffer = malloc((right - left + 1) * sizeof(char*));
     int leftPtr = left;
     int rightPtr = mid;
     int current = 0;
 
-    while (left + current < right && leftPtr < mid && rightPtr < right)
+    while (leftPtr < mid && rightPtr < right)
     {
-        if (strcmp(array[leftPtr], array[rightPtr]) == -1)
+        if (strcmp(array[leftPtr], array[rightPtr]) < 0)
         {
-            buffer[current] = array[leftPtr];
+            mergeBuffer[current] = array[leftPtr];
             current++;
             leftPtr++;
         }
-        if (strcmp(array[rightPtr], array[leftPtr]) <= 0)
+        else
         {
-            buffer[current] = array[rightPtr];
+            mergeBuffer[current] = array[rightPtr];
             current++;
             rightPtr++;
         }
     }
     while (leftPtr < mid)
     {
-        buffer[current] = array[leftPtr];
+        mergeBuffer[current] = array[leftPtr];
         current++;
         leftPtr++;
     }
     while (rightPtr < right)
     {
-        buffer[current] = array[rightPtr];
+        mergeBuffer[current] = array[rightPtr];
         current++;
         rightPtr++;
     }
 
-
     for (int i = 0; i < right - left; ++i)
-        array[left + i] = buffer[i];
-
-    free(buffer);
+        array[left + i] = mergeBuffer[i];
+    free(mergeBuffer);
 }
 
 void bubbleSort(char **array, int size)
@@ -251,6 +248,7 @@ int main(int argc, char *argv[])
         if (data[i][len - 1] == '\n')
             data[i][len - 1] = '\0';
     }
+
     if (strcmp(argv[3], "bubble") == 0)
     {
         bubbleSort(data, n);
@@ -263,8 +261,8 @@ int main(int argc, char *argv[])
     }
     else if (strcmp(argv[3], "merge") == 0)
     {
-        //mergeSort(data, 0, n);
-        quickSort(data, 0, n - 1);
+        mergeSort(data, 0, n);
+        //quickSort(data, 0, n - 1);
     }
     else if (strcmp(argv[3], "quick") == 0)
     {
