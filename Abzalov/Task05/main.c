@@ -7,6 +7,8 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 
+#define true 1
+
 int MaxStringSize = 256;
 
 void PrintError(char* Message, int ExitCode) {
@@ -15,10 +17,10 @@ void PrintError(char* Message, int ExitCode) {
 	exit(ExitCode);
 }
 
-void swap(char** a, char** b) {
-	char* tmp = *a;
-	*a = *b;
-	*b = tmp;
+void swap(char** FirstString, char** SecondString) {
+	char* Temp = *FirstString;
+	*FirstString = *SecondString;
+	*SecondString = Temp;
 }
 
 void BubbleSort(char** Strings, int NumberStrings) {
@@ -69,7 +71,7 @@ int Partition(char** Strings, int Left, int Right) {
 	char* Pivot = Strings[Left];
 	int i = Left - 1, 
 		j = Right + 1;
-	while (1) {
+	while (true) {
 		do {i++;} while (strcmp(Strings[i], Pivot) < 0);
 		do {j--;} while (strcmp(Strings[j], Pivot) > 0);
 		if (i >= j) return j;
@@ -111,17 +113,18 @@ void HeapSort(char** Strings, int NumberStrings) {
 	}
 }
 
-int compare(char* map, int* StrBegin, int* StrEnd, int a, int b) {
-	int a_len = StrEnd[a] - StrBegin[a] + 1,
-		b_len = StrEnd[b] - StrBegin[b] + 1;
-	if (a_len < b_len) 
+int compare(char* map, int* StrBegin, int* StrEnd, int FirstString, int SecondString) {
+	int FirstLen = StrEnd[FirstString] - StrBegin[FirstString] + 1,
+		SecondLen = StrEnd[SecondString] - StrBegin[SecondString] + 1;
+	if (FirstLen < SecondLen) 
 		return -1;
-	if (a_len > b_len) 
+	if (FirstLen > SecondLen) 
 		return 1;
-	for (int i = 0; i < a_len; ++i)
-		if (map[StrBegin[a] + i] < map[StrBegin[b] + i])
+	int Len = FirstLen;
+	for (int i = 0; i < Len; ++i)
+		if (map[StrBegin[FirstString] + i] < map[StrBegin[SecondString] + i])
 			return -1;
-		else if (map[StrBegin[a] + i] > map[StrBegin[b] + i])
+		else if (map[StrBegin[FirstString] + i] > map[StrBegin[SecondString] + i])
 			return 1;
 	return 0;
 }
@@ -154,6 +157,8 @@ void MmapQuickSort (char* map, int* StrBegin, int* StrEnd, int Left, int Right) 
 
 void MmapSort(int NumberStrings, const char* FileName) {
 	int FileDescriptor = open(FileName, O_RDWR);
+	if (FileDescriptor < 0)
+		PrintError("Can't open the file at MmapSort!", 2);
 	struct stat SizeBinary;
 	fstat(FileDescriptor, &SizeBinary);
 	char* map = (char*)mmap(NULL, SizeBinary.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, FileDescriptor, 0);
