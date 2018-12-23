@@ -77,8 +77,7 @@ int main(int argc, char * inputstring[])
 	}
 	else if(!strcmp(inputstring[3], "insertion"))
 	{
-		Sort_Bubble(strings, Numberoflines);
-		//Sort_Insertion(strings, Numberoflines);
+		Sort_Insertion(strings, Numberoflines);
 	}
 	else if(!strcmp(inputstring[3], "merge"))
 	{
