@@ -43,9 +43,9 @@ jobs:
       - '$CC --version'
       - .scripts/travis/test_all.sh
       os: linux
-      dist: bionic
+      dist: xenial
       sudo: required
-      name: "Bionic /GCC 8.2/ sanitized & with Intel MPX"
+      name: "Xenial /GCC 8.1/ sanitized & with Intel MPX"
       env: CC=gcc-8 TEST_SANITIZE_MODE=gcc-8-mpx
       addons:
         apt:
