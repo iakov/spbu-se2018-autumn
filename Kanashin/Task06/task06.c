@@ -257,7 +257,7 @@ int main(int argc, char *argv[])
             word = (char *)calloc(strlen(buffer) + 1, sizeof(char));
             if (word == NULL)
             {
-                printf("Cannot allocate memory for new word", 4);
+                printErrors("Cannot allocate memory for new word", 4);
             }
 
             strcpy(word, buffer);
