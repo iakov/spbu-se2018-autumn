@@ -1,0 +1,64 @@
+#!/bin/bash
+. $(dirname $(readlink -f "${BASH_SOURCE[0]}"))/../../common/testHelpers
+
+Task05_postcheck() {
+  sed -i -e '/^$/d' "$1"
+  sort -C "$1"
+}
+
+runTest(){
+  TEST_SRCDIR=$PWD
+  TEST_TMPDIR=$(mktemp -d -p .)
+  cd $TEST_TMPDIR
+  TEST_BINARY=./test-"$TASKNAME"
+  rm -f $TEST_BINARY
+#  for c in *.c ; do
+#    clang-format -style LLVM $c > $c.reformatted
+#    colordiff $c $c.reformatted | tail -n +2 | head -n 20 || true
+#  done
+  if ! compile $TEST_BINARY ; then
+    cat compile.log
+    return 171
+  fi
+  local test_input=./one_liner
+  echo "xxxx" > $test_input
+  local test_array_len=$(wc -l < $test_input)
+  local test_algorithm=""
+  local test_algorithm_list="bubble insertion merge quick radix"
+  local exitCode
+  TESTSTEP=0
+  exitCode=0
+  touch empty
+  # bad sort algo name
+  runTestCase empty $test_array_len $test_input "badname" || exitCode=$?
+  (( $exitCode > 0 )) && (( $exitCode < 5 )) && ((TESTSTEP+=1)) || return $exitCode # && logOk "step $TESTSTEP finished"
+
+  # empty sort algo name
+  runTestCase empty $test_array_len $test_input "" || exitCode=$?
+  (( $exitCode > 0 )) && (( $exitCode < 5 )) && ((TESTSTEP+=1)) || return $exitCode # && logOk "step $TESTSTEP finished"
+
+  # len is greater than actual data
+  runTestCase empty $test_array_len /dev/null "quick" || exitCode=$?
+  (( $exitCode > 0 )) && (( $exitCode < 5 )) && ((TESTSTEP+=1)) || return $exitCode # && logOk "step $TESTSTEP finished"
+
+  # empty file
+  runTestCase empty 0 /dev/null "quick"
+
+  local test_expected=$(mktemp -p .)
+  command sort $test_input > $test_expected
+  for a in $test_algorithm_list ; do
+    runTestCase $test_expected $test_array_len $test_input $a
+  done
+  test_len=1000
+  test_input=$(mktemp -p .)
+  #hexdump -e '4/4 "%08x\n" "\n"' -n $((4 * $test_len)) /dev/urandom > $test_input
+  hexdump -e '4/4 "%011u\n" "\n"' -n $((4 * $test_len)) /dev/urandom > $test_input
+  test_expected=$(mktemp -p .)
+  command sort -o $test_expected $test_input
+  for a in $test_algorithm_list ; do
+    runTestCase $test_expected $test_len $test_input $a
+  done
+}
+
+
+runTest

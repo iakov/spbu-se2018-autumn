@@ -3,7 +3,7 @@
 performTests() {
   local task_dir=$2
   local tests_dir=$1
-  cd $task_dir
+  pushd $task_dir > /dev/null
   if [ -x $tests_dir/setup ] ; then $tests_dir/setup ; fi
   for t in $tests_dir/test*; do 
     export TESTNAME=$(basename $t)
@@ -17,7 +17,8 @@ performTests() {
         139) msg="access violation (invalid pointer?)";;
         141) msg="SIGPIPE was issued, please, ask your teacher for an explanation";;
         143) msg="killed on timeout (waiting for data input or too slow?)";;
-        155) msg="expecting exit codes 1..5 for incorrect input/parameters, got something else";;
+#        155) msg="expecting exit codes 1..5 for incorrect input/parameters, got something else";;
+        157) msg="Failed Sanitizer check(memory access issues?)";;
         171) msg="no binary (compilation issues?)";;
         200) msg="unexpected output/result (incorrect program?)";;
           *) msg="process exited with unexpected code: $errCode";;
@@ -30,6 +31,7 @@ performTests() {
     fi
   done
   unset TESTNAME
+  popd > /dev/null
 }
 
 forTask() {
@@ -69,6 +71,6 @@ forAllUsers() {
 
 setStatus() {
   local errorsCnt=$1
-  ((errorsCnt > 1)) && echo 123 || echo 0
+  ((errorsCnt > 0)) && echo 123 || echo 0
 }
 

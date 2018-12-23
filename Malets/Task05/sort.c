@@ -1,5 +1,3 @@
-#include <stdlib.h>
-#include <time.h>
 #include <string.h>
 
 #include "sort.h"
@@ -107,8 +105,6 @@ static void sortQuickRec( int64_t first, int64_t last )
     if (first >= last)
         return;
 
-    swapLines(g_lines + random() % (last - first) + first, g_lines + last);
-
     int64_t pivot = first;
 
     for (int64_t i = first; i < last; i++)
@@ -128,16 +124,12 @@ static void sortQuickRec( int64_t first, int64_t last )
 
 static void sortQuick()
 {
-    srandom(time(NULL));
-
     sortQuickRec(0, g_linesCount - 1);
 }
 
 static void sortMerge()
 {
-    Line* sorted = malloc(sizeof(Line) * g_linesCount);
-    if (sorted == NULL)
-        return;
+    Line* sorted = allocateMemory(sizeof(Line) * g_linesCount);
 
     for (int64_t blockSize = 1; blockSize < g_linesCount; blockSize <<= 1)
     {
@@ -181,7 +173,7 @@ static void sortMerge()
         }
     }
 
-    free(sorted);
+    freeMemory(sorted);
 }
 
 static void correctHeap( int64_t index, int64_t count )
@@ -250,6 +242,8 @@ static void sortHeap()
 #define MERGE_ID_HIGH     0x6
 #define HEAP_ID_LOW       0xd1970f0
 #define HEAP_ID_HIGH      0x0
+#define RADIX_ID_LOW      0x2c3934f8
+#define RADIX_ID_HIGH     0x7
 
 SortingMethod getSortingMethod( uint64_t id )
 {
@@ -275,7 +269,8 @@ SortingMethod getSortingMethod( uint64_t id )
                 return sortMerge;
             return NULL;
         case HEAP_ID_LOW:
-            if (highPart == HEAP_ID_HIGH)
+        case RADIX_ID_LOW:
+            if (highPart == HEAP_ID_HIGH || highPart == RADIX_ID_HIGH)
                 return sortHeap;
             return NULL;
         default:
