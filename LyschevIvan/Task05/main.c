@@ -203,18 +203,12 @@ int main(int argc,char* argv[])
         exit(1);
     }
 
-    FILE *out_file;
-    out_file=fopen("out.txt","w");
-    if(out_file == NULL)
-    {
-        printf("Unable to open out.txt for write\n");
-        exit(4);
-    }
     for(int i = 0; i < strAmount; i++)
     {
-        fputs(strings[i], out_file);
+        printf("%s",strings[i]);
+        free(strings[i]);
     }
+
     free(strings);
-    fclose(out_file);
     return 0;
 }
