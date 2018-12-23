@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 
-char **sorted, **data;
+char **sorted, **data, **mergeBuffer;
 int *len, *lenOfSorted;
 
 void swapStrings(char **first, char **second)
@@ -24,7 +24,6 @@ void mergeSort(char **array, int left, int right)
     mergeSort(array, left, mid);
     mergeSort(array, mid, right);
 
-    char **buffer = malloc((right - left) * sizeof(char*));
     int leftPtr = left;
     int rightPtr = mid;
     int current = 0;
@@ -33,35 +32,34 @@ void mergeSort(char **array, int left, int right)
     {
         if (strcmp(array[leftPtr], array[rightPtr]) == -1)
         {
-            buffer[current] = array[leftPtr];
+            mergeBuffer[current] = array[leftPtr];
             current++;
             leftPtr++;
         }
         if (strcmp(array[rightPtr], array[leftPtr]) <= 0)
         {
-            buffer[current] = array[rightPtr];
+            mergeBuffer[current] = array[rightPtr];
             current++;
             rightPtr++;
         }
     }
     while (leftPtr < mid)
     {
-        buffer[current] = array[leftPtr];
+        mergeBuffer[current] = array[leftPtr];
         current++;
         leftPtr++;
     }
     while (rightPtr < right)
     {
-        buffer[current] = array[rightPtr];
+        mergeBuffer[current] = array[rightPtr];
         current++;
         rightPtr++;
     }
 
 
     for (int i = 0; i < right - left; ++i)
-        array[left + i] = buffer[i];
+        array[left + i] = mergeBuffer[i];
 
-    free(buffer);
 }
 
 void bubbleSort(char **array, int size)
@@ -251,6 +249,9 @@ int main(int argc, char *argv[])
         if (data[i][len - 1] == '\n')
             data[i][len - 1] = '\0';
     }
+
+    mergeBuffer = malloc(n * sizeof(char*));
+
     if (strcmp(argv[3], "bubble") == 0)
     {
         bubbleSort(data, n);
@@ -263,8 +264,8 @@ int main(int argc, char *argv[])
     }
     else if (strcmp(argv[3], "merge") == 0)
     {
-        //mergeSort(data, 0, n);
-        quickSort(data, 0, n - 1);
+        mergeSort(data, 0, n);
+        //quickSort(data, 0, n - 1);
     }
     else if (strcmp(argv[3], "quick") == 0)
     {
@@ -272,8 +273,8 @@ int main(int argc, char *argv[])
     }
     else if (strcmp(argv[3], "radix") == 0)
     {
-        //radixSort(data, n);
-        quickSort(data, 0, n - 1);
+        radixSort(data, n);
+        //quickSort(data, 0, n - 1);
     }
     else
     {
@@ -291,6 +292,7 @@ int main(int argc, char *argv[])
         printf("%s\n", data[i]);
         free(data[i]);
     }
+    free(mergeBuffer);
     free(data);
     free(input);
     fclose(file);
