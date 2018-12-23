@@ -219,9 +219,6 @@ int main(int argc, char *argv[])
 
     for (int numStr = 0; numStr < amountString; numStr++){
 
-        int lenOfStr = 1;
-
-        int currLenOfCurrStr;
         if (fgets(buffer, LENGTH_BUFF, myFile) == NULL)
         {
             amountString = numStr;
