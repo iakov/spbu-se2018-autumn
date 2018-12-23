@@ -232,6 +232,7 @@ int main(int argc, char *argv[])
             }
             else if (symbBuff == EOF)
             {
+                amountString = numStr;
                 break;
             }
 
