@@ -29,7 +29,7 @@ void deletePunctuation(char *word)
             ( ( (currPosLetter != 0) && (currPosLetter != strlen(word)-1) ) &&
                 strlen(buffer) != 1) ) )
         {
-            word[posWithoutPunct] = tolower(buffer[currPosLetter]);
+            word[posWithoutPunct] = buffer[currPosLetter];
             posWithoutPunct++;
         }
     }
