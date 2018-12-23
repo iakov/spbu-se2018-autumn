@@ -1,0 +1,33 @@
+	Наблюдения по выполненной работе.
+
+Таблицу строил по "The Old Testament of the King James Version of the Bible".
+(4432803 bytes, ASCII, http://textfiles.com/etext/NONFICTION/kjv10.txt)
+Было получено 854114 ключей (13765 из них уникальны).
+При организации таблицы с хэш-функцией md5 и начальным размером 100 длина наибольшей цепочки составила 6 элементов.
+Наиболее распростарнёнными оказались следующие слова:
+	the	62112
+	and	38575
+	shall	 9760
+	a	 7942
+	they	 6893
+	with	 5951
+	all	 5238
+	them	 3503
+	as	 3257
+	were	 2711
+	when	 2483
+	out	 2459
+	but	 2410
+	God	 2229
+	came	 1989
+	man	 1970
+	on	 1925
+	up	 1898
+	your	 1755
+	before	 1745
+	against	 1654
+	we	 1609
+	children 1587
+	come	 1521
+	at	 1502
+	also	 1422
