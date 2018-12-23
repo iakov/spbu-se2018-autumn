@@ -5,7 +5,7 @@
 
 int sizeFile, i, j;
 
-int SortSelection(char *name)
+int sortSelection(char *name)
 {
 	int res = 0;
 
@@ -33,18 +33,18 @@ int SortSelection(char *name)
 	return res;
 }
 
-void ErrorMessage(char *message)
+void errorMessage(char *message)
 {
 	printf("//\n%s\n//\n", message);
 }
 
-void BubbleSort(char **bubbleText,int n)
+void bubbleSort(char **bubbleText,int n)
 {
-	for (i = 0; i < n; i++)
+	for (i = 0; i < n - 1; i++)
 	{
 		for(j = 0; j < n - i - 1; j++)
 		{
-			if (strcmp(bubbleText[j], bubbleText[j + 1]) == 1)
+			if (strcmp(bubbleText[j], bubbleText[j + 1]) > 0)
 			{
 				char *tmp = bubbleText[j];
 				bubbleText[j] = bubbleText[j + 1];
@@ -54,13 +54,13 @@ void BubbleSort(char **bubbleText,int n)
 	}
 }
 
-void InsertionSort(char **insertionText, int n)
+void insertionSort(char **insertionText, int n)
 {
 	for(i = 1; i < n; i++)
 	{
 		for (j = i - 1; j >= 0; j--)
 		{
-	        	if(strcmp(insertionText[j], insertionText[j + 1]) == 1)
+        	if(strcmp(insertionText[j], insertionText[j + 1]) == 1)
 			{
 				char *tmp = insertionText[j];
 				insertionText[j] = insertionText[j + 1];
@@ -70,7 +70,7 @@ void InsertionSort(char **insertionText, int n)
 	}
 }
 
-void MergeSort(char **mergeText, int n)
+void mergeSort(char **mergeText, int n)
 {
 	if(n <= 1)
 	{
@@ -79,13 +79,13 @@ void MergeSort(char **mergeText, int n)
 
 	int mid = n / 2;
 
-	MergeSort(mergeText, mid);
-	MergeSort(mergeText + mid, n - mid);
+	mergeSort(mergeText, mid);
+	mergeSort(mergeText + mid, n - mid);
 
 	char **tmp = (char **) malloc(n * sizeof(char *));
 	if(NULL == tmp)
 	{
-		ErrorMessage("cant allocate memory for tmp in mergesort procedure");
+		errorMessage("cant allocate memory for tmp in mergesort procedure");
 		exit(4);
 	}
 
@@ -116,7 +116,7 @@ void MergeSort(char **mergeText, int n)
 	free(tmp);
 }
 
-void QuickSort(char **quickText, int left, int right)
+void quickSort(char **quickText, int left, int right)
 {
 	if(left >= right)
 	{
@@ -148,16 +148,16 @@ void QuickSort(char **quickText, int left, int right)
 
 	if(left < ptrR)
 	{
-		QuickSort(quickText, left, ptrR);
+		quickSort(quickText, left, ptrR);
 	}
 
 	if(ptrL < right)
 	{
-		QuickSort(quickText, ptrL, right);
+		quickSort(quickText, ptrL, right);
 	}
 }
 
-void Heap(char **textInHeap, int amount, int i)
+void heap(char **textInHeap, int amount, int i)
 {
 	int largest = i;
 	int left = 2*i + 1;
@@ -178,15 +178,15 @@ void Heap(char **textInHeap, int amount, int i)
 		char *tmp = textInHeap[i];
 		textInHeap[i] = textInHeap[largest];
 		textInHeap[largest] = tmp;
-		Heap(textInHeap, amount, largest);
+		heap(textInHeap, amount, largest);
 	}
 }
 
-void HeapSort(char **heapText, int n)
+void heapSort(char **heapText, int n)
 {
 	for(i = n / 2 - 1; i >= 0; i--)
 	{
-		Heap(heapText, n, i);
+		heap(heapText, n, i);
 	}
 
 	for(i = n - 1; i >= 0; i--)
@@ -194,7 +194,7 @@ void HeapSort(char **heapText, int n)
 		char *tmp = heapText[0];
 		heapText[0] = heapText[i];
 		heapText[i] = tmp;
-		Heap(heapText, i, 0);
+		heap(heapText, i, 0);
 	}
 }
 
@@ -202,13 +202,13 @@ int main(int argc, char *argv[])
 {
 	if(argc != 4)
 	{
-		ErrorMessage("wrong number of arguments");
+		errorMessage("wrong number of arguments");
 		exit(1);
 	}
 	FILE *file = fopen(argv[2], "r");
 	if(NULL == file)
 	{
-		ErrorMessage("cant open file");
+		errorMessage("cant open file");
 		exit(2);
 	}
 	sizeFile = atoi(argv[1]);
@@ -218,12 +218,12 @@ int main(int argc, char *argv[])
 	char *buf = (char *) malloc(strLength * sizeof(char));
 	if(NULL == text)
 	{
-		ErrorMessage("cant allocate memory for text in main function");
+		errorMessage("cant allocate memory for text in main function");
 		exit(4);
 	}
 	if(NULL == buf)
 	{
-		ErrorMessage("cant allocate memory for buf in main function");
+		errorMessage("cant allocate memory for buf in main function");
 		exit(4);
 	}
 	
@@ -238,32 +238,32 @@ int main(int argc, char *argv[])
 		text[i] =(char *) malloc((strlen(buf) + 1) * sizeof(char));
 		if(NULL == text[i])
 		{
-			ErrorMessage("cant allocate memory for a string of text in main function");
+			errorMessage("cant allocate memory for a string of text in main function");
 			exit(4);
 		}
 		strcpy(text[i], buf);
 	} 
 	free(buf);
 	
-	switch(SortSelection(argv[3]))
+	switch(sortSelection(argv[3]))
 	{
 		case 1:
-				BubbleSort(text, realSize);
+				bubbleSort(text, realSize);
 				break;
 		case 2:
-				InsertionSort(text, realSize);
+				insertionSort(text, realSize);
 				break;
 		case 3:
-				MergeSort(text, realSize);
+				mergeSort(text, realSize);
 				break;
 		case 4:
-				QuickSort(text, 0, realSize - 1);
+				quickSort(text, 0, realSize - 1);
 				break;
 		case 5:
-				HeapSort(text, realSize);
+				heapSort(text, realSize);
 				break;
 		default:
-				ErrorMessage("Unknown algorithm");
+				errorMessage("Unknown algorithm");
 				exit(1);
 				break;
 	}
