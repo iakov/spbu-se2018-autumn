@@ -149,13 +149,8 @@ uint32_t get(struct hashTable *table, char *key)
     return table->keyChains[pos].items[indexInChain].value;
 }
 
-int main(int argc, char *argv[])
+int main()
 {
-    if (argc > 1 || argv[0] == NULL)
-    {
-        exit(1);
-    }
-
     uint32_t tableSize = 1000;
     struct hashTable table = new(tableSize);
     //reading stdin
