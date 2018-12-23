@@ -9,7 +9,7 @@ void* allocateMemory( uint64_t size )
     void* pointer = calloc(1, size);
 
     if (pointer == NULL && size != 0)
-        suicide("Can not allocate memory", REASON_SYSTEM_ERROR);
+        forceExit("Can not allocate memory", REASON_SYSTEM_ERROR);
 
     return pointer;
 }
@@ -20,7 +20,7 @@ void freeMemory( void* pointer )
         free(pointer);
 }
 
-void suicide( const char* suicideNote, Reason suicideReason )
+void forceExit( const char* suicideNote, Reason suicideReason )
 {
     fprintf(stderr, "%s\n", suicideNote);
     exit(suicideReason);
