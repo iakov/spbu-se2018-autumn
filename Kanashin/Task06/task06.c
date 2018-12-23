@@ -238,12 +238,16 @@ void deleteTable(HashTable *table)
             free(buff);
         }
     }
-    free(table);
+    free(table->lenghtList);
+    free(table->lists);
 }
 
-int main()
+int main(int argc, char *argv[])
 {
-
+    if (argc > 1 || argv[0] == NULL)
+    {
+        checkErrors("Incorrect parameters input", 1);
+    }
     uint32_t numberOfReplies = 1;
     char buffer[MAX_WORD_LENGTH];
     HashTable table = newHashTable(MAX_SIZE_ARR);
