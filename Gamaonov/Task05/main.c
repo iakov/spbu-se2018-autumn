@@ -263,7 +263,6 @@ int main(int argc, char *argv[])
         }
         strcpy(str_array[current_line_number], temp);
     }
-    LINES_NUMBER = current_line_number;
 
     /*
     FILE *o_file = fopen(OUT_FILE_NAME, "w");
@@ -274,7 +273,7 @@ int main(int argc, char *argv[])
     }
      */
 
-    sort(str_array, LINES_NUMBER, ALG_NAME);
+    sort(str_array, current_line_number, ALG_NAME);
 
     /*
     //Output to file
@@ -284,13 +283,13 @@ int main(int argc, char *argv[])
     }
      */
 
-    for (int i = 0; i < LINES_NUMBER; i++)
+    for (int i = 0; i < current_line_number; i++)
     {
         printf("%s", str_array[i]);
     }
 
     //Memory release
-    for (int i = 0; i < LINES_NUMBER; i++)
+    for (int i = 0; i < current_line_number; i++)
     {
         free(str_array[i]);
     }
