@@ -13,7 +13,7 @@ void printErrors(char *errorMessage, uint32_t numberError)
     exit(numberError);
 }
 
-/*void deletePunctuation(char *word)
+void deletePunctuation(char *word)
 {
     uint32_t currPosLetter;
     char buffer[MAX_WORD_LENGTH];
@@ -41,7 +41,7 @@ void printErrors(char *errorMessage, uint32_t numberError)
         word[currPosLetter] = 0;
     }
 }
-*/
+
 typedef struct HashList
 {
     char* key;
@@ -198,7 +198,7 @@ void getStat(HashTable *table)
             uint32_t currNumberReplies = getValueWord(table, currElemList->key);
             if (currNumberReplies >= maxNumberReplies)
             {
-                fprintf(stderr, "One of the most frequently words is \"%s\", appeared %d times\n", currElemList->key, currElemList->numberReplies);
+                fprintf(stderr, "%s %d\n", currElemList->key, currElemList->numberReplies);
             }
             currElemList = currElemList->ptrNext;
         }
@@ -209,7 +209,7 @@ void getStat(HashTable *table)
 }
 void printWords(char *key, uint32_t numReplies)
 {
-    fprintf(stdout, "\"%s\" was appeared %d times.\n", key, numReplies);
+    fprintf(stdout, "%s %d\n", key, numReplies);
 }
 void iterate(HashTable *table)
 {
@@ -248,45 +248,25 @@ int main(int argc, char *argv[])
     {
         printErrors("Incorrect parameters input", 1);
     }
-    uint32_t numberOfReplies = 1;
-    char buffer[MAX_WORD_LENGTH];
-    HashTable table = newHashTable(MAX_SIZE_ARR);
-    char symb;
-    char *word;
-    uint32_t posWithoutPunct=0;
-
-    while ((symb = getchar()) != EOF)
+    FILE *bookFile;
+    bookFile = fopen("book.txt", "r");
+    if (NULL == bookFile)
     {
-        if((symb >= 'a' && symb <= 'z') ||
-            (symb >= 'A' && symb <= 'Z') ||
-            ((symb == '-') || (symb == '\'')))
+        printf("Error: cannot open file");
+        return 1;
+    }
+    uint32_t numberOfReplies = 1;
+    char word[MAX_WORD_LENGTH];
+    HashTable table = newHashTable(MAX_SIZE_ARR);
+    uint32_t posWithoutPunct = 0;
+    while (scanf("%s", word) != EOF)
+    {
+        if (strcmp(word, "endText") == 0)
         {
-            buffer[posWithoutPunct] = tolower(symb);
-            posWithoutPunct++;
+            break;
         }
-        else if(posWithoutPunct > 0)
-        {
-            while (buffer[posWithoutPunct - 1] == '-' || buffer[posWithoutPunct - 1] == '\'' )
-            {
-                buffer[posWithoutPunct--] = '\0';
-            }
-
-            buffer[posWithoutPunct] = '\0';
-
-            word = (char *)calloc(strlen(buffer) + 1, sizeof(char));
-            if (word == NULL)
-            {
-                printErrors("Cannot allocate memory for reading word", 4);
-            }
-
-            strcpy(word, buffer);
-
-            addWord(word, &table, numberOfReplies);
-
-            posWithoutPunct = 0;
-            free(word);
-        }
-
+        deletePunctuation(word);
+        addWord(word, &table, numberOfReplies);
     }
 
     iterate(&table);
@@ -296,3 +276,4 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
