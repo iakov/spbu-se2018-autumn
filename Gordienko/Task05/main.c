@@ -244,10 +244,11 @@ int main(int argc, char *argv[])
     }
 
     for (int i = 0; i < linesAmount; i++)
-    {
         printf("%s", data[i]);
+
+    for (int i = 0; i < linesAmount; i++)
         free(data[i]);
-    }
+
     free(data);
 
     return 0;
