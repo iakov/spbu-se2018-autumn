@@ -167,30 +167,34 @@ void heapSort(char *str_array[], int strNum)
 //Sort by defined algorithm
 void sort(char **str_array, int linesNumber, const char *alg)
 {
-    switch (alg[0])
+    if (strcmp(alg,"bubble") == 0)
     {
-        case 'b':   //Bubble sort
-            bubbleSort(str_array, linesNumber);
-            break;
-        case 'i':   //Insertion sort
-            insertionSort(str_array, linesNumber);
-            break;
-        case 'm':   //Merge sort
-            mergeSort(str_array, linesNumber);
-            break;
-        case 'q':   //Quick sort
-            quickSort(str_array, 0, linesNumber);
-            break;
-        case 'h':   //Heap sort
-            heapSort(str_array, linesNumber);
-            break;
-        case 'r':   //Still heap sort
-            heapSort(str_array, linesNumber);
-            break;
-
-        default:
-            fprintf(stderr, "Unknown sorting algorithm!\n");
-            exit(1);    //1 - invalid program argument exit code
+        bubbleSort(str_array, linesNumber);     //Bubble sort
+    }
+    else if (strcmp(alg,"insertion") == 0)
+    {
+        insertionSort(str_array, linesNumber);  //Insertion sort
+    }
+    else if (strcmp(alg,"merge") == 0)
+    {
+        mergeSort(str_array, linesNumber);      //Merge sort
+    }
+    else if (strcmp(alg,"quick") == 0)
+    {
+        quickSort(str_array, 0, linesNumber);   //Quick sort
+    }
+    else if (strcmp(alg,"heap") == 0)
+    {
+        heapSort(str_array, linesNumber);       //Heap sort
+    }
+    else if (strcmp(alg,"radix") == 0)
+    {
+        heapSort(str_array, linesNumber);       //Still heap sort
+    }
+    else
+    {
+        fprintf(stderr, "Unknown sorting algorithm! (%s)\n", alg);
+        exit(1);    //1 - invalid program argument exit code
     }
 }
 
@@ -206,7 +210,7 @@ int main(int argc, char *argv[])
     //Output to file
     //char *OUT_FILE_NAME = "/home/avalacnhe/CLionProjects/FileSort/output.txt";
 
-    const int LINE_LENGTH = 100;     //10 symbols + '\n' + '\0'
+    const int LINE_LENGTH = 228+1337;
     int LINES_NUMBER = (int)strtol(argv[1], NULL, 10);  //String to int conversion
     char *IN_FILE_NAME = argv[2];                       //
     char *ALG_NAME = argv[3];                           //
@@ -237,7 +241,7 @@ int main(int argc, char *argv[])
     {
         if (fgets(temp, LINE_LENGTH, i_file) == NULL)
         {
-            if (current_line_number < LINE_LENGTH)
+            if (current_line_number < LINE_LENGTH)      //if input file contains less lines than expected
             {
                 fprintf(stderr, "Wrong input data! (%s)\n", IN_FILE_NAME);
                 exit(3);
