@@ -165,7 +165,7 @@ void FunctionDef(char *text, int N, char Name){
         mergeSort(text, N-1, 0);
         break;
     case 'q':
-        bubbleSort(text, 0, N-1);
+        bubbleSort(text, N);
         break;
     case 'h':
         heapSort(text, N);
