@@ -55,20 +55,20 @@ uint32_t getHash(char *key)
     return hash;
 }
 
-void clear(hashTable table)
+void clear(hashTable *table)
 {
-    for (int i = 0; i < table.size; i++)
+    for (int i = 0; i < table->size; i++)
     {
-        while (table.listArr[i] != NULL)
+        while (table->listArr[i] != NULL)
         {
-            node *currNode = table.listArr[i];
-            table.listArr[i] = table.listArr[i]->next;
+            node *currNode = table->listArr[i];
+            table->listArr[i] = table->listArr[i]->next;
             free(currNode->key);
             free(currNode);
         }
     }
-    free(table.listArr);
-    free(table.listLength);
+    free(table->listArr);
+    free(table->listLength);
 }
 
 void add(hashTable *table, char *key)
@@ -235,6 +235,6 @@ int main(int argc, char *argv[])
     }
 
     printStat(table);
-    clear(table);
+    clear(&table);
     return 0;
 }
