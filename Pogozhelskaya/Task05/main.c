@@ -144,11 +144,17 @@ int main(int argc, char* argv[]) {
     if (argc == 4) {
         FILE* f;
         int N = atoi(argv[1]);
+        if (N < 0) {
+            printf("Wrong number of strings\n");
+            exit(1);
+        }
         const char* file = (const char*)argv[2];
         char* sort_name = argv[3];
         f = fopen(file, "r");
-        if(N > num_of_strings(file))
-            N = num_of_strings(file);
+        if(N > num_of_strings(file)) {
+            printf("Wrong number of strings\n");
+            exit(1);
+        }   
         char** strings = (char**)malloc(N * sizeof(char*));
         if (strings == NULL) {
             printf("Allocation error\n");
