@@ -210,7 +210,8 @@ int main(int argc, char *argv[])
     //Output to file
     //char *OUT_FILE_NAME = "/home/avalacnhe/CLionProjects/FileSort/output.txt";
 
-    const int LINE_LENGTH = 228+1337;
+    const int LINE_LENGTH = 1337228;
+    int sss[LINE_LENGTH];
     int LINES_NUMBER = (int)strtol(argv[1], NULL, 10);  //String to int conversion
     char *IN_FILE_NAME = argv[2];                       //
     char *ALG_NAME = argv[3];                           //
