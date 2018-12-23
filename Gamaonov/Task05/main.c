@@ -229,7 +229,8 @@ int main(int argc, char *argv[])
         exit(4);    //4 - system function call error exit code
     }
 
-    for (int current_lines_number = 0; current_lines_number < LINES_NUMBER; current_lines_number++)
+    int current_lines_number = 0
+    for (current_lines_number = 0; current_lines_number < LINES_NUMBER; current_lines_number++)
     {
         if (fgets(temp, LINE_LENGTH, i_file) == NULL)
         {
@@ -237,7 +238,6 @@ int main(int argc, char *argv[])
         }
 
         str_array[current_lines_number] = malloc((strlen(temp) + 1) * sizeof(char));
-
         if (str_array[current_lines_number] == NULL)
         {
             for (int i = 0; i < current_lines_number; i++)
@@ -251,6 +251,7 @@ int main(int argc, char *argv[])
         }
         strcpy(str_array[current_lines_number], temp);
     }
+    LINES_NUMBER = current_lines_number;
 
     /*
     FILE *o_file = fopen(OUT_FILE_NAME, "w");
