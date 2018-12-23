@@ -90,7 +90,7 @@ void free_table(hashtable_t *table) {
     table->capacity = 0;
 }
 
-int main(int argc, char **argv) {
+int main() {
     hashtable_t table = init_table(128);
     const int MAX_WORD_LEN = 5000;
     int word_len = 0, words_cnt = 0;
