@@ -104,7 +104,6 @@ void quickSort(char *text, int start, int N){
             }
         }
     }
-    int i;
 	if (start < R){
 		if(R==N){
 			return;
