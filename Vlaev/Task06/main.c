@@ -204,7 +204,6 @@ struct HashTable* createHashTable(int size)
 struct HashTable * insertInTable(struct HashTable * table, char * key, int value);
 struct HashTable * resize(struct HashTable * table,int size)
 {
-    printf("RESIZE %d\n",size);
     struct HashTable * newTable=createHashTable(size);
     for (int i=0;i<table->size;i++)
     {
