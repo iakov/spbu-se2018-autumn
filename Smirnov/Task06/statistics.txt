@@ -1,0 +1,9 @@
+Book for analyse: Jack London, "White Fang"
+
+Table size: 1000
+   Chains amount: 999
+   Average value of chains' length: 6.558558
+   Total keys amount: 73649
+   Different keys amount: 6552
+   The most frequently used key: 'the' - 5148 times
+   Average time: (0.18) +\- (0,02)
