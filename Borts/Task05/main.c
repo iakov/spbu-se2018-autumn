@@ -85,8 +85,7 @@ int main(int argc, char * inputstring[])
 	}
 	else if(!strcmp(inputstring[3], "quick"))
 	{
-		Sort_Bubble(strings, Numberoflines);
-		//Sort_Quick(strings, 0, Numberoflines-1);
+		Sort_Quick(strings, 0, Numberoflines-1);
 	}
 	else if(!strcmp(inputstring[3], "radix"))
 	{
@@ -216,7 +215,8 @@ void Sort_Quick(char * sortlines[], unsigned int first, unsigned int last)
 	}
 
     unsigned int i = first, j = last;
-    char *pivot = sortlines[(first + (last-first)/2)];
+    char pivot[strlen(sortlines[(first + (last-first)/2)])];
+    sprintf(pivot, "%s", sortlines[(first + (last-first)/2)]);
 
     do
     {
