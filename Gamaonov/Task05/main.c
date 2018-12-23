@@ -181,7 +181,10 @@ void sort(char **str_array, int linesNumber, const char *alg)
         case 'q':   //Quick sort
             quickSort(str_array, 0, linesNumber);
             break;
-        case 'r':   //Heap sort
+        case 'h':   //Heap sort
+            heapSort(str_array, linesNumber);
+            break;
+        case 'r':   //Still heap sort
             heapSort(str_array, linesNumber);
             break;
 
@@ -229,7 +232,7 @@ int main(int argc, char *argv[])
         exit(4);    //4 - system function call error exit code
     }
 
-    int current_lines_number = 0
+    int current_lines_number = 0;
     for (current_lines_number = 0; current_lines_number < LINES_NUMBER; current_lines_number++)
     {
         if (fgets(temp, LINE_LENGTH, i_file) == NULL)
