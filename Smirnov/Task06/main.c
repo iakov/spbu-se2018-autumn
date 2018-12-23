@@ -304,3 +304,4 @@ int main()
     clear(&map);
     return 0;
 }
+
