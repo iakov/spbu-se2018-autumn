@@ -85,18 +85,18 @@ Node * nextNode(HashTable * hashTable, Node * present)
 	if (present == NULL)
 	{
 		index = 0;
-		while (hashTable->table[index] == NULL && index < hashTable->size)
+		while (hashTable->table[index] == NULL && (int) index < hashTable->size)
 			++index;
-		if (index >= hashTable->size)
+		if ((int) index >= hashTable->size)
 			return NULL;
 		return hashTable->table[index];
 	}
 	if (present->ptr == NULL)
 	{
 		index = getIndex(hashTable, present->key) + 1;
-		while (hashTable->table[index] == NULL && index < hashTable->size)
+		while (hashTable->table[index] == NULL && (int) index < hashTable->size)
 			++index;
-		if (index >= hashTable->size)
+		if ((int) index >= hashTable->size)
 			return NULL;
 		return hashTable->table[index];
 	}
@@ -109,7 +109,6 @@ void freeHashTable(HashTable *hashTable)
 	{
 		while (hashTable->table[i] != NULL)
 		{
-			Node *present = hashTable->table[i];
 			hashTable->table[i] = hashTable->table[i]->ptr;
 			free(hashTable->table[i]);
 			hashTable->table[i] = NULL;
