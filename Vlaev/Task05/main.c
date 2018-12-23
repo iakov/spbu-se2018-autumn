@@ -405,15 +405,16 @@ int main(int argc, char **argv)
     }
     long long int  current_string_list_len = 0;
     char c;
+    bool empty_file=true;
     while(n<true_n)
     {
         c = getc(fptr);
-        if (c==EOF && ferror(fptr))
+        if (c == EOF && ferror(fptr))
         {
             printf("Error! Unexpected EOF");
             fclose(fptr);
             free(lengths);
-            for (long long int  i=0;i<n;i++)
+            for (long long int i = 0; i < n; i++)
             {
                 free(strings[i]);
             }
@@ -421,7 +422,7 @@ int main(int argc, char **argv)
             free(current_string);
             exit(3);
         }
-        if (c==EOF)
+        if (c == EOF)
         {
             break;
         }
@@ -431,18 +432,18 @@ int main(int argc, char **argv)
             lengths[n] = (current_string_list_len);
             n++;
             current_string_list_len = 0;
-            current_string = malloc(startlen* sizeof(char));
+            current_string = malloc(startlen * sizeof(char));
             current_string_len = startlen;
-            if (n + 1 > current_n_for_malloc)
+            if (n + 1 >= current_n_for_malloc)
             {
                 current_n_for_malloc *= 2;
                 strings = realloc(strings, current_n_for_malloc * sizeof(char *));
-                if (strings==NULL)
+                if (strings == NULL)
                 {
                     printf("Memory allocation error!");
                     fclose(fptr);
                     free(lengths);
-                    for (long long int  i=0;i<n;i++)
+                    for (long long int i = 0; i < n; i++)
                     {
                         free(strings[i]);
                     }
@@ -450,13 +451,13 @@ int main(int argc, char **argv)
                     free(current_string);
                     exit(4);
                 }
-                lengths = realloc(lengths, current_n_for_malloc * sizeof(long long int ));
-                if (lengths==NULL)
+                lengths = realloc(lengths, current_n_for_malloc * sizeof(long long int));
+                if (lengths == NULL)
                 {
                     printf("Memory allocation error!");
                     fclose(fptr);
                     free(lengths);
-                    for (long long int  i=0;i<n;i++)
+                    for (long long int i = 0; i < n; i++)
                     {
                         free(strings[i]);
                     }
@@ -468,18 +469,19 @@ int main(int argc, char **argv)
         }
         else
         {
+            empty_file=false;
             current_string[current_string_list_len] = c;
             (current_string_list_len)++;
             if ((current_string_list_len) + 1 > current_string_len)
             {
                 current_string_len *= 2;
-                current_string = realloc(current_string, (size_t)current_string_len);
-                if (current_string==NULL)
+                current_string = realloc(current_string, (size_t) current_string_len);
+                if (current_string == NULL)
                 {
                     printf("Memory allocation error!");
                     fclose(fptr);
                     free(lengths);
-                    for (long long int  i=0;i<n;i++)
+                    for (long long int i = 0; i < n; i++)
                     {
                         free(strings[i]);
                     }
@@ -490,13 +492,11 @@ int main(int argc, char **argv)
             }
         }
     }
-    bool no_slash_n=false;
     if (current_string_list_len > 0)
     {
         strings[n] = current_string;
         lengths[n] = (current_string_list_len);
         n++;
-        no_slash_n=true;
     }
     char sort_name_first_symbol=argv[3][0];
     switch (sort_name_first_symbol)
@@ -628,7 +628,7 @@ int main(int argc, char **argv)
         free(strings[i]);
     }
     free(strings);
-    if (no_slash_n)
+    if (empty_file)
     {
         free(current_string);
     }
