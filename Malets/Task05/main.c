@@ -16,5 +16,5 @@ int main( int argc, char** argv )
     fprintf(stderr, "printing...\n");
     print();
 
-    suicide("Success", REASON_DESIRE_TO_DIE);
+    forceExit("Success", REASON_NONE);
 }

@@ -1,0 +1,51 @@
+#!/bin/bash
+. $(dirname $(readlink -f "${BASH_SOURCE[0]}"))/../../common/testHelpers
+
+Task06_postcheck(){
+  sort -k 1,1 "$1" > "$1.tmp"
+  mv "$1.tmp" "$1"
+}
+
+runTest(){
+  TEST_SRCDIR="$PWD"
+  TEST_TMPDIR="$(mktemp -d -p .)"
+  cd "$TEST_TMPDIR"
+  TEST_BINARY=./test-"$TASKNAME"
+  rm -f $TEST_BINARY
+  if ! compile $TEST_BINARY ; then
+    cat compile.log
+    return 171
+  fi
+  local test_input=./1line
+  echo "xxxx" > $test_input
+  echo "xxxx 1" > ./1line.out
+  touch empty
+  local exitCode
+  TESTSTEP=0
+  exitCode=0
+  < /dev/null runTestCase empty
+  < $test_input runTestCase ./1line.out
+
+  test_input="$(mktemp -p . testInputXXXX)"
+  find "$TEST_SRCDIR" -name '*.h' -o -name '*.c' | xargs cat | sed -r 's/[^a-zA-Z \t]//g;s/\b[[:alpha:]]\b//g' > $test_input
+  gawk '/^.{2,}$/{a[$0]++ } END{for (k in a) { print k,a[k]} }' RS='[[:space:]]+' "$test_input" | sort -k 1,1 > "$test_input.out"
+  < "$test_input" runTestCase "$test_input.out"
+
+#  local test_expected=$(mktemp -p .)
+#  command sort $test_input > $test_expected
+#  for a in $test_algorithm_list ; do
+#    runTestCase $test_array_len $test_input $a $test_expected
+#  done
+#  test_len=1000
+#  test_input=$(mktemp -p .)
+#  #hexdump -e '4/4 "%08x\n" "\n"' -n $((4 * $test_len)) /dev/urandom > $test_input
+#  hexdump -e '4/4 "%011u\n" "\n"' -n $((4 * $test_len)) /dev/urandom > $test_input
+#  test_expected=$(mktemp -p .)
+#  command sort -o $test_expected $test_input
+#  for a in $test_algorithm_list ; do
+#    runTestCase $test_len $test_input $a $test_expected
+#  done
+}
+
+
+runTest
