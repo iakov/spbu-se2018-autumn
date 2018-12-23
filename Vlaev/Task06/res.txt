@@ -1,0 +1,3 @@
+Book: white_fang.txt
+Average chain length: 33 table end size 192
+Most frequent word: "the", 46782 occurences
