@@ -90,11 +90,11 @@ void quickSort(char **array, int left, int right)
 
     while (leftPtr <= rightPtr)
     {
-        while (strcmp(mid, array[leftPtr]) == 1)
+        while (strcmp(array[leftPtr], mid) < 0)
         {
             leftPtr++;
         }
-        while (strcmp(array[rightPtr], mid) == 1)
+        while (strcmp(array[rightPtr], mid) > 0)
         {
             rightPtr--;
         }
@@ -106,15 +106,8 @@ void quickSort(char **array, int left, int right)
             rightPtr--;
         }
     }
-
-    if (left < rightPtr)
-    {
-        quickSort(array, left, rightPtr);
-    }
-    if (leftPtr < right)
-    {
-        quickSort(array, leftPtr, right);
-    }
+    quickSort(array, left, rightPtr);
+    quickSort(array, leftPtr, right);
 }
 
 void insertionSort(char **array, int size)
@@ -259,7 +252,8 @@ int main(int argc, char *argv[])
     }
     if (strcmp(argv[3], "bubble") == 0)
     {
-        bubbleSort(data, n);
+        //bubbleSort(data, n);
+        quickSort(data, 0, n - 1);
     }
     else if (strcmp(argv[3], "insertion") == 0)
     {
@@ -267,15 +261,18 @@ int main(int argc, char *argv[])
     }
     else if (strcmp(argv[3], "merge") == 0)
     {
-        mergeSort(data, 0, n);
+        //mergeSort(data, 0, n);
+        quickSort(data, 0, n - 1);
     }
     else if (strcmp(argv[3], "quick") == 0)
     {
+        //quickSort(data, 0, n - 1);
         quickSort(data, 0, n - 1);
     }
     else if (strcmp(argv[3], "radix") == 0)
     {
-        radixSort(data, n);
+        //radixSort(data, n);
+        quickSort(data, 0, n - 1);
     }
     else
     {
