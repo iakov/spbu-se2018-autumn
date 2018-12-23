@@ -13,6 +13,9 @@ void swapStrings(char **first, char **second)
     *second = temp;
 }
 
+
+
+
 void mergeSort(char **array, int left, int right)
 {
     if (left >= right - 1)
@@ -61,6 +64,9 @@ void mergeSort(char **array, int left, int right)
     free(mergeBuffer);
 }
 
+
+
+
 void bubbleSort(char **array, int size)
 {
     for (int i = 0; i < size - 1; ++i)
@@ -74,6 +80,9 @@ void bubbleSort(char **array, int size)
         }
     }
 }
+
+
+
 
 void quickSort(char **array, int left, int right)
 {
@@ -107,6 +116,9 @@ void quickSort(char **array, int left, int right)
     quickSort(array, leftPtr, right);
 }
 
+
+
+
 void insertionSort(char **array, int size)
 {
     for (int i = 1; i < size; i++)
@@ -120,6 +132,9 @@ void insertionSort(char **array, int size)
         }
     }
 }
+
+
+
 
 void radixSort(char **array, int size)
 {
@@ -224,22 +239,22 @@ int main(int argc, char *argv[])
     {
         if (fgets(input, wordLen, file) == NULL)
         {
-            /*for (int j = 0; j < i; ++j)
+            for (int j = 0; j < i; ++j)
             {
                 free(data[j]);
             }
             free(data);
-            free(input);*/
+            free(input);
             fprintf(stderr, "Invalid data\n");
             exit(3);
         }
         data[i] = malloc((strlen(input) + 1) * sizeof(char));
         if (data[i] == NULL)
         {
-            /*for (int j = 0; j < n; j++)
+            for (int j = 0; j < n; j++)
                 free(data[j]);
             free(data);
-            free(input);*/
+            free(input);
             printf("Memory allocation error\n");
             exit(4);
         }
@@ -249,20 +264,19 @@ int main(int argc, char *argv[])
             data[i][len - 1] = '\0';
     }
 
+
+
     if (strcmp(argv[3], "bubble") == 0)
     {
         bubbleSort(data, n);
-        //quickSort(data, 0, n - 1);
     }
     else if (strcmp(argv[3], "insertion") == 0)
     {
         insertionSort(data, n);
-        //quickSort(data, 0, n - 1);
     }
     else if (strcmp(argv[3], "merge") == 0)
     {
         mergeSort(data, 0, n);
-        //quickSort(data, 0, n - 1);
     }
     else if (strcmp(argv[3], "quick") == 0)
     {
@@ -271,7 +285,6 @@ int main(int argc, char *argv[])
     else if (strcmp(argv[3], "radix") == 0)
     {
         radixSort(data, n);
-        //quickSort(data, 0, n - 1);
     }
     else
     {
@@ -282,6 +295,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Invalid algorithm name\n");
         exit(1);
     }
+
 
 
     for (int i = 0; i < n; ++i)
