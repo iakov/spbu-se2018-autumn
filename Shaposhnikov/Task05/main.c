@@ -2,18 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-void swap(char *str1, char *str2)
+void swap(char **str1, char **str2)
 {
-    char *temp;
-        if ((temp = (char *)malloc(strlen(str1))) == NULL)
-    {
-        fprintf(stderr, "Out of memory (temp(swap))\n");
-        exit(4);
-    }
-    strcpy(temp, str1);
-    strcpy(str1, str2);
-    strcpy(str2, temp);
-    free(temp);
+    char *temp = *str1;
+    *str1 = *str2;
+    *str2 = temp;
 }
 
 void bubbleSort(char *arr[], int num)
@@ -23,7 +16,7 @@ void bubbleSort(char *arr[], int num)
     for (int i = 0; i < num-1; i++)
        for (int j = 0; j < num-i-1; j++)
            if (strcmp(arr[j], arr[j+1]) > 0)
-            swap(arr[j], arr[j+1]);
+            swap(&arr[j], &arr[j+1]);
 }
 
 void insertionSort(char * arr[], int num)
@@ -143,7 +136,7 @@ void heapify(char * arr[], int num, int i)
         largest = r;
     if (largest != i)
     {
-        swap(arr[i], arr[largest]);
+        swap(&arr[i], &arr[largest]);
         heapify(arr, num, largest);
     }
 }
@@ -154,7 +147,8 @@ void heapSort(char *arr[], int num)
         heapify(arr, num, i);
     for (int i=num-1; i>=0; i--)
     {
-        if ( i != 0) swap(arr[0], arr[i]);
+        if (strcmp(arr[0], arr[i]) != 0) 
+            swap(&arr[0], &arr[i]);
         heapify(arr, i, 0);
     }
 }
