@@ -206,7 +206,7 @@ int main(int argc, char *argv[])
     //Output to file
     //char *OUT_FILE_NAME = "/home/avalacnhe/CLionProjects/FileSort/output.txt";
 
-    const int LINE_LENGTH = 12;     //10 symbols + '\n' + '\0'
+    const int LINE_LENGTH = 100;     //10 symbols + '\n' + '\0'
     int LINES_NUMBER = (int)strtol(argv[1], NULL, 10);  //String to int conversion
     char *IN_FILE_NAME = argv[2];                       //
     char *ALG_NAME = argv[3];                           //
@@ -221,29 +221,34 @@ int main(int argc, char *argv[])
     char **str_array = malloc(LINES_NUMBER * sizeof(char *));   //File content
     if (str_array == NULL)
     {
-        fprintf(stderr, "Not enough memory!");
+        fprintf(stderr, "Not enough memory!\n");
         exit(4);    //4 - system function call error exit code
     }
 
     char *temp = malloc(LINE_LENGTH);  //Temporary string buffer
     if (temp == NULL)
     {
-        fprintf(stderr, "Not enough memory! (and money...)");
+        fprintf(stderr, "Not enough memory! (and money...)\n");
         exit(4);    //4 - system function call error exit code
     }
 
-    int current_lines_number = 0;
-    for (current_lines_number = 0; current_lines_number < LINES_NUMBER; current_lines_number++)
+    int current_line_number = 0;
+    for (current_line_number = 0; current_line_number < LINES_NUMBER; current_line_number++)
     {
         if (fgets(temp, LINE_LENGTH, i_file) == NULL)
         {
+            if (current_line_number < LINE_LENGTH)
+            {
+                fprintf(stderr, "Wrong input data! (%s)\n", IN_FILE_NAME);
+                exit(3);
+            }
             break;
         }
 
-        str_array[current_lines_number] = malloc((strlen(temp) + 1) * sizeof(char));
-        if (str_array[current_lines_number] == NULL)
+        str_array[current_line_number] = malloc((strlen(temp) + 1) * sizeof(char));
+        if (str_array[current_line_number] == NULL)
         {
-            for (int i = 0; i < current_lines_number; i++)
+            for (int i = 0; i < current_line_number; i++)
                 free(str_array[i]);
 
             free(str_array);
@@ -252,9 +257,9 @@ int main(int argc, char *argv[])
             fprintf(stderr, "Not enough memory!");
             exit(4);    //4 - system function call error exit code
         }
-        strcpy(str_array[current_lines_number], temp);
+        strcpy(str_array[current_line_number], temp);
     }
-    LINES_NUMBER = current_lines_number;
+    LINES_NUMBER = current_line_number;
 
     /*
     FILE *o_file = fopen(OUT_FILE_NAME, "w");
