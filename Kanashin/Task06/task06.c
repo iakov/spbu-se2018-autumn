@@ -161,25 +161,26 @@ uint32_t getValueWord(HashTable *table, char* word)
 void getStat(HashTable *table)
 {
     uint32_t maxNumberReplies = 0;
-    uint32_t avgLengthList = 0;
-    uint32_t amountLists = 0;
-    uint32_t amountWords = 0;
+    //uint32_t avgLengthList = 0;
+    //uint32_t amountLists = 0;
+    //uint32_t amountWords = 0;
     for (uint32_t i = 0; i < table->sizeOfTable; i++)
     {
-        if (table->lenghtList[i] != 0)
+        /*if (table->lenghtList[i] != 0)
         {
             avgLengthList += table->lenghtList[i];
             amountLists++;
-        }
+        }*/
 
         List *currElemList = table->lists[i];
         while (currElemList != NULL)
         {
-            uint32_t currNumberReplies = getValueWord(table, currElemList->key);
-            amountWords ++;
-            if (currNumberReplies > maxNumberReplies)
+            //uint32_t currNumberReplies = getValueWord(table, currElemList->key);
+            //amountWords ++;
+
+            if (currElemList->numberReplies > maxNumberReplies)
             {
-                maxNumberReplies = currNumberReplies;
+                maxNumberReplies = currElemList->numberReplies;
             }
             fprintf(stdout, "%s %d\n", currElemList->key, currElemList->numberReplies);
             currElemList = currElemList->ptrNext;
@@ -191,8 +192,8 @@ void getStat(HashTable *table)
         List *currElemList = table->lists[i];
         while (currElemList != NULL)
         {
-            uint32_t currNumberReplies = getValueWord(table, currElemList->key);
-            if (currNumberReplies >= maxNumberReplies)
+            //uint32_t currNumberReplies = getValueWord(table, currElemList->key);
+            if (currElemList->numberReplies == maxNumberReplies)
             {
                 fprintf(stderr, "%s %d\n", currElemList->key, currElemList->numberReplies);
             }
