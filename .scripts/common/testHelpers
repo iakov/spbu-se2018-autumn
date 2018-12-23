@@ -65,9 +65,13 @@ runTestCase() {
     rm -f $out $err
     local exitCode=0
     runBinary $TEST_BINARY $* > $out 2>$err || exitCode=$?
-    if [[ $exitCode != 0 ]] ; then head -n 20 $err || true ; return $exitCode; fi
+    if [[ $exitCode != 0 ]] ; then
+      head -n 20 $err 2>/dev/null || true
+      grep -q 'Sanitizer:' $err && exitCode=157 || true
+      return $exitCode
+    fi
     [ -s $out ] && ${TASKNAME}_postcheck $out && ((TESTSTEP+=1)) # && logOk "step $TESTSTEP finished"
-    local quoted_args="${*//.\//}"
+    local quoted_args="${*//\//}"
     diff -d $expected $out 1> "$quoted_args.diff" 2>&1 \
       ||  { logError "Unexpected result for args: $quoted_args" ; head -n 5 "$quoted_args.diff" ; return 200 ; }
 }
