@@ -18,7 +18,7 @@ void bubbleSort(char *text, int N){
 	int i, j;
 	for(i=0; i<N; i++){
 		for(j=i+1; j<N; j++){
-			if(strcmp(&text[Strings[i][0]],&text[Strings[j][0]])==1){
+			if(strcmp(&text[Strings[i][0]],&text[Strings[j][0]])>0){
 				SwapStrings(i,j);
 			}
 		}
@@ -177,7 +177,6 @@ int main(int argc, char **argv)
 {
 	int i=0, N, j=0, z=0;
     if (argc != 4){
-    	printf("%d ", argc);
    		printf("Invalid number of arguments!\n");
     	exit(1);
     }
