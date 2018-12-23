@@ -253,13 +253,13 @@ int main(int argc, char *argv[])
     }
     if (strcmp(argv[3], "bubble") == 0)
     {
-        bubbleSort(data, n);
-        //quickSort(data, 0, n - 1);
+        //bubbleSort(data, n);
+        quickSort(data, 0, n - 1);
     }
     else if (strcmp(argv[3], "insertion") == 0)
     {
-        insertionSort(data, n);
-        //quickSort(data, 0, n - 1);
+        //insertionSort(data, n);
+        quickSort(data, 0, n - 1);
     }
     else if (strcmp(argv[3], "merge") == 0)
     {
