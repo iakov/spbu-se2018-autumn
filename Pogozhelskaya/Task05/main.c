@@ -157,7 +157,8 @@ int main(int argc, char* argv[]) {
                 exit(4);
             }
             for (int i = 0; i < N; i++) {
-                fgets(buffer, max_string, f);
+                if (fgets(buffer, max_string, f) == NULL)
+                    break;
                 int length = strlen(buffer);
 		        strings[i] = (char*)malloc((length + 1) * sizeof(char));
                 if (strings[i] == NULL) {
