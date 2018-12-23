@@ -143,7 +143,6 @@ void add(struct hashTable *table, char* key, uint32_t value)
 
 uint32_t get(struct hashTable *table, char *key)
 {
-
     int indexInChain;
     uint32_t pos = getIndex(table, key, &indexInChain);
     return table->keyChains[pos].items[indexInChain].value;
@@ -183,6 +182,7 @@ int main()
         }
     }
     free(word);
+
     uint32_t countMax = 0;
     char *keyCurr;
     uint32_t valCurr;
@@ -204,6 +204,7 @@ int main()
             }
         }
     }
+
     for (uint32_t i = 0; i < tableSize; i++)
     {
         for (uint32_t j = 0; j < table.keyChains[i].used; j++)
