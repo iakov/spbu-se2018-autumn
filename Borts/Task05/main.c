@@ -209,38 +209,36 @@ void Sort_Merge(char * sortlines[], unsigned int Countofline)
 
 void Sort_Quick(char * sortlines[], unsigned int first, unsigned int last)
 {
+	if(first >= last)
+	{
+		return;
+	}
+
 	if(timecounter_start == 0)
 	{
 		timecounter_start = clock();
 	}
 
     unsigned int i = first, j = last;
-    char pivot[strlen(sortlines[first])];
-    sprintf(pivot, "%s", sortlines[first]);
+    unsigned int middle = (first + last)/2;
+    char *pivot = sortlines[middle];
 
-    do
+    while (i <= j)
     {
         while((strcmp(sortlines[i], pivot) < 0))
         {
-            i++;
+            ++i;
         }
         while((strcmp(sortlines[j], pivot) > 0))
         {
-            j--;
+            --j;
         }
-        if(i <= j)
-        {
-            if((strcmp(sortlines[i], sortlines[j]) > 0))
-            {
-            	SwapString(sortlines, i, j);
-            }
-            i++;
-            if (j > 0)
-            {
-            	j--;
-            }
+
+		if (i <= j)
+		{
+            SwapString(sortlines, i++, j--);
         }
-    } while (i <= j);
+    }
  
     if(i < last)
     {
