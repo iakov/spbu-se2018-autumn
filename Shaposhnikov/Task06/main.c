@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "Md5.c"
+#include "MD5.h"
 
 /*
 void punctuationExtermination(char  word[])
