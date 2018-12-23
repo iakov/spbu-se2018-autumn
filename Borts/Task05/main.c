@@ -71,7 +71,7 @@ int main(int argc, char * inputstring[])
 	Numberoflines = counter;
 
 
-	if(!strcmp(inputstring[3], "bubble"))
+	/*if(!strcmp(inputstring[3], "bubble"))
 	{
 		Sort_Bubble(strings, Numberoflines);
 	}
@@ -89,8 +89,7 @@ int main(int argc, char * inputstring[])
 	}
 	else if(!strcmp(inputstring[3], "radix"))
 	{
-		Sort_Quick(strings, 0, Numberoflines-1);
-/*		unsigned int maxlength = strlen(strings[0]);
+		unsigned int maxlength = strlen(strings[0]);
 		for(unsigned int i = 1; i < Numberoflines; ++i)
 		{
 			if(strlen(strings[i]) > maxlength)
@@ -98,13 +97,13 @@ int main(int argc, char * inputstring[])
 				maxlength = strlen(strings[i]);
 			}
 		}
-		Sort_Radix(strings, 0, Numberoflines-1, 0, maxlength-2);*/
+		Sort_Radix(strings, 0, Numberoflines-1, 0, maxlength-2);
 	}
 	else
 	{
 		printf("\n[!] Error: Unknown error, program failed.\n");
 		exit(1);
-	}
+	}*/
 
 	for(unsigned int i = 0; i < Numberoflines; ++i)
 	{
