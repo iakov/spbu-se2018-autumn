@@ -23,11 +23,11 @@ void deletePunctuation(char *word)
     {
         buffer[currPosLetter] = word[currPosLetter];
 
-        if((buffer[currPosLetter] >= 'a' && buffer[currPosLetter] <= 'z') ||
-            (buffer[currPosLetter] >= 'A' && buffer[currPosLetter] <= 'Z') ||
-           ((buffer[currPosLetter] == '-' || (buffer[currPosLetter] == '\'') &&
-             currPosLetter != 0 && currPosLetter != strlen(word)-1)) &&
-           strlen(buffer) != 1)
+        if( ( (buffer[currPosLetter] >= 'a') && (buffer[currPosLetter] <= 'z') ) ||
+            ( (buffer[currPosLetter] >= 'A') && (buffer[currPosLetter] <= 'Z') ) ||
+            ( ( (buffer[currPosLetter] == '-') || (buffer[currPosLetter] == '\'') ) &&
+            ( ( (currPosLetter != 0) && (currPosLetter != strlen(word)-1) ) &&
+                strlen(buffer) != 1) ) )
         {
             word[posWithoutPunct] = tolower(buffer[currPosLetter]);
             posWithoutPunct++;
@@ -35,11 +35,6 @@ void deletePunctuation(char *word)
     }
 
     word[posWithoutPunct] = '\0';
-
-    for (currPosLetter; currPosLetter > posWithoutPunct; currPosLetter--)
-    {
-        word[currPosLetter] = 0;
-    }
 }
 
 typedef struct HashList
@@ -258,7 +253,7 @@ int main(int argc, char *argv[])
     uint32_t numberOfReplies = 1;
     char word[MAX_WORD_LENGTH];
     HashTable table = newHashTable(MAX_SIZE_ARR);
-    uint32_t posWithoutPunct = 0;
+
     while (scanf("%s", word) != EOF)
     {
         if (strcmp(word, "endText") == 0)
