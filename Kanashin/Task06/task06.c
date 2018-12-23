@@ -4,7 +4,7 @@
 #include <ctype.h>
 #include "md5.h"
 
-#define MAX_SIZE_ARR 50
+#define MAX_SIZE_ARR 10000
 #define MAX_WORD_LENGTH 100
 
 void printErrors(char *errorMessage, uint32_t numberError)
@@ -13,7 +13,7 @@ void printErrors(char *errorMessage, uint32_t numberError)
     exit(numberError);
 }
 
-void deletePunctuation(char *word)
+/*void deletePunctuation(char *word)
 {
     uint32_t currPosLetter;
     char buffer[MAX_WORD_LENGTH];
@@ -34,8 +34,9 @@ void deletePunctuation(char *word)
         }
     }
 
+
     word[posWithoutPunct] = '\0';
-}
+}*/
 
 typedef struct HashList
 {
@@ -112,13 +113,13 @@ void addWord(char *word, HashTable *table, uint32_t numberOfReplies)
     }
     else
     {
-        List *newElemList = malloc(sizeof(List));
+        List *newElemList = (List *) malloc(sizeof(List));
         if (newElemList == NULL)
         {
             printErrors("Cannot allocate memory for adding new element of List", 4);
         }
 
-        newElemList->key = (char *) malloc(strlen(word)*sizeof(uint32_t));
+        newElemList->key = (char *) malloc(strlen(word)*sizeof(char));
         if (newElemList->key == NULL)
         {
             printErrors("Cannot allocate memory for adding new word to the lists", 4);
@@ -130,7 +131,7 @@ void addWord(char *word, HashTable *table, uint32_t numberOfReplies)
         {
             newElemList->ptrNext = NULL;
             table->lists[index] = newElemList;
-            table->lenghtList[index] = numberOfReplies;
+            table->lenghtList[index] = 1;
         }
         else
         {
@@ -204,23 +205,7 @@ void getStat(HashTable *table)
     //printf("Average length of Lists is %d", avgLengthList/amountLists);
 
 }
-/*void printWords(char *key, uint32_t numReplies)
-{
-    fprintf(stdout, "%s %d\n", key, numReplies);
-}
-void iterate(HashTable *table)
-{
-    for (uint32_t i = 0; i < table->sizeOfTable; i++)
-    {
-        List *currElemList = table->lists[i];
-        while (currElemList != NULL)
-        {
-            uint32_t currNumberReplies = getValueWord(table, currElemList->key);
-            printWords(currElemList->key, currNumberReplies);
-            currElemList = currElemList->ptrNext;
-        }
-    }
-}*/
+
 
 void deleteTable(HashTable *table)
 {
@@ -245,32 +230,49 @@ int main(int argc, char *argv[])
     {
         printErrors("Incorrect parameters input", 1);
     }
-    /*FILE *bookFile;
-    bookFile = fopen("book.txt", "r");
-    if (NULL == bookFile)
-    {
-        printf("Error: cannot open file");
-        return 1;
-    }*/
-    uint32_t numberOfReplies = 1;
-    char word[MAX_WORD_LENGTH];
-    HashTable table = newHashTable(MAX_SIZE_ARR);
 
-    while (scanf("%s", word) != EOF)
+    uint32_t numberOfReplies = 1;
+    char buffer[MAX_WORD_LENGTH];
+    HashTable table = newHashTable(MAX_SIZE_ARR);
+    char symb;
+    char *word;
+    uint32_t position = 0;
+
+    while ( (symb = getchar()) != EOF)
     {
-        if (strcmp(word, "endText") == 0)
+        if( ( symb >= 'a' && symb <= 'z' ) ||
+            ( symb >= 'A' && symb <= 'Z' ) ||
+            ( symb == '-' || symb == '\'' ) )
         {
-            break;
+            buffer[position++] = symb;
         }
-        deletePunctuation(word);
-        addWord(word, &table, numberOfReplies);
+        else if(position != 0)
+        {
+            while (buffer[position - 1] == '-' || buffer[position - 1] == '\'' )
+            {
+                buffer[position--] = '\0';
+            }
+            buffer[position] = '\0';
+
+            word = (char *)calloc(strlen(buffer) + 1, sizeof(char));
+            if (word == NULL)
+            {
+                printf("Cannot allocate memory for new word", 4);
+            }
+
+            strcpy(word, buffer);
+            addWord(word, &table, numberOfReplies);
+            free(word);
+            position = 0;
+
+        }
+
+
     }
 
-    //iterate(&table);
     getStat(&table);
     deleteTable(&table);
 
 
     return 0;
 }
-
