@@ -249,7 +249,7 @@ int main()
     HashTable table = newHashTable(MAX_SIZE_ARR);
     char symb;
     char *word;
-    uint32_t posWithoutPunct;
+    uint32_t posWithoutPunct=0;
 
     while ((symb = getchar()) != EOF)
     {
@@ -269,7 +269,7 @@ int main()
 
             buffer[posWithoutPunct] = '\0';
 
-            word = (char *)calloc(strlen(word) + 1, sizeof(char));
+            word = (char *)calloc(strlen(buffer) + 1, sizeof(char));
             if (word == NULL)
             {
                 checkErrors("Cannot allocate memory for reading word", 4);
