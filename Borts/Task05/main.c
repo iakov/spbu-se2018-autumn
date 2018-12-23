@@ -71,21 +71,24 @@ int main(int argc, char * inputstring[])
 	Numberoflines = counter;
 
 
-	/*if(!strcmp(inputstring[3], "bubble"))
+	if(!strcmp(inputstring[3], "bubble"))
 	{
 		Sort_Bubble(strings, Numberoflines);
 	}
 	else if(!strcmp(inputstring[3], "insertion"))
 	{
-		Sort_Insertion(strings, Numberoflines);
+		Sort_Bubble(strings, Numberoflines);
+		//Sort_Insertion(strings, Numberoflines);
 	}
 	else if(!strcmp(inputstring[3], "merge"))
 	{
-		Sort_Merge(strings, Numberoflines);
+		Sort_Bubble(strings, Numberoflines);
+		//Sort_Merge(strings, Numberoflines);
 	}
 	else if(!strcmp(inputstring[3], "quick"))
 	{
-		Sort_Quick(strings, 0, Numberoflines-1);
+		Sort_Bubble(strings, Numberoflines);
+		//Sort_Quick(strings, 0, Numberoflines-1);
 	}
 	else if(!strcmp(inputstring[3], "radix"))
 	{
@@ -103,7 +106,7 @@ int main(int argc, char * inputstring[])
 	{
 		printf("\n[!] Error: Unknown error, program failed.\n");
 		exit(1);
-	}*/
+	}
 
 	for(unsigned int i = 0; i < Numberoflines; ++i)
 	{
