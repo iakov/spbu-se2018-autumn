@@ -7,9 +7,9 @@
 #define MAX_SIZE_ARR 50
 #define MAX_WORD_LENGTH 100
 
-void checkErrors(char *errorMessage, uint32_t numberError)
+void printErrors(char *errorMessage, uint32_t numberError)
 {
-    printf("%s", errorMessage);
+    fprintf(stderr, "%s", errorMessage);
     exit(numberError);
 }
 
@@ -64,13 +64,13 @@ HashTable newHashTable(uint32_t size)
     newTable.lists = (List **) calloc(size, sizeof(List*));
     if (newTable.lists == NULL)
     {
-        checkErrors("Cannot allocate memory for creating hash table", 4);
+        printErrors("Cannot allocate memory for creating hash table", 4);
     }
     newTable.sizeOfTable = size;
     newTable.lenghtList = (uint32_t *) calloc(size, sizeof(uint32_t));
     if (newTable.lenghtList == NULL)
     {
-        checkErrors("Cannot allocate memory for counter of Length each of lists", 4);
+        printErrors("Cannot allocate memory for counter of Length each of lists", 4);
     }
     return newTable;
 
@@ -82,7 +82,7 @@ uint32_t getHash(char *key)
     uint32_t *res = (uint32_t *)calloc(4, sizeof(uint32_t));
     if (res == NULL)
     {
-        checkErrors("Cannot allocate memory for buffer of Hash", 4);
+        printErrors("Cannot allocate memory for buffer of Hash", 4);
     }
     md5((uint8_t *)key, strlen(key), (uint8_t *)res);
     hashRes = res[0];
@@ -120,13 +120,13 @@ void addWord(char *word, HashTable *table, uint32_t numberOfReplies)
         List *newElemList = malloc(sizeof(List));
         if (newElemList == NULL)
         {
-            checkErrors("Cannot allocate memory for adding new element of List", 4);
+            printErrors("Cannot allocate memory for adding new element of List", 4);
         }
 
         newElemList->key = (char *) malloc(strlen(word)*sizeof(uint32_t));
         if (newElemList->key == NULL)
         {
-            checkErrors("Cannot allocate memory for adding new word to the lists", 4);
+            printErrors("Cannot allocate memory for adding new word to the lists", 4);
         }
         strcpy(newElemList->key , word);
         newElemList->numberReplies = numberOfReplies;
@@ -246,7 +246,7 @@ int main(int argc, char *argv[])
 {
     if (argc > 1 || argv[0] == NULL)
     {
-        checkErrors("Incorrect parameters input", 1);
+        printErrors("Incorrect parameters input", 1);
     }
     uint32_t numberOfReplies = 1;
     char buffer[MAX_WORD_LENGTH];
@@ -276,7 +276,7 @@ int main(int argc, char *argv[])
             word = (char *)calloc(strlen(buffer) + 1, sizeof(char));
             if (word == NULL)
             {
-                checkErrors("Cannot allocate memory for reading word", 4);
+                printErrors("Cannot allocate memory for reading word", 4);
             }
 
             strcpy(word, buffer);
