@@ -73,18 +73,19 @@ void mergeSort(char *text, int N, int start){
 }
 
 void quickSort(char *text, int start, int N){
-    if (N-start<=1){
+    if (N-start<1){
         return;
     }
     int L = start, R = N;
     int M=(N+start)/2;
-    while (L <= R){
+    while (L < R){
         while(M!=L && strcmp(&text[Strings[M][0]],&text[Strings[L][0]])>0){
             L++;
         }
         while(M!=R && strcmp(&text[Strings[R][0]],&text[Strings[M][0]])>0){
             R--;
         }
+            printf("%d %d\n", L, R);
         if (L <= R){
             SwapStrings(L,R);
             if(M==L){
@@ -103,11 +104,18 @@ void quickSort(char *text, int start, int N){
             }
         }
     }
+    int i;
 	if (start < R){
-        quickSort(text, start, R);
+		if(R==N){
+			return;
+		}
+		quickSort(text, start, R);
     }
     if (L < N){
-        quickSort(text, L, N);
+	    if(L==start){
+				return;
+			}
+			quickSort(text, L, N);
 	}
 }
 
@@ -158,7 +166,7 @@ void FunctionDef(char *text, int N, char Name){
         mergeSort(text, N-1, 0);
         break;
     case 'q':
-        quickSort(text, 0, N);
+        quickSort(text, 0, N-1);
         break;
     case 'h':
         heapSort(text, N);
@@ -177,6 +185,7 @@ int main(int argc, char **argv)
 {
 	int i=0, N, j=0, z=0;
     if (argc != 4){
+    	printf("%d ", argc);
    		printf("Invalid number of arguments!\n");
     	exit(1);
     }
