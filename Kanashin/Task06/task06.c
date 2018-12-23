@@ -4,7 +4,7 @@
 #include <ctype.h>
 #include "md5.h"
 
-#define MAX_SIZE_TABLE 500
+#define MAX_SIZE_TABLE 5000
 #define MAX_WORD_LENGTH 500
 
 typedef struct HashList
@@ -160,7 +160,7 @@ void getStat(HashTable *table)
             {
                 maxNumberReplies = currElemList->numberReplies;
             }
-            printf("%s %d\n", currElemList->key, currElemList->numberReplies);
+            fprintf(stdout, "%s %d\n", currElemList->key, currElemList->numberReplies);
             currElemList = currElemList->ptrNext;
         }
         /*if (currLenghList > maxList)
