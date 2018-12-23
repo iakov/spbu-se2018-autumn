@@ -187,10 +187,12 @@ struct HashTable* createHashTable(int size)
     {
         printf("Memory error");
         exit(1);
+
     }
     newTable->data=malloc(size*sizeof(struct Node*));
     if (newTable->data==NULL)
     {
+        free(newTable);
         printf("Memory error");
         exit(1);
     }
@@ -293,10 +295,11 @@ int getValue(struct HashTable * table, char * key)
     }
     return result;
 }
-char * delete_punctuation(char * st)
+void clearTable (struct HashTable * table);
+char * delete_punctuation(struct HashTable *table, char * st)
 {
     int sign_counter=0;
-    for (int i=0;i<strlen(st);i++)
+    for (unsigned long i=0;i<strlen(st);i++)
     {
         if (!(isalpha(st[i])))
         {
@@ -316,6 +319,7 @@ char * delete_punctuation(char * st)
     st=realloc(st,len+1);
     if (st==NULL)
     {
+        clearTable(table);
         printf("Memory error");
         exit(5);
     }
@@ -373,12 +377,13 @@ void printTable(struct HashTable * table)
         }
     }
 }
-char * readword()
+char * readword(struct HashTable * table)
 {
     char gotChar =(char) fgetc(stdin);
     char *word = malloc(STRING_MAX_LEN * sizeof(char));
     if (word==NULL)
     {
+        clearTable(table);
         printf("memory error");
         exit(4);
     }
@@ -472,17 +477,17 @@ int main(/*int argc, char **argv*/)
         exit(1);
     }*/
     struct HashTable *table = createHashTable(init_size);
-    char * word=readword();
+    char * word=readword(table);
     while (word!=NULL)
     {
 
-        word=delete_punctuation(word);
+        word=delete_punctuation(table,word);
         if (word!=NULL)
         {
             int value = 1;
             table = insertInTable(table, word, value);
         }
-        word=readword();
+        word=readword(table);
     }
     printTable(table);
    // printf("%d\n",table->size);
