@@ -238,13 +238,12 @@ int main()
             exit(4);
         }
         //fscanf(f, "%s", word);
-		if (strcmp(word, "stop") == 0)
-			break;
+		//if (strcmp(word, "stop") == 0)
+		//	break;
 		punctuationExtermination(word);
 		strcpy(buffer, word);
 		if (strlen(buffer) > 0)
         {
-            printf("before adding'\n");
             add(&hashTable, buffer);
         }
         else
