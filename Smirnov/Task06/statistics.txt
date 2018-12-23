@@ -1,36 +1,9 @@
 Book for analyse: Jack London, "White Fang"
 
-
-Statistics of hash-table:
-
-  Table size: 100000
-   Chains amount: 6274
-   Average value of chains' length: 1.044310
-   Total keys amount: 73649
-   Different keys amount: 6552
-   The most frequently used key: 'the' - 5148 times
-   Average time: 0.175
-
-  Table size: 1000
+Table size: 1000
    Chains amount: 999
    Average value of chains' length: 6.558558
    Total keys amount: 73649
    Different keys amount: 6552
    The most frequently used key: 'the' - 5148 times
-   Average time: 0.182000
-
-  Table size: 100
-   Chains amount: 100
-   Average value of chains' length: 65.519997
-   Total keys amount: 73649
-   Different keys amount: 6552
-   The most frequently used key: 'the' - 5148 times
-   Average time: 0.218000
-
-  Table size: 10
-   Chains amount: 10
-   Average value of chains' length: 655.200012
-   Total keys amount: 73649
-   Different keys amount: 6552
-   The most frequently used key: 'the' - 5148 times
-   Average time: 0.553000
+   Average time: (0.18) +\- (0,02)
