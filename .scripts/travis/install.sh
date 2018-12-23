@@ -11,6 +11,6 @@ case $TRAVIS_OS_NAME in
  ;;
   linux)
     $CC --version || \
-    sudo sh -c "add-apt-repository -y ppa:jonathonf/gcc-8.2 && sudo apt-get update && sudo apt-get install -y binutils gcc-8"
+    sudo sh -c "add-apt-repository -y ppa:jonathonf/gcc-8.1 && sudo apt-get update && sudo apt-get install -y binutils gcc-8"
   ;;
 esac
