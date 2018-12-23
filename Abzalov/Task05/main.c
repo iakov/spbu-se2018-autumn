@@ -9,7 +9,7 @@
 #include <sys/mman.h>
 #include <time.h>
 
-int MaxStringSize;
+int MaxStringSize = 256;
 
 void PrintError(char* Message, int ExitCode) {
 	printf("%s\n", Message);
