@@ -15,7 +15,6 @@ int size, counter, counter2;
 
 void makeTable(){
 	size = 1000;
-	printf("Created successfully\n");
 }
 
 void copies(struct Cell *i, char *key){
@@ -70,7 +69,6 @@ void clearTable(){
 		Chains[i] = NULL;
 	}
 	size=0;
-	printf("Cleared successfully\n");
 }
 /*
 int seek(struct Cell *i, char *key){
