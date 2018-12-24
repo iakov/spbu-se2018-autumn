@@ -73,45 +73,29 @@ void mergeSort(char *text, int N, int start){
 }
 
 void quickSort(char *text, int start, int N){
-    if (N-start<1){
+    if (start >= N){
         return;
     }
     int L = start, R = N;
-    int M=(N+start)/2;
-    while (L < R){
-        while(M!=L && strcmp(&text[Strings[M][0]],&text[Strings[L][0]])>0){
+    int M = (start+N)/ 2;
+    char *buf = &text[Strings[M][0]];
+    while (L<=R){
+        while(strcmp(&text[Strings[L][0]], buf)<0){
             L++;
         }
-        while(M!=R && strcmp(&text[Strings[R][0]],&text[Strings[M][0]])>0){
+        while(strcmp(&text[Strings[R][0]], buf)>0){
             R--;
         }
-        if (L <= R){
-            SwapStrings(L,R);
-            if(M==L){
-            	M=R;
-            	L++;
-            }
-            else{
-            	if(M==R){
-            		M=L;
-            		R--;
-            	}
-            	else{
-            		L++;
-            		R--;
-            	}
-            }
+        if(L<=R){
+            SwapStrings(L++,R--);
         }
     }
-	if (start < R){
-		if(R==N){
-			return;
-		}
-		quickSort(text, start, R);
+    if(start<R){
+    	quickSort(text, start, R);
     }
-    if (L < N){
-			quickSort(text, L, N);
-	}
+    if(L<N){
+    	quickSort(text, L, N);
+    }
 }
 
 void sink(char *text, int i, int max){
