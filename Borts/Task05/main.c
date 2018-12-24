@@ -40,7 +40,7 @@ int main(int argc, char * inputstring[])
 		CheckOption(inputstring, &Numberoflines);
 	else
 	{
-		//PrintError("Three parameters must be entered.", 1);
+		PrintError("Three parameters must be entered.", 1);
 	}
 
 	FILE *inputfile = fopen(inputstring[2],"r");
@@ -120,7 +120,7 @@ int main(int argc, char * inputstring[])
 	}
 	else
 	{
-		//PrintError("Unknown error, program failed.", 1);
+		PrintError("Unknown error, program failed.", 1);
 	}
 
 	for(unsigned int i = 0; i < Numberoflines; ++i)
