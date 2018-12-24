@@ -215,8 +215,6 @@ int main(int argc, char *argv[])
     char *IN_FILE_NAME = argv[2];                       //
     char *ALG_NAME = argv[3];                           //
 
-    fprintf(stderr, "Line count: %d\nInput file: %s\nSorting algorithm: %s\n", LINES_NUMBER, IN_FILE_NAME, ALG_NAME);
-
     FILE *i_file = fopen(IN_FILE_NAME, "r");
     if (i_file == NULL)
     {
@@ -275,7 +273,8 @@ int main(int argc, char *argv[])
     }
      */
 
-    sort(str_array, current_line_number, ALG_NAME);
+    if (current_line_number > 0)
+        sort(str_array, current_line_number, ALG_NAME);
 
     /*
     //Output to file
