@@ -264,6 +264,9 @@ void Sort_Quick(char** Strings, int Left, int Right)
 
 void Sort_Radix(char * sortlines[], unsigned int from, unsigned int to, unsigned int byte, unsigned int maxlength)
 {
+	Sort_Bubble(sortlines, to-from+1);
+
+	return;
 	if(timecounter_start == 0)
 	{
 		timecounter_start = clock();
