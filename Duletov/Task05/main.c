@@ -18,7 +18,7 @@ void bubbleSort(char *text, int N){
 	int i, j;
 	for(i=0; i<N; i++){
 		for(j=i+1; j<N; j++){
-			if(strcmp(&text[Strings[i][0]],&text[Strings[j][0]])>0){
+			if(strcmp(&text[Strings[i][0]],&text[Strings[j][0]])==1){
 				SwapStrings(i,j);
 			}
 		}
@@ -72,6 +72,22 @@ void mergeSort(char *text, int N, int start){
 	}
 }
 
+int Mystrcmp(int len, int len1, int strNum, char *buf, char *text){
+	int i;
+	if(len1<len){
+		len=len1;
+	}
+	for(i=0; i<len; i++){
+		if(text[Strings[strNum][0]+i]>buf[i]){
+			return(1);
+		}
+		if(text[Strings[strNum][0]+i]<buf[i]){
+			return(-1);
+		}
+	}
+	return(0);
+}
+
 void quickSort(char *text, int start, int N){
     if (start >= N){
         return;
@@ -79,11 +95,12 @@ void quickSort(char *text, int start, int N){
     int L = start, R = N;
     int M = (start+N)/ 2;
     char *buf = &text[Strings[M][0]];
+    int bufLen = Strings[M][1];
     while (L<=R){
-        while(strcmp(&text[Strings[L][0]], buf)<0){
+        while(Mystrcmp(Strings[L][1], bufLen, L, buf, text)<0){
             L++;
         }
-        while(strcmp(&text[Strings[R][0]], buf)>0){
+        while(Mystrcmp(Strings[R][1], bufLen, R, buf, text)>0){
             R--;
         }
         if(L<=R){
@@ -142,16 +159,16 @@ void FunctionDef(char *text, int N, char Name){
         insertionSort(text, N);
         break;
     case 'm':
-        mergeSort(text, N-1, 0);
+        mergeSort(text, N, 0);
         break;
     case 'q':
-        quickSort(text, 0, N-1);
+        quickSort(text, 0, N);
         break;
     case 'h':
-        heapSort(text, N);
+        heapSort(text, N+1);
         break;
     case 'r':
-        heapSort(text, N);
+        heapSort(text, N+1);
         break;
     default:
         printf("Invalid name of algorythm\n");
@@ -164,9 +181,8 @@ int main(int argc, char **argv)
 {
 	int i=0, N, j=0, z=0;
     if (argc != 4){
-    	printf("%d ", argc);
-   		printf("Invalid number of arguments!\n");
-    	exit(1);
+        printf("Invalid number of arguments!\n");
+        exit(1);
     }
     N = atoi(argv[1]);
   if(N==0){
@@ -185,7 +201,7 @@ int main(int argc, char **argv)
 	printf("Failed to malloc memory\n");
 	}
 	Strings[0][0]=0;
-	while ((text[i] = fgetc(f)) != EOF) {
+	while (((text[i] = fgetc(f)) != EOF) && (j<N)) {
 		z++;
 		if(text[i]=='\n'){
 			Strings[j+1][0]=i+1;
@@ -196,9 +212,8 @@ int main(int argc, char **argv)
 		i++;
 	}
 	text[i]='\n';
-	Strings[j][1]=z+1;
-	if(j<N-1){
-		N=j;
+	if(j<N){
+		N=j+1;
 	}
 	fclose(f);
 	if(strcmp(argv[3],"bubble")==0 || strcmp(argv[3],"insertion")==0 || strcmp(argv[3],"heap")==0 || strcmp(argv[3],"merge")==0 || strcmp(argv[3],"radix")==0 || strcmp(argv[3],"quick")==0){
