@@ -90,9 +90,8 @@ void mergeSort(char **str_array, int strNum)
 void quickSort(char **str_array, int left, int right)
 {
     int l_pointer = left;        //left pointer
-    int r_pointer = right - 1;   //Right pointer
-    char *pivot = str_array[(left + (right-left)/2)];  //Pivot element
-
+    int r_pointer = right;   //Right pointer
+    char *pivot = str_array[(left + (right - left)/2)];  //Pivot element
     do
     {
         while((strcmp(str_array[l_pointer], pivot) < 0))
@@ -181,7 +180,7 @@ void sort(char **str_array, int linesNumber, const char *alg)
     }
     else if (strcmp(alg,"quick") == 0)
     {
-        quickSort(str_array, 0, linesNumber);   //Quick sort
+        quickSort(str_array, 0, linesNumber - 1);   //Quick sort
     }
     else if (strcmp(alg,"heap") == 0)
     {
