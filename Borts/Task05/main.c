@@ -89,6 +89,11 @@ int main(int argc, char * inputstring[])
 	}
 	Numberoflines = counter;
 
+	for(unsigned int i = 0; i < Numberoflines; ++i)
+	{
+		fprintf(stderr, "..| %s", strings[i]);
+	}
+
 
 	if(!strcmp(inputstring[3], "bubble"))
 	{
