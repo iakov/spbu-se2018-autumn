@@ -155,7 +155,7 @@ void output(struct Cell *i){
 		output(i->next);
 	}
 	if(i->value == counter2){
-		printf("%s %d\n", i->key, i->value);
+		fprintf(stderr, "%s %d\n", i->key, i->value);
 	}
 }
 
