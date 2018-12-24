@@ -35,6 +35,7 @@ void Sort_Quick(char **base, int left, int right)
 
 int main(int argc, char * inputstring[])
 {
+	fprintf(stderr, "\nSTART NEW PROGRAM\n\n");
 	unsigned int Numberoflines;
 	if(argc == 4)
 		CheckOption(inputstring, &Numberoflines);
