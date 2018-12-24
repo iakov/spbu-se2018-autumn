@@ -77,45 +77,51 @@ List *findWord(HashTable *table, uint32_t index, char* word )
 void addWord(char *word, HashTable *table)
 {
     uint32_t index = getHash(word) % table->sizeOfTable;
-    List *elemList;
-    elemList = findWord(table, index, word);
-    if (elemList != NULL)
+
+    List * newElemList = findWord(table, index, word);
+    if (newElemList != NULL)
     {
-        elemList->numberReplies ++;
+        newElemList->numberReplies++;
         return;
     }
 
-    List *newElemList = (List *) malloc(sizeof(List));
-
-    if (newElemList == NULL)
-    {
-        fprintf(stderr, "Cannot allocate memory for adding new element of List");
-        exit(4);
-    }
-
-    newElemList->key = (char *) malloc(strlen(word)*sizeof(char));
-    if (newElemList->key == NULL)
-    {
-        fprintf(stderr, "Cannot allocate memory for adding new word to the lists");
-        exit(4);
-    }
-
-    strcpy(newElemList->key , word);
-    newElemList->numberReplies = 1;
-
     if (table->lists[index] == NULL)
     {
-        newElemList->ptrNext = NULL;
-        table->lists[index] = newElemList;
-        table->lenghtList[index] = 1;
+        table->lists[index] = (List*)malloc(sizeof(List));
+        if (table->lists[index] == NULL)
+        {
+            fprintf(stderr, "Cannot allocate memory for the head of lists");
+            exit(4);
+        }
+        newElemList = table->lists[index];
     }
     else
     {
-        newElemList->ptrNext = table->lists[index];
-        table->lists[index] = newElemList;
-        table->lenghtList[index]++;
+        List *prevElemList = table->lists[index];
+        while (prevElemList->ptrNext != NULL)
+        {
+            prevElemList = prevElemList->ptrNext;
+        }
+
+        newElemList = (List*)malloc(sizeof(List));
+        if (newElemList == NULL)
+        {
+            fprintf(stderr, "Cannot allocate memory for new element of list in the table");
+            exit(4);
+        }
+
+        prevElemList->ptrNext = newElemList;
+    }
+    newElemList->key = (char *)malloc((strlen(word) + 1) * sizeof(char));
+    if (newElemList->key == NULL)
+    {
+        fprintf(stderr, "Cannot allocate memory for word in the table");
+        exit(4);
     }
 
+    strcpy(newElemList->key, word);
+    newElemList->ptrNext = NULL;
+    newElemList->numberReplies = 1;
 }
 
 int getValueWord(HashTable *table, char* word)
