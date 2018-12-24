@@ -408,7 +408,7 @@ void CheckOption(char * options[], unsigned int *Numberoflines)
 	{
 		char errorstr[75 + strlen(options[1])];
 		sprintf(errorstr, "The parameter is responsible for the number of lines NaN, or it is zero.(%s)", options[1]);
-		PrintError(errorstr, 1);
+		//PrintError(errorstr, 1);
 	}
 	for(unsigned int j = 0; j < allowedOptionsLength; j++)
 	{
@@ -426,7 +426,7 @@ void CheckOption(char * options[], unsigned int *Numberoflines)
 	{
 		char errorstr[30 + strlen(options[UnknownOptionIndex])];
 		sprintf(errorstr, "Unknown option was given! (%s)", options[UnknownOptionIndex]);
-		//PrintError(errorstr, 1);
+		PrintError(errorstr, 1);
 	}
 }
 
