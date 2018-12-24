@@ -207,26 +207,24 @@ void Sort_Merge(char * sortlines[], unsigned int Countofline)
 	timecounter_end = clock();
 }
 
-void Sort_Quick(char **base, int left, int right) {
-    if (left >= right) {
-        return;
-    }
-    int left2 = left, right2 = right;
-    int middle = (right + left) / 2;
-    char *pivot = base[middle];
-    while (left2 <= right2) {
-        while (strcmp(base[left2], pivot) < 0) {
-            ++left2;
-        }
-        while (strcmp(base[right2], pivot) > 0) {
-            --right2;
-        }
-        if (left2 <= right2) {
-            SwapString(&base[left2++], &base[right2--]);
-        }
-    }
-    if(left<right2) Sort_Quick(base, left, right2);
-    if(left2<right) Sort_Quick(base, left2, right);
+int Partition(char** Strings, int Left, int Right) {
+	char* Pivot = Strings[Left];
+	int i = Left - 1, 
+		j = Right + 1;
+	while (true) {
+		do {i++;} while (strcmp(Strings[i], Pivot) < 0);
+		do {j--;} while (strcmp(Strings[j], Pivot) > 0);
+		if (i >= j) return j;
+		SwapString(&Strings[i], &Strings[j]);
+	}
+}
+
+void Sort_Quick(char** Strings, int Left, int Right) {
+	if (Left < Right) {
+		int Middle = Partition(Strings, Left, Right);
+		Sort_Quick(Strings, Left, Middle);
+		Sort_Quick(Strings, Middle + 1, Right);
+	}
 }
 
 /*void Sort_Quick(char * sortlines[], unsigned int first, unsigned int last)
