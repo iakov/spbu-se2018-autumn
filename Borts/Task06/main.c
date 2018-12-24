@@ -1,171 +1,212 @@
-#include <stdio.h>
 #include <string.h>
-#include <stdint.h>
 #include <stdlib.h>
+#include <stdio.h>
 
-#include "md5.h"
+#include "MD5.h"
 #include "main.h"
 
-int main()
+int main(int arg_counter, char * arguments[])
 {
-    hash_table_var table = InitTable(128);
-    const int max_word_length = 4096;
-    char buffer[max_word_length];    
-    int word_length = 0, words_counter = 0;
-    char ch = getchar();
+    if(arg_counter > 1 || arguments[0] == NULL)
+    {        
+        PrintError("Invalid arguments.", 1);
+    }
 
-    while(ch != EOF)
+    struct HashTable hashTable = CreateHashTable(256);
+    char word[10000];
+    char *buffer;
+    char inputSymbol;
+    int word_length = 0;
+
+    while ((inputSymbol = getchar()) != EOF)
     {
-        if ((ch >= 'a' && ch <='z') || (ch >= 'A' && ch <= 'Z'))
+        if(((inputSymbol >= 'A') && (inputSymbol <= 'Z')) || ((inputSymbol >= 'a') && (inputSymbol <= 'z')))
         {
-        	word_length++;
-            buffer[word_length] = ch;
+            word[word_length++] = inputSymbol;
         }
-        else if (word_length > 0)
+        else if((word_length > 0) && (inputSymbol == '-' || inputSymbol == '\''))
         {
-            buffer[word_length] = '\0';
-            char *word = (char*)calloc(word_length + 1, sizeof(char));
-            if(word == NULL)
+            word[word_length++] = inputSymbol;
+        }
+        else if(word_length)
+        {
+            while((word[word_length - 1] == '\'') || (word[word_length - 1] == '-'))
             {
-				PrintError("I can not allocate memory in Main for \"*word\"", 4);
+                word[word_length--] = '\0';
             }
-            strncpy(word, buffer, word_length);
-            Add(&table, word);
+            word[word_length] = '\0';
+            buffer = (char *)calloc(strlen(word) + 1, sizeof(char));
+            if(buffer == NULL)
+            {
+                PrintError("I can not allocate memory in Main for \"buffer\"", 4);
+            }
+
+            strcpy(buffer, word);
+            Add(&hashTable, buffer, Get(&hashTable, buffer) + 1);
             word_length = 0;
         }
-        ch = getchar();
     }
 
-    int counter_of_maximum = 0;
+    uint32_t Maximum_Word_Counter = 0;
 
-    for(unsigned int i = 0; i < table.capacity; ++i)
+    for(uint32_t i = 0; i < hashTable.size; i++)
     {
-        if(table.data[i].key != NULL)
+        if(hashTable.data[i].key != NULL)
         {
-            printf("%s %d\n", table.data[i].key, table.data[i].value);
-
-            ++words_counter;
-            if(table.data[i].value > counter_of_maximum)
+            printf("%s %d\n", hashTable.data[i].key, hashTable.data[i].value);
+            if(hashTable.data[i].value > Maximum_Word_Counter)
             {
-                counter_of_maximum = table.data[i].value;
+                Maximum_Word_Counter = hashTable.data[i].value;
             }
         }
     }
-    for(unsigned int i = 0; i < table.capacity; ++i)
+
+    for(uint32_t i = 0; i < hashTable.size; i++)
     {
-        if((table.data[i].key != NULL) && (table.data[i].value == counter_of_maximum))
+        if((hashTable.data[i].key != NULL) && (hashTable.data[i].value == Maximum_Word_Counter))
         {
-            fprintf(stderr, "%s %d\n", table.data[i].key, table.data[i].value);
+            fprintf(stderr, "%s %d\n", hashTable.data[i].key, hashTable.data[i].value);
         }
     }
 
-    FreeTable(&table);
-
+    Clear(&hashTable);
     return 0;
 }
 
-hash_table_var InitTable(int init_capacity)
+void Add(struct HashTable *hashTable, char *key, uint32_t value)
 {
-    hash_table_var table;
-    table.data = (table_item_var*)calloc(init_capacity, sizeof(table_item_var));
-    if(table.data == NULL)
-    {
-		PrintError("I can not allocate memory in Main for \"table.data\"", 4);
-    }
-    table.capacity = init_capacity;
-    table.size = 0;
-    return table;
-}
+    uint32_t index = GetIndex(hashTable, key);
 
-void Resize(hash_table_var *table)
-{
-    int resized_capacity = 2 * table->capacity;
-    table_item_var *resized_data = (table_item_var*)calloc(resized_capacity, sizeof(table_item_var));
-    if(resized_data == NULL)
+    if(index < hashTable->size)
     {
-		PrintError("I can not allocate memory in Main for \"*resized_data\"", 4);
+         hashTable->data[index].value = value;
+         free(hashTable->data[index].key);
+         hashTable->data[index].key = key;
+         return;
     }
 
-    for(int i = 0; i < table->capacity; ++i)
+    hashTable->numberOfElements++;
+
+    if(hashTable->numberOfElements > hashTable->size / 2)
     {
-        if(table->data[i].key != NULL)
-        {
-            int position = find_position(resized_data, resized_capacity, table->data[i].key);
-            resized_data[position] = table->data[i];
-        }
+        Resize(hashTable, hashTable->size * 2);
     }
 
-    free(table->data);
-
-    table->data = resized_data;
-    table->capacity = resized_capacity;
-}
-
-void Add(hash_table_var *table, char *key)
-{
-    int position = find_position(table->data, table->capacity, key);
-    if( (table->data[position].key == NULL) || (strcmp(table->data[position].key, key)) )
-    {
-        table->size++;
-        if(table->size > table->capacity / 2)
-        {
-           Resize(table);
-        }
-        position = find_position(table->data, table->capacity, key);
-        table->data[position].key = key;
-        table->data[position].value = 1;
-    }
-    else
-    {
-        ++table->data[position].value;
-        free(key);
-    }
-}
-
-int find_position(table_item_var *data, int capacity, char *key)
-{
-    uint8_t *hash = (uint8_t*)malloc(16 * sizeof(uint8_t));
+    uint32_t *hash = (uint32_t *)calloc(4, sizeof(uint32_t));
     if(hash == NULL)
     {
-		PrintError("I can not allocate memory in Main for \"*hash\"", 4);
+        PrintError("I can not allocate memory in Add for \"*hash\"", 4);
     }
-    int position = 0;
-    md5((uint8_t*)key, strlen(key), hash);
-    for(int i = 0; i < 16; ++i)
+
+    md5((uint8_t *)key, strlen(key), (uint8_t *)hash);
+    uint32_t pos = hash[0] % hashTable->size;
+
+    while(hashTable->data[pos].key != NULL)
     {
-        position += (int)hash[i] % capacity;
+        pos++;
+        if (pos >= hashTable->size)
+        {
+            pos = 0;
+        }
     }
-    position %= capacity;
+
+    hashTable->data[pos].hash = hash;
+    hashTable->data[pos].key = key;
+    hashTable->data[pos].value = value;
+}
+
+void Resize(struct HashTable *hashTable, uint32_t size)
+{
+    struct HashTableSlot *newData = (struct HashTableSlot *)calloc(size, sizeof(struct HashTableSlot));
+    if(newData == NULL)
+    {
+        PrintError("I can not allocate memory in Resize for \"*newData\"", 4);
+    }
+
+    for(uint32_t i = 0; i < hashTable->size; i++)
+    {
+        if(hashTable->data[i].key != NULL)
+        {
+            uint32_t pos = hashTable->data[i].hash[0] % size;
+            while(newData[pos].key != NULL)
+            {
+                pos++;
+                if(pos >= size)
+                {
+                    pos = 0;
+                }
+            }
+            newData[pos] = hashTable->data[i];
+        }
+    }
+
+    free(hashTable->data);
+
+    hashTable->data = newData;
+    hashTable->size = size;
+}
+
+uint32_t Get(struct HashTable *hashTable, char *key)
+{
+    uint32_t pos = GetIndex(hashTable, key);
+
+    if(pos == hashTable->size)
+    {
+        return 0;
+    }
+
+    return hashTable->data[pos].value;
+}
+
+uint32_t GetIndex(struct HashTable *hashTable, char *key)
+{
+    uint32_t *hash = (uint32_t *)calloc(4, sizeof(uint32_t));
+    if(hash == NULL)
+    {
+        PrintError("I can not allocate memory in GetIndex for \"*hash\"", 4);
+    }
+
+    md5((uint8_t *)key, strlen(key), (uint8_t *)hash);
+    uint32_t pos = hash[0] % hashTable->size;
+
+    while(hashTable->data[pos].key != NULL && strcmp(key, hashTable->data[pos].key) != 0)
+    {
+        pos++;
+        if(pos == hashTable->size)
+        {
+            pos = 0;
+        }
+    }
 
     free(hash);
 
-    while( (data[position].key != NULL) && (strcmp(key, data[position].key)) )
+    if(hashTable->data[pos].key == NULL)
     {
-        ++position;
-        position %= capacity;
+        return hashTable->size;
     }
 
-    return position;
+    return pos;
 }
 
-void FreeTable(hash_table_var *table)
+void Clear(struct HashTable *hashTable)
 {
-    for(int i = 0; i < table->capacity; ++i)
+    for(uint32_t i = 0; i < hashTable->size; i++)
     {
-        if(table->data[i].key != NULL)
+        if(hashTable->data[i].key != NULL)
         {
-            free(table->data[i].key);
+            free(hashTable->data[i].key);
+            free(hashTable->data[i].hash);
         }
     }
-    free(table->data);
 
-    table->size = 0;
-    table->capacity = 0;
+    free(hashTable->data);
+    hashTable->size = 0;
+    hashTable->numberOfElements = 0;
 }
 
 void PrintError(char * string, int ExitCode)
 {
-	printf("\n[!] Error: %s.\n\n", string);
-	fflush(stdin);
-	exit(ExitCode);
+    printf("\n[!] Error: %s.\n\n", string);
+    fflush(stdin);
+    exit(ExitCode);
 }
