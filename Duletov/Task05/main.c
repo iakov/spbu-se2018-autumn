@@ -196,7 +196,7 @@ int main(int argc, char **argv)
 	fseek(f, 0, SEEK_END);
 	size = ftell(f);
 	fseek(f, 0, SEEK_SET);
-	char *text = (char*) malloc(size*sizeof(char)+1);
+	char *text = malloc(size*sizeof(char)+1);
 	if(text==0){
 	printf("Failed to malloc memory\n");
 	}
