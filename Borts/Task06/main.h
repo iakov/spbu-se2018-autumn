@@ -1,21 +1,35 @@
-typedef struct table_item
+void PrintError(char * string, int ExitCode);
+
+struct HashTableSlot
 {
     char *key;
-    int value;
-} table_item_var;
+    uint32_t *hash;
+    uint32_t value;
+};
 
-typedef struct hash_table
+struct HashTable
 {
-    int size;
-    int capacity;
-    table_item_var *data;
-} hash_table_var;
+    struct HashTableSlot *data;
+    uint32_t size;
+    uint32_t numberOfElements;
+};
 
-hash_table_var InitTable(int init_capacity);
-void Resize(hash_table_var *table);
-void Add(hash_table_var *table, char *key);
-void FreeTable(hash_table_var *table);
-//int FindPosition(table_item_var *data, int capacity, char *key);
-int find_position(table_item_var *data, int capacity, char *key);
+struct HashTable CreateHashTable(uint32_t size)
+{
+    struct HashTable hashTable;
+    hashTable.data = (struct HashTableSlot *)calloc(size, sizeof(struct HashTableSlot));
+    if(hashTable.data == NULL)
+    {
+        PrintError("I can not allocate memory in Main for \"hashTable.data\"", 4);
+    }
 
-void PrintError(char * string, int ExitCode);
+    hashTable.size = size;
+    hashTable.numberOfElements = 0;
+    return hashTable;
+}
+
+void Add(struct HashTable *hashTable, char *key, uint32_t value);
+void Resize(struct HashTable *hashTable, uint32_t size);
+uint32_t Get(struct HashTable *hashTable, char *key);
+uint32_t GetIndex(struct HashTable *hashTable, char *key);
+void Clear(struct HashTable *hashTable);
