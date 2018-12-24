@@ -1,441 +1,184 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include <stdbool.h>
-#include <malloc.h>
-#include <time.h>
+#include <string.h>
+#include <stdint.h>
 
-#include "header.h"
-
-clock_t timecounter_start = 0;
-clock_t timecounter_end = 0;
-
-int main(int argc, char * inputstring[])
-{
-	unsigned int Numberoflines;
-	if(argc == 4)
-		CheckOption(inputstring, &Numberoflines);
-	else
-	{
-		printf("\n[!] Error: Three parameters must be entered.\n");
-		exit(1);
-	}
-
-	FILE *inputfile = fopen(inputstring[2],"r");
-	if(!inputfile)
-	{
-		printf("\n[!] Error: Failed to read a file.\n");
-		exit(2);
-	}
-
-	char **strings;
-	strings = (char**)malloc(Numberoflines * sizeof(char*));
-	unsigned int counter = 0;
-	unsigned int pass_counter = 0;
-	while(counter < Numberoflines)
-	{
-		int tmplen = 1000;
-		char tmpstring[tmplen];
-		if(fgets(tmpstring, tmplen, inputfile) == NULL)
-		{
-			break;
-		}
-
-		pass_counter++;
-		if(pass_counter == 1)
-		{
-			strings[counter] = (char*)calloc((strlen(tmpstring) + 1), sizeof(char));
-			if(strings == NULL)
-			{
-				printf("\n[!] Error: I can not allocate memory in Main for a \"strings[counter]\" array.\n");
-			    exit(4);
-			}
-		}
-		else
-		{
-			strings[counter] = (char*)realloc(strings[counter], (strlen(strings[counter]) + strlen(tmpstring) + 1) * sizeof(char));
-			if(strings[counter] == NULL)
-		    {
-		        printf("\n[!] Error: I can not change the size of the allocated memory in Main for a \"strings[counter]\" array.\n");
-		        exit(4);
-		    }
-		}
-		sprintf(strings[counter], "%s%s", strings[counter], tmpstring);
-		char tempchar = tmpstring[strlen(tmpstring)-1];
-		if(tempchar == '\n' || tempchar == EOF)
-		{
-			counter++;
-			pass_counter = 0;
-		}
-	}
-	Numberoflines = counter;
-
-
-	if(!strcmp(inputstring[3], "bubble"))
-	{
-		Sort_Bubble(strings, Numberoflines);
-	}
-	else if(!strcmp(inputstring[3], "insertion"))
-	{
-		Sort_Insertion(strings, Numberoflines);
-	}
-	else if(!strcmp(inputstring[3], "merge"))
-	{
-		Sort_Merge(strings, Numberoflines);
-	}
-	else if(!strcmp(inputstring[3], "quick"))
-	{
-		Sort_Quick(strings, 0, Numberoflines-1);
-	}
-	else if(!strcmp(inputstring[3], "radix"))
-	{
-		unsigned int maxlength = strlen(strings[0]);
-		for(unsigned int i = 1; i < Numberoflines; ++i)
-		{
-			if(strlen(strings[i]) > maxlength)
-			{
-				maxlength = strlen(strings[i]);
-			}
-		}
-		Sort_Radix(strings, 0, Numberoflines-1, 0, maxlength-2);
-	}
-	else
-	{
-		printf("\n[!] Error: Unknown error, program failed.\n");
-		exit(1);
-	}
-
-	for(unsigned int i = 0; i < Numberoflines; ++i)
-	{
-		printf("%s", strings[i]);
-		free(strings[i]);
-	}
-	free(strings);
-
-
-	//printf("Time: %ld\n", timecounter_end - timecounter_start);
-
-	fclose(inputfile);
-
-	return 0;
+void swap(char **str1, char **str2) {
+    char *tmp = *str1;
+    *str1 = *str2;
+    *str2 = tmp;
 }
 
-void Sort_Bubble(char * sortlines[], unsigned int Countofline)
-{
-	if(timecounter_start == 0)
-	{
-		timecounter_start = clock();
-	}
-	for(unsigned int i = 0; i < Countofline; ++i)
-	{
-		for(unsigned int j = 0; j < Countofline-1; ++j)
-		{
-			if(strcmp(sortlines[j], sortlines[j+1]) > 0)
-			{
-				SwapString(&sortlines[j], &sortlines[j+1]);
-			}
-		}
-	}
-
-	timecounter_end = clock();
+void merge(int left, int middle, int right, char **base) {
+    char **buffer = (char**)malloc((right - left + 2) * sizeof(char*));
+    int left_ptr = left;
+    int right_ptr = middle;
+    int buf_ptr = 0;
+    while (left_ptr <  middle && right_ptr < right) {
+        if (strcmp(base[left_ptr], base[right_ptr]) < 0) {
+            buffer[buf_ptr] = base[left_ptr];
+            ++left_ptr;
+        } else {
+            buffer[buf_ptr] = base[right_ptr];
+            ++right_ptr;
+        }
+        ++buf_ptr;
+    }
+    while (left_ptr < middle) {
+        buffer[buf_ptr++] = base[left_ptr++];
+    }
+    while (right_ptr < right) {
+        buffer[buf_ptr++] = base[right_ptr++];
+    }
+    for (int i = left; i < right; ++i) {
+        base[i] = buffer[i - left];
+    }
+    free(buffer);
 }
 
-void Sort_Insertion(char * sortlines[], unsigned int Countofline)
-{
-	timecounter_start = clock();
-
-	for(unsigned int i = 1; i < Countofline; ++i)
-	{
-		char *temp = sortlines[i];
-		int j = i-1;
-		while((j >= 0) && (strcmp(sortlines[j], temp) > 0))
-		{
-			SwapString(&sortlines[j], &sortlines[j+1]);
-			j--;
-		}
-	}
-
-	timecounter_end = clock();
+void merge_sort(int left, int right, char **base) {
+    if (right - left <= 1) return;
+    int middle = (left + right) / 2;
+    merge_sort(left, middle, base);
+    merge_sort(middle, right, base);
+    merge(left, middle, right, base);
 }
 
-void Sort_Merge(char * sortlines[], unsigned int Countofline)
-{
-	if(timecounter_start == 0)
-	{
-		timecounter_start = clock();
-	}
+void insertion_sort(char **str, int cnt) {
+    for (int i = 1; i < cnt; ++i) {
+        int j = i;
+        while(j > 0 && strcmp(str[j], str[j - 1]) < 0) {
+                swap(&str[j], &str[j - 1]);
+                --j;
+        }
+    }
+}
 
-	if(Countofline <= 1)
-	{
-		return;
-	}
+void bubble_sort(char **str, int cnt) {
+    for (int i = 0; i < cnt - 1; ++i) {
+        for (int j = 0; j < cnt - i - 1; ++j) {
+            if ((strcmp(str[j], str[j + 1])) > 0) {
+                swap(&str[j], &str[j + 1]);
+            }
+        }
+    }
+}
 
-	unsigned int mid = Countofline / 2;
-	Sort_Merge(sortlines, mid);
-    Sort_Merge(sortlines + mid, Countofline - mid);
+void quick_sort(int left, int right, char **base) {
+    if (left >= right) {
+        return;
+    }
+    int left2 = left, right2 = right;
+    int middle = (right + left) / 2;
+    char *pivot = base[middle];
+    while (left2 <= right2) {
+        while (strcmp(base[left2], pivot) < 0) {
+            ++left2;
+        }
+        while (strcmp(base[right2], pivot) > 0) {
+            --right2;
+        }
+        if (left2 <= right2) {
+            swap(&base[left2++], &base[right2--]);
+        }
+    }
+    if(left<right2) quick_sort(left, right2, base);
+    if(left2<right) quick_sort(left2, right, base);
+}
 
-    char **tmp = (char **) malloc(Countofline * sizeof(char *));
-    if(tmp == NULL)
-    {
-        printf("\n[!] Error: I can not allocate memory in Merge sorting for a \"tmp\" array.\n");
+void sift_down(char **base, int root, int bottom) {
+    int max_ind;
+    while ((root * 2 <= bottom)) {
+        if (root * 2 == bottom) {
+            max_ind = root * 2;
+        } else if (strcmp(base[root * 2], base[root * 2 + 1]) > 0) {
+            max_ind = root * 2;
+        } else {
+            max_ind = root * 2 + 1;
+        }
+        if (strcmp(base[root], base[max_ind]) < 0) {
+            swap(&base[root], &base[max_ind]);
+            root = max_ind;
+        } else {
+            break;
+        }
+    }
+}
+
+void heap_sort(char **base, int n) {
+    for (int i = (n / 2) - 1; i >= 0; --i) {
+        sift_down(base, i, n - 1);
+    }
+    for (int i = n - 1; i > 0; --i) {
+        swap(&base[0], &base[i]);
+        sift_down(base, 0, i - 1);
+    }
+}
+
+int main(int argc, char **argv) {
+    if (argc != 4) {
+        printf("Wrong number of arguments!\n");
+        exit(1);
+    }
+
+    int n = atoi(argv[1]);
+    FILE *f = fopen(argv[2], "r");
+    char *algorithm_name = argv[3];
+    if (f == NULL) {
+        printf("Cannot open file\n");
+        exit(2);
+    }
+
+    int str_cnt = 0;
+    const int MAX_STR_LEN = 1000000;
+    char **arr_of_str = (char**)malloc(n * sizeof(char*));
+    if (arr_of_str == NULL) {
+        printf("Do not have enough memory\n");
         exit(4);
     }
-
-    unsigned int left_pointer = 0, right_pointer = mid, pointer = 0;
-    while(left_pointer < mid)
-    {
-        if((right_pointer >= Countofline) || (strcmp(sortlines[right_pointer], sortlines[left_pointer]) > 0))
-        {
-            tmp[pointer++] = sortlines[left_pointer++];
-    	}
-        else
-        {
-    		tmp[pointer++] = sortlines[right_pointer++];
-        }
-    }
-    while(right_pointer < Countofline)
-    {
-        tmp[pointer++] = sortlines[right_pointer++];
-    }
-    for(unsigned int i = 0; i < Countofline; i++)
-    {
-        sortlines[i] = tmp[i];
-    }
-    
-    free(tmp);
-
-	timecounter_end = clock();
-}
-
-int Partition(char** Strings, int Left, int Right) {
-	char* Pivot = Strings[Left];
-	int i = Left - 1, 
-		j = Right + 1;
-	while (true) {
-		do {i++;} while (strcmp(Strings[i], Pivot) < 0);
-		do {j--;} while (strcmp(Strings[j], Pivot) > 0);
-		if (i >= j) return j;
-		SwapString(&Strings[i], &Strings[j]);
-	}
-}
-
-void Sort_Quick(char** Strings, int Left, int Right) {
-	if (Left < Right) {
-		int Middle = Partition(Strings, Left, Right);
-		Sort_Quick(Strings, Left, Middle);
-		Sort_Quick(Strings, Middle + 1, Right);
-	}
-}
-
-/*void Sort_Quick(char * sortlines[], unsigned int first, unsigned int last)
-{
-	if(first >= last)
-	{
-		return;
-	}
-
-	if(timecounter_start == 0)
-	{
-		timecounter_start = clock();
-	}
-
-    unsigned int i = first, j = last;
-    unsigned int middle = (first + last)/2;
-    char *pivot = sortlines[middle];
-
-    while (i <= j)
-    {
-        while((strcmp(sortlines[i], pivot) < 0))
-        {
-            ++i;
-        }
-        while((strcmp(sortlines[j], pivot) > 0))
-        {
-            --j;
-        }
-
-		if (i <= j)
-		{
-            SwapString(&sortlines[i++], &sortlines[j--]);
-        }
-    }
- 
-    if(i < last)
-    {
-        Sort_Quick(sortlines, i, last);
-    }
-    if(j > first)
-    {
-        Sort_Quick(sortlines, first, j);
-    }
-
-	timecounter_end = clock();
-}*/
-
-void Sort_Radix(char * sortlines[], unsigned int from, unsigned int to, unsigned int byte, unsigned int maxlength)
-{
-	if(timecounter_start == 0)
-	{
-		timecounter_start = clock();
-	}
-
-	if(byte >= maxlength)
-	{
-		return;
-	}
-
-	char *basecharacters = " !\"'(),-.0123456789:;?ABCDEFGHIJKLMNOPQRSTUVWXYZ`abcdefghijklmnoprqrstuvwxyz";
-	unsigned int length = strlen(basecharacters)+1;
-	unsigned int datacounter[length];
-	unsigned int strcounter[length];
-	char ***data = (char***)malloc((length + 1) * sizeof(char**));
-	if(data == NULL)
-    {
-        printf("\n[!] Error: I can not allocate memory in Radix sorting for a \"data\" array.\n");
+    char *buf = (char*)malloc(MAX_STR_LEN * sizeof(char));
+    if (buf == NULL) {
+        printf("Do not have enough memory\n");
         exit(4);
     }
+    for (int i = 0; i < n; str_cnt = ++i) {
+        if (fgets(buf, MAX_STR_LEN, f) == NULL) {
+            --str_cnt;
+            break;
+        }
+        int str_len = strlen(buf);
+        arr_of_str[i] = (char*)malloc((str_len + 1) * sizeof(char));
+        if (arr_of_str[i] == NULL) {
+            printf("Do not have enough memory\n");
+            for(int i = 0; i < str_cnt; ++i) {
+                free(arr_of_str[i]);
+            }
+            free(arr_of_str);
+            exit(4);
+        }
+        strcpy(arr_of_str[i], buf);
+    }
+    fclose(f);
+    free(buf);
 
-    for(unsigned int i = 0; i <= length; ++i)
-	{
-		datacounter[i] = 0;
-		strcounter[i] = 0;
-	}
+    if (!strcmp(algorithm_name, "bubble")) {
+            bubble_sort(arr_of_str, str_cnt);
+    } else if (!strcmp(algorithm_name, "insertion")) {
+        insertion_sort(arr_of_str, str_cnt);
+    } else if (!strcmp(algorithm_name, "merge")) {
+        merge_sort(0, str_cnt, arr_of_str);
+    } else if (!strcmp(algorithm_name, "quick")) {
+        quick_sort(0, str_cnt - 1, arr_of_str);
+    } else if (!strcmp(algorithm_name, "radix")) {
+        heap_sort(arr_of_str, str_cnt);
+    } else {
+        printf("Unknown algorithm!\n");
+        exit(1);
+    }
 
-	for(unsigned int i = from; i <= to; ++i)
-	{
-		int tempchar;
-		if(byte >= strlen(sortlines[i])-2)
-		{
-			tempchar = 0;
-		}
-		else
-		{
-			char *tempchar_temp = strchr(basecharacters, sortlines[i][byte]);
-			if(tempchar_temp == NULL)
-			{
-				printf("\n[!] Error: Found a character that is not part of the allowed.");
-		        printf("\n[!] String: %d Byte: %d / [ %c ]\n", i+1, byte, sortlines[i][byte]);
-		        exit(5);
-			}
-			tempchar = tempchar_temp - basecharacters + 1;
-		}
-		if(datacounter[tempchar] == 0)
-		{
-			data[tempchar] = (char**)calloc(1, sizeof(char*));
-			if(data[tempchar] == NULL)
-		    {
-		        printf("\n[!] Error: I can not allocate memory in Radix sorting for a \"data[tempchar]\" array.\n");
-		        exit(4);
-		    }
-		}
-		else if(datacounter[tempchar] > 0)
-		{
-			data[tempchar] = (char**)realloc(data[tempchar], (datacounter[tempchar] + 1) * sizeof(char*));			
-			if(data[tempchar] == NULL)
-		    {
-		        printf("\n[!] Error: I can not change the size of the allocated memory in Radix sorting for a \"data[tempchar]\" array.\n");
-		        exit(4);
-		    }
-		}
-
-		data[tempchar][datacounter[tempchar]] = (char*)malloc((strlen(sortlines[i]) + 1) * sizeof(char));
-		if(data[tempchar][datacounter[tempchar]] == NULL)
-	    {
-	        printf("\n[!] Error: I can not allocate memory in Radix sorting for a \"data[tempchar][datacounter[tempchar]]\" array.\n");
-	        exit(4);
-	    }
-		sprintf(data[tempchar][datacounter[tempchar]], "%s", sortlines[i]);
-
-		datacounter[tempchar]++;
-		strcounter[tempchar]++;
-	}
-
-	unsigned int counter = 0;
-	while(counter <= (to-from))
-	{
-		for(unsigned int i = 0; i <= length; ++i)
-		{
-			if(datacounter[i] > 0)
-			{
-				for(unsigned int j = 0; j < datacounter[i]; ++j)
-				{
-					free(sortlines[from+counter]);
-					sortlines[from+counter] = (char*)calloc((strlen(data[i][j]) + 1), sizeof(char));
-					sprintf(sortlines[from+counter], "%s", data[i][j]);
-					counter++;
-				}
-			}
-		}
-	}
-
-	counter = 0; int fromposition = -1;
-	for(unsigned int i = from; i < to; ++i)
-	{
-		if(sortlines[i][byte] == sortlines[i+1][byte])
-		{
-			if(fromposition == -1)
-			{
-				fromposition = i;
-			}
-			counter++;
-		}
-		else if(( sortlines[i][byte] != sortlines[i+1][byte]) && (fromposition != -1))
-		{
-			Sort_Radix(sortlines, fromposition, fromposition+counter, byte+1, maxlength);
-			counter = 0;
-			fromposition = -1;
-		}
-	}
-
-	for(unsigned int i = 0; i <= length; ++i)
-	{
-		if(datacounter[i] > 0)
-		{
-			for(int j = strcounter[i]; j > 0; --j)
-			{
-				free(data[i][j-1]);
-			}
-			free(data[i]);
-		}
-	}
-
-	free(data);
-
-	timecounter_end = clock();
-}
-
-void SwapString(char * string1[], char * string2[])
-{
-	char *temp = *string1;
-	*string1 = *string2;
-	*string2 = temp;
-}
-
-void CheckOption(char * options[], unsigned int *Numberoflines)
-{
-	int UnknownOptionIndex = -1;
-
-	*Numberoflines = atoi(options[1]);
-	if(*Numberoflines == 0)
-	{
-		printf("\n[!] Error: The parameter is responsible for the number of lines NaN, or it is zero.(%s)\n", options[1]);
-		exit(1);
-	}
-	for(unsigned int j = 0; j < allowedOptionsLength; j++)
-	{
-		if(strcmp(options[3], allowedOptions[j]) == 0)
-		{
-			UnknownOptionIndex = -1;
-			break;
-		}
-		else
-		{		
-			UnknownOptionIndex = 3;
-		}
-	}
-	if(UnknownOptionIndex > -1)
-	{
-		printf("\n[!] Error: Unknown option was given! (%s)\n", options[UnknownOptionIndex]);
-		exit(1);
-	}
+    for(int i = 0; i < str_cnt; ++i) {
+        printf("%s", arr_of_str[i]);
+        free(arr_of_str[i]);
+    }
+    free(arr_of_str);
 }
