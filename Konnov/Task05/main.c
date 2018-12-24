@@ -2,32 +2,35 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <ctype.h>
 
-int sizeFile, i, j;
+int sizeFile;
+enum sorts {bubble, insertion, merge, quick, radix, other};
 
-int sortSelection(char *name)
+
+enum sorts sortSelection(char *name)
 {
-	int res = 0;
+	enum sorts res = other;
 
-	if((strcmp("bubble",name) == 0) || (strcmp("Bubble",name) == 0))
+	if(strcmp("bubble", name) == 0)
 	{
-		res = 1;
+		res = bubble;
 	}
-	if((strcmp("insertion",name) == 0) || (strcmp("Insertion",name) == 0))
+	if(strcmp("insertion",name) == 0)
 	{
-		res = 2;
+		res = insertion;
 	}
-	if((strcmp("merge",name) == 0) || (strcmp("Merge",name) == 0))
+	if(strcmp("merge",name) == 0)
 	{
-		res = 3;
+		res = merge;
 	}
-	if((strcmp("quick",name) == 0) || (strcmp("Quick",name) == 0))
+	if(strcmp("quick",name) == 0)
 	{
-		res = 4;
+		res = quick;
 	}
-	if((strcmp("radix",name) == 0) || (strcmp("Radix",name) == 0))
+	if(strcmp("radix",name) == 0)
 	{
-		res = 5;
+		res = radix;
 	}
 
 	return res;
@@ -40,6 +43,7 @@ void errorMessage(char *message)
 
 void bubbleSort(char **bubbleText,int n)
 {
+	int i, j;
 	for (i = 0; i < n - 1; i++)
 	{
 		for(j = 0; j < n - i - 1; j++)
@@ -56,6 +60,7 @@ void bubbleSort(char **bubbleText,int n)
 
 void insertionSort(char **insertionText, int n)
 {
+	int i, j;
 	for(i = 1; i < n; i++)
 	{
 		for (j = i - 1; j >= 0; j--)
@@ -83,7 +88,7 @@ void mergeSort(char **mergeText, int n)
 	mergeSort(mergeText + mid, n - mid);
 
 	char **tmp = (char **) malloc(n * sizeof(char *));
-	if(NULL == tmp)
+	if(tmp == NULL)
 	{
 		errorMessage("cant allocate memory for tmp in mergesort procedure");
 		exit(4);
@@ -108,7 +113,8 @@ void mergeSort(char **mergeText, int n)
 	{
 		tmp[ptr++] = mergeText[ptrR++];
 	}
-
+	
+	int i;
 	for(i = 0; i < n; i++)
 	{
 		mergeText[i] = tmp[i];
@@ -177,6 +183,7 @@ void heap(char **textInHeap, int amount, int i)
 
 void heapSort(char **heapText, int n)
 {
+	int i;
 	for(i = n / 2 - 1; i >= 0; i--)
 	{
 		heap(heapText, n, i);
@@ -199,7 +206,7 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 	FILE *file = fopen(argv[2], "r");
-	if(NULL == file)
+	if(file == NULL)
 	{
 		errorMessage("cant open file");
 		exit(2);
@@ -209,27 +216,28 @@ int main(int argc, char *argv[])
 
 	char **text = (char **) malloc(sizeFile * sizeof(char *));
 	char *buf = (char *) malloc(strLength * sizeof(char));
-	if(NULL == text)
+	if(text == NULL)
 	{
 		errorMessage("cant allocate memory for text in main function");
 		exit(4);
 	}
-	if(NULL == buf)
+	if(buf == NULL)
 	{
 		errorMessage("cant allocate memory for buf in main function");
 		exit(4);
 	}
 	
+	int i;
 	int realSize = 0; //real size of text
 	for(i = 0; i < sizeFile; i++)
 	{
-		if(NULL == fgets(buf, strLength, file))
+		if(fgets(buf, strLength, file) == NULL)
 		{
 			break;
 		}
 		realSize++;
 		text[i] =(char *) malloc((strlen(buf) + 1) * sizeof(char));
-		if(NULL == text[i])
+		if(text[i] == NULL)
 		{
 			errorMessage("cant allocate memory for a string of text in main function");
 			exit(4);
@@ -238,21 +246,22 @@ int main(int argc, char *argv[])
 	} 
 	free(buf);
 	
+	argv[3][0] = tolower(argv[3][0]);
 	switch(sortSelection(argv[3]))
 	{
-		case 1:
+		case bubble:
 				bubbleSort(text, realSize);
 				break;
-		case 2:
+		case insertion:
 				insertionSort(text, realSize);
 				break;
-		case 3:
+		case merge:
 				mergeSort(text, realSize);
 				break;
-		case 4:
+		case quick:
 				quickSort(text, 0, realSize - 1);
 				break;
-		case 5:
+		case radix:
 				heapSort(text, realSize);
 				break;
 		default:
