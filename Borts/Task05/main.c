@@ -10,7 +10,8 @@
 clock_t timecounter_start = 0;
 clock_t timecounter_end = 0;
 
-void Sort_Quick(char **base, int left, int right) {
+void Sort_Quick(char **base, int left, int right)
+{
     if (left >= right) {
         return;
     }
@@ -39,7 +40,7 @@ int main(int argc, char * inputstring[])
 		CheckOption(inputstring, &Numberoflines);
 	else
 	{
-		PrintError("Three parameters must be entered.", 1);
+		//PrintError("Three parameters must be entered.", 1);
 	}
 
 	FILE *inputfile = fopen(inputstring[2],"r");
@@ -119,7 +120,7 @@ int main(int argc, char * inputstring[])
 	}
 	else
 	{
-		PrintError("Unknown error, program failed.", 1);
+		//PrintError("Unknown error, program failed.", 1);
 	}
 
 	for(unsigned int i = 0; i < Numberoflines; ++i)
@@ -407,7 +408,7 @@ void CheckOption(char * options[], unsigned int *Numberoflines)
 	{
 		char errorstr[75 + strlen(options[1])];
 		sprintf(errorstr, "The parameter is responsible for the number of lines NaN, or it is zero.(%s)", options[1]);
-		PrintError(errorstr, 1);
+		//PrintError(errorstr, 1);
 	}
 	for(unsigned int j = 0; j < allowedOptionsLength; j++)
 	{
@@ -425,7 +426,7 @@ void CheckOption(char * options[], unsigned int *Numberoflines)
 	{
 		char errorstr[30 + strlen(options[UnknownOptionIndex])];
 		sprintf(errorstr, "Unknown option was given! (%s)", options[UnknownOptionIndex]);
-		PrintError(errorstr, 1);
+		//PrintError(errorstr, 1);
 	}
 }
 
