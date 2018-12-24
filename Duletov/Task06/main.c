@@ -6,7 +6,7 @@
 
 int main(){
 	makeTable();
-	int i;
+	int i=0;
 	long int hash_value;
 	char word[50] = "";
 	char symbol;
