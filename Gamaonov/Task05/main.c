@@ -150,7 +150,7 @@ void heapify(char* str_array[], int strNum, int i)
         heapify(str_array, strNum, largest);
     }
 }
-void heapSort(char *str_array[], int strNum)
+void heapSort(char **str_array, int strNum)
 {
     for (int i = strNum / 2 - 1; i >= 0; i--)
     {
@@ -214,6 +214,8 @@ int main(int argc, char *argv[])
     int LINES_NUMBER = (int)strtol(argv[1], NULL, 10);  //String to int conversion
     char *IN_FILE_NAME = argv[2];                       //
     char *ALG_NAME = argv[3];                           //
+
+    printf("Line count: %d\nInput file: %s\nSorting algorithm: %s\n", LINES_NUMBER, IN_FILE_NAME, ALG_NAME);
 
     FILE *i_file = fopen(IN_FILE_NAME, "r");
     if (i_file == NULL)
