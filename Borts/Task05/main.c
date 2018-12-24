@@ -10,6 +10,28 @@
 clock_t timecounter_start = 0;
 clock_t timecounter_end = 0;
 
+void Sort_Quick(char **base, int left, int right) {
+    if (left >= right) {
+        return;
+    }
+    int i = left, j = right;
+    int middle = (right + left) / 2;
+    char *pivot = base[middle];
+    while (i <= j) {
+        while (strcmp(base[i], pivot) < 0) {
+            ++i;
+        }
+        while (strcmp(base[j], pivot) > 0) {
+            --j;
+        }
+        if (i <= j) {
+            SwapString(&base[i++], &base[j--]);
+        }
+    }
+    if(left<j) Sort_Quick(base, left, j);
+    if(i<right) Sort_Quick(base, i, right);
+}
+
 int main(int argc, char * inputstring[])
 {
 	unsigned int Numberoflines;
@@ -204,16 +226,16 @@ void Sort_Merge(char * sortlines[], unsigned int Countofline)
 	timecounter_end = clock();
 }
 
-void Sort_Quick(char * sortlines[], unsigned int first, unsigned int last)
+/*void Sort_Quick(char * sortlines[], unsigned int first, unsigned int last)
 {
-	if(first >= last)
-	{
-		return;
-	}
-
 	if(timecounter_start == 0)
 	{
 		timecounter_start = clock();
+	}
+
+	if(first >= last)
+	{
+		return;
 	}
 
     unsigned int i = first, j = last;
@@ -247,7 +269,7 @@ void Sort_Quick(char * sortlines[], unsigned int first, unsigned int last)
     }
 
 	timecounter_end = clock();
-}
+}*/
 
 void Sort_Radix(char * sortlines[], unsigned int from, unsigned int to, unsigned int byte, unsigned int maxlength)
 {
