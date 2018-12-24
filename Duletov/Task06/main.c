@@ -23,8 +23,10 @@ int main(){
      	}
     }
   }
-  hash_value = hash(word);
-	insert(word, hash_value);
+  if(i>0){
+  	hash_value = hash(word);
+		insert(word, hash_value);
+	}
   iterate();
 	bookanalise();
 	return 0;
