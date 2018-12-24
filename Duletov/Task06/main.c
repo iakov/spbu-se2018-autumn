@@ -18,20 +18,12 @@ int main(){
     else{
     	if(i>0){
       	word[i]='\0';
-       	buf=(char *)calloc(strlen(word) + 1, sizeof(char));
-				if(buf == NULL){
-					
-     			printf("Failed to malloc memory\n");
-        	return 1;
-        }
-        strcpy(buf, word);
         hash_value = hash(word);
 				insert(word, hash_value);
     		i = 0;
      	}
     }
   }
-  strcpy(buf, word);
   hash_value = hash(word);
 	insert(word, hash_value);
   iterate();
