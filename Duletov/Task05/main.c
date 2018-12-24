@@ -159,16 +159,16 @@ void FunctionDef(char *text, int N, char Name){
         insertionSort(text, N);
         break;
     case 'm':
-        mergeSort(text, N, 0);
+        mergeSort(text, N-1, 0);
         break;
     case 'q':
         quickSort(text, 0, N);
         break;
     case 'h':
-        heapSort(text, N+1);
+        heapSort(text, N);
         break;
     case 'r':
-        heapSort(text, N+1);
+        heapSort(text, N);
         break;
     default:
         printf("Invalid name of algorythm\n");
@@ -212,6 +212,7 @@ int main(int argc, char **argv)
 		i++;
 	}
 	text[i]='\n';
+	Strings[j][1]=z+1;
 	if(j<N){
 		N=j+1;
 	}
