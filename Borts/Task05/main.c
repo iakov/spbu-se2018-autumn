@@ -405,6 +405,7 @@ void Sort_Radix(char * sortlines[], unsigned int from, unsigned int to, unsigned
 	timecounter_end = clock();
 }
 
+
 void CheckOption(char * options[], unsigned int *Numberoflines)
 {
 	int UnknownOptionIndex = -1;
@@ -445,7 +446,8 @@ void SwapString(char * string1[], char * string2[])
 
 void PrintError(char * string, int ExitCode)
 {
-	printf("\n[!] Error: %s.\n\n", string);
-	fflush(stdin);
+	/*printf("\n[!] Error: %s.\n\n", string);
+	fflush(stdin);*/
+	fprintf(stderr, "\n[!] Error: %s.\n\n", string);
 	exit(ExitCode);
 }
