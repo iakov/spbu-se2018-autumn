@@ -10,7 +10,7 @@
 clock_t timecounter_start = 0;
 clock_t timecounter_end = 0;
 
-void heapify(char** Strings, int NumberStrings, int Position) {
+/*void heapify(char** Strings, int NumberStrings, int Position) {
 	int Largest = Position, 
 		Left = (Position << 1) + 1, 
 		Right = (Position << 1) + 2;
@@ -41,7 +41,7 @@ void Sort_Radix(char * sortlines[], unsigned int from, unsigned int to, unsigned
 	byte = maxlength;
 	maxlength = byte;
 	HeapSort(sortlines, to-from+1);
-}
+}*/
 
 int Partition(char** Strings, int Left, int Right) {
 	char* Pivot = Strings[Left];
@@ -307,7 +307,7 @@ void Sort_Merge(char * sortlines[], unsigned int Countofline)
 	timecounter_end = clock();
 }*/
 
-/*void Sort_Radix(char * sortlines[], unsigned int from, unsigned int to, unsigned int byte, unsigned int maxlength)
+void Sort_Radix(char * sortlines[], unsigned int from, unsigned int to, unsigned int byte, unsigned int maxlength)
 {
 	if(timecounter_start == 0)
 	{
@@ -329,7 +329,7 @@ void Sort_Merge(char * sortlines[], unsigned int Countofline)
 		PrintError("I can not allocate memory in Radix sorting for a \"data\" array.", 4);
     }
 
-    for(unsigned int i = 0; i <= length; ++i)
+    for(unsigned int i = 0; i < length; ++i)
 	{
 		datacounter[i] = 0;
 		strcounter[i] = 0;
@@ -383,7 +383,7 @@ void Sort_Merge(char * sortlines[], unsigned int Countofline)
 	unsigned int counter = 0;
 	while(counter <= (to-from))
 	{
-		for(unsigned int i = 0; i <= length; ++i)
+		for(unsigned int i = 0; i < length; ++i)
 		{
 			if(datacounter[i] > 0)
 			{
@@ -417,7 +417,7 @@ void Sort_Merge(char * sortlines[], unsigned int Countofline)
 		}
 	}
 
-	for(unsigned int i = 0; i <= length; ++i)
+	for(unsigned int i = 0; i < length; ++i)
 	{
 		if(datacounter[i] > 0)
 		{
@@ -432,7 +432,7 @@ void Sort_Merge(char * sortlines[], unsigned int Countofline)
 	free(data);
 
 	timecounter_end = clock();
-}*/
+}
 
 void CheckOption(char * options[], unsigned int *Numberoflines)
 {
