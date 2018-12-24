@@ -284,7 +284,8 @@ void Sort_Radix(char * sortlines[], unsigned int from, unsigned int to, unsigned
 		return;
 	}
 
-	char *basecharacters = " !\"'(),-.0123456789:;?ABCDEFGHIJKLMNOPQRSTUVWXYZ`abcdefghijklmnoprqrstuvwxyz";
+	//char *basecharacters = " !\"'(),-.0123456789:;?ABCDEFGHIJKLMNOPQRSTUVWXYZ`abcdefghijklmnoprqrstuvwxyz";
+	char *basecharacters = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 	unsigned int length = strlen(basecharacters)+1;
 	unsigned int datacounter[length];
 	unsigned int strcounter[length];
