@@ -132,7 +132,7 @@ void Sort_Bubble(char * sortlines[], unsigned int Countofline)
 		{
 			if(strcmp(sortlines[j], sortlines[j+1]) > 0)
 			{
-				SwapString(sortlines, j, j+1);
+				SwapString(&sortlines[j], *sortlines[j+1]);
 			}
 		}
 	}
@@ -150,7 +150,7 @@ void Sort_Insertion(char * sortlines[], unsigned int Countofline)
 		int j = i-1;
 		while((j >= 0) && (strcmp(sortlines[j], temp) > 0))
 		{
-			SwapString(sortlines, j, j+1);
+			SwapString(&sortlines[j], &sortlines[j+1]);
 			j--;
 		}
 	}
@@ -236,7 +236,7 @@ void Sort_Quick(char * sortlines[], unsigned int first, unsigned int last)
 
 		if (i <= j)
 		{
-            SwapString(sortlines, i++, j--);
+            SwapString(&sortlines[i++], &sortlines[j--]);
         }
     }
  
@@ -384,12 +384,11 @@ void Sort_Radix(char * sortlines[], unsigned int from, unsigned int to, unsigned
 	timecounter_end = clock();
 }
 
-void SwapString(char * lines[], unsigned int stridx1, unsigned int stridx2)
+void SwapString(char * string1[], char * string2[])
 {
-	char *tmpstring;
-	tmpstring = lines[stridx1];
-	lines[stridx1] = lines[stridx2];
-	lines[stridx2] = tmpstring;
+	char *temp = *string1;
+	*string1 = *string2;
+	*string2 = temp
 }
 
 void CheckOption(char * options[], unsigned int *Numberoflines)
