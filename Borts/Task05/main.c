@@ -144,16 +144,16 @@ void Sort_Insertion(char * sortlines[], unsigned int Countofline)
 {
 	timecounter_start = clock();
 
-	for(unsigned int i = 1; i < Countofline; ++i)
-	{
-		char *temp = sortlines[i];
-		int j = i-1;
-		while((j >= 0) && (strcmp(sortlines[j], temp) > 0))
-		{
-			SwapString(&sortlines[j], &sortlines[j+1]);
-			j--;
-		}
-	}
+    for(unsigned int i = 0; i < Countofline - 1; ++i)
+    {
+        for(unsigned int j = i + 1; j < Countofline; ++j)
+        {
+            if (strcmp(sortlines[i], sortlines[j]) > 0)
+            {
+                SwapString(&sortlines[i], &sortlines[j]);
+            }
+        }
+    }
 
 	timecounter_end = clock();
 }
