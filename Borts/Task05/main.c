@@ -404,12 +404,12 @@ void CheckOption(char * options[], unsigned int *Numberoflines)
 	int UnknownOptionIndex = -1;
 
 	*Numberoflines = atoi(options[1]);
-	if(*Numberoflines == 0)
+	/*if(*Numberoflines == 0)
 	{
 		char errorstr[75 + strlen(options[1])];
 		sprintf(errorstr, "The parameter is responsible for the number of lines NaN, or it is zero.(%s)", options[1]);
 		PrintError(errorstr, 1);
-	}
+	}*/
 	for(unsigned int j = 0; j < allowedOptionsLength; j++)
 	{
 		if(strcmp(options[3], allowedOptions[j]) == 0)
