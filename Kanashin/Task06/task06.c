@@ -17,7 +17,7 @@ typedef struct HashList
 typedef struct
 {
     List **lists;
-    int *lenghtList;
+    int *lengthList;
     int sizeOfTable;
 
 }HashTable;
@@ -26,36 +26,43 @@ typedef struct
 HashTable newHashTable(int size)
 {
     HashTable newTable;
+
     newTable.lists = (List **) calloc(size, sizeof(List*));
     if (newTable.lists == NULL)
     {
         fprintf(stderr, "Cannot allocate memory for creating hash table");
         exit(4);
     }
+
     newTable.sizeOfTable = size;
-    newTable.lenghtList = (int *) calloc(size, sizeof(int));
-    if (newTable.lenghtList == NULL)
+
+    newTable.lengthList = (int *) calloc(size, sizeof(int));
+    if (newTable.lengthList == NULL)
     {
         fprintf(stderr, "Cannot allocate memory for counter of Length each of lists");
         exit(4);
     }
+
     return newTable;
 
 }
 
 uint32_t getHash(char *key)
 {
-    uint32_t hashRes = 0;
+    uint32_t hash = 0;
+
     uint32_t *res = (uint32_t *)calloc(4, sizeof(uint32_t));
     if (res == NULL)
     {
         fprintf(stderr, "Cannot allocate memory for buffer of Hash");
         exit(4);
     }
+
     md5((uint8_t *)key, strlen(key), (uint8_t *)res);
-    hashRes = res[0];
+    hash = res[0];
+
     free(res);
-    return hashRes;
+    return hash;
 }
 
 List *findWord(HashTable *table, uint32_t index, char* word )
@@ -112,6 +119,7 @@ void addWord(char *word, HashTable *table)
 
         prevElemList->ptrNext = newElemList;
     }
+
     newElemList->key = (char *)malloc((strlen(word) + 1) * sizeof(char));
     if (newElemList->key == NULL)
     {
@@ -127,6 +135,7 @@ void addWord(char *word, HashTable *table)
 int getValueWord(HashTable *table, char* word)
 {
     uint32_t index = getHash(word) % table->sizeOfTable;
+
     List *elemList;
     elemList = findWord(table, index, word);
     if (elemList == NULL)
@@ -148,17 +157,17 @@ void getStat(HashTable *table)
     int totalWords = 0;*/
     for (int i = 0; i < table->sizeOfTable; i++)
     {
-        /*int currLenghList = 0;
-        if (table->lenghtList[i] != 0)
+        /*int currLengthList = 0;
+        if (table->lengthList[i] != 0)
         {
-            avgLengthList += table->lenghtList[i];
+            avgLengthList += table->lengthList[i];
             amountLists++;
         }*/
 
         List *currElemList = table->lists[i];
         while (currElemList != NULL)
         {
-            //currLenghList++;
+            //currLengthList++;
             //int currNumberReplies = getValueWord(table, currElemList->key);
             //amountWords ++;
             //totalWords += currNumberReplies;
@@ -209,7 +218,7 @@ void deleteTable(HashTable *table)
             free(buff);
         }
     }
-    free(table->lenghtList);
+    free(table->lengthList);
     free(table->lists);
 }
 
@@ -252,6 +261,7 @@ int main(int argc, char *argv[])
 
 
     }
+
     getStat(&table);
     deleteTable(&table);
 
