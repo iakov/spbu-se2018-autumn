@@ -179,7 +179,7 @@ void FunctionDef(char *text, int N, char Name){
 
 int main(int argc, char **argv)
 {
-	int i=0, N, j=0, z=0;
+	int i=0, N, j=0, z=0, size=0;
     if (argc != 4){
         printf("Invalid number of arguments!\n");
         exit(1);
@@ -194,7 +194,7 @@ int main(int argc, char **argv)
 	exit(2);
 	}
 	fseek(f, 0, SEEK_END);
-	int size = ftell(f);
+	size = ftell(f);
 	fseek(f, 0, SEEK_SET);
 	char *text = (char*) malloc(size*sizeof(char)+1);
 	if(text==0){
