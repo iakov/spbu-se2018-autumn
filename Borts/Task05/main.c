@@ -81,7 +81,7 @@ int main(int argc, char * inputstring[])
 	}
 	else if(!strcmp(inputstring[3], "merge"))
 	{
-		Sort_Merge(strings, Numberoflines);
+		Sort_Merge(strings, 0, Numberoflines);
 	}
 	else if(!strcmp(inputstring[3], "quick"))
 	{
@@ -158,53 +158,41 @@ void Sort_Insertion(char * sortlines[], unsigned int Countofline)
 	timecounter_end = clock();
 }
 
-void Sort_Merge(char * sortlines[], unsigned int Countofline)
-{
-	if(timecounter_start == 0)
-	{
-		timecounter_start = clock();
-	}
-
-	if(Countofline <= 1)
-	{
+//void Sort_Merge(char * sortlines[], unsigned int Countofline)
+void Sort_Merge(char** Strings, int Left, int Right) {
+	if (Left == Right - 1) 
 		return;
+	int Middle = (Left + Right) >> 1;
+	Sort_Merge(Strings, Left, Middle);
+	Sort_Merge(Strings, Middle, Right);
+	int IteratorFirst = Left, 
+		IteratorSecond = Middle;
+	char** Buffer = (char**)malloc(Right * sizeof(char*));
+	if (Buffer == NULL)
+	{
+		printf("\n[!] Error: Memory Allocation at MergeSort!\n");
+		exit(4);
 	}
-
-	unsigned int mid = Countofline / 2;
-	Sort_Merge(sortlines, mid);
-    Sort_Merge(sortlines + mid, Countofline - mid);
-
-    char **tmp = (char **) malloc(Countofline * sizeof(char *));
-    if(tmp == NULL)
-    {
-        printf("\n[!] Error: I can not allocate memory in Merge sorting for a \"tmp\" array.\n");
-        exit(4);
-    }
-
-    unsigned int left_pointer = 0, right_pointer = mid, pointer = 0;
-    while(left_pointer < mid)
-    {
-        if((right_pointer >= Countofline) || (strcmp(sortlines[right_pointer], sortlines[left_pointer]) > 0))
-        {
-            tmp[pointer++] = sortlines[left_pointer++];
-    	}
-        else
-        {
-    		tmp[pointer++] = sortlines[right_pointer++];
-        }
-    }
-    while(right_pointer < Countofline)
-    {
-        tmp[pointer++] = sortlines[right_pointer++];
-    }
-    for(unsigned int i = 0; i < Countofline; i++)
-    {
-        sortlines[i] = tmp[i];
-    }
-    
-    free(tmp);
-
-	timecounter_end = clock();
+	for(int i = 0; i < Right; ++i) {
+		Buffer[i] = (char*)malloc(256 * sizeof(char));
+		if (Buffer[i] == NULL)
+		{
+			printf("\n[!] Error: Memory Allocation at MergeSort!\n");
+			exit(4);
+		}
+	}
+	for (int i = 0; i < Right - Left; ++i) {
+		if ((IteratorSecond >= Right) || ((IteratorFirst < Middle) &&
+			(strcmp(Strings[IteratorFirst], Strings[IteratorSecond]) < 0)))
+			strcpy(Buffer[i], Strings[IteratorFirst++]);
+		else
+			strcpy(Buffer[i], Strings[IteratorSecond++]);
+	}
+	for (int i = 0; i < Right - Left; ++i)
+		strcpy(Strings[i + Left], Buffer[i]);
+	for (int i = 0; i < Right; ++i)
+		free(Buffer[i]);
+	free(Buffer);
 }
 
 int Partition(char** Strings, int Left, int Right)
