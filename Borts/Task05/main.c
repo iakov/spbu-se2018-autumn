@@ -132,7 +132,7 @@ void Sort_Bubble(char * sortlines[], unsigned int Countofline)
 		{
 			if(strcmp(sortlines[j], sortlines[j+1]) > 0)
 			{
-				SwapString(&sortlines[j], *sortlines[j+1]);
+				SwapString(&sortlines[j], &sortlines[j+1]);
 			}
 		}
 	}
@@ -388,7 +388,7 @@ void SwapString(char * string1[], char * string2[])
 {
 	char *temp = *string1;
 	*string1 = *string2;
-	*string2 = temp
+	*string2 = temp;
 }
 
 void CheckOption(char * options[], unsigned int *Numberoflines)
