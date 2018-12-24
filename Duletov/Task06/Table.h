@@ -12,7 +12,6 @@ struct Cell {
 
 struct Cell *Chains[100000] = {0};
 int size, counter, counter2;
-char frequent[50];
 
 void makeTable(){
 	size = 1000;
@@ -73,7 +72,7 @@ void clearTable(){
 	size=0;
 	printf("Cleared successfully\n");
 }
-
+/*
 int seek(struct Cell *i, char *key){
 	if(strcmp(i->key,key)==0){
 		return i->value;
@@ -120,9 +119,9 @@ void statistic(){
 	}
 	printf("There are %li keys in table\n", z);
 }
-
+*/
 void iteration(struct Cell *i){
-	printf("Key %s Hash %li Value %d\n", i->key, i->hash, i->value);
+	printf("%s %d\n", i->key, i->value);
 	if(i->next!=0){
 		iteration(i->next);
 	}
@@ -144,29 +143,34 @@ void frequency(struct Cell *i){
 		frequency(i->next);
 		if(i->value > counter2){
 			counter2 = i->value;
-			strcpy(frequent, i->key);
 		}
 	}
 	else{
 		if(i->value > counter2){
 			counter2 = i->value;
-			strcpy(frequent, i->key);
 		}
 	}
 }
 
+void output(struct Cell *i){
+	if(i->next != 0){
+		output(i->next);
+	}
+	if(i->value == counter2){
+		printf("%s %d\n", i->key, i->value);
+	}
+}
+
 void bookanalise(){
-	int i, z=0;
-	counter=0;
+	int i;
 	counter2 = 0;
 	for(i=0;i<size;i++){
-		if(Chains[i] != 0){
 			if(Chains[i] != 0)
-			count(Chains[i]);
 			frequency(Chains[i]);
-			z = z + counter;
-			counter = 0;
+	}
+	for(i=0; i<size;i++){
+		if(Chains[i] != 0){
+			output(Chains[i]);
 		}
 	}
-	printf("There are %d different words. The most frequent word is \"%s\" with %d mentions\n", z, frequent, counter2);
 }
