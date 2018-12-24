@@ -17,7 +17,7 @@ int main(){
             word[i++] = symbol;
         }
         else{
-        	if(i){
+        	if(i>0){
             word[i]='\0';
             buf=(char *)calloc(strlen(word) + 1, sizeof(char));
             if(buf == NULL){
