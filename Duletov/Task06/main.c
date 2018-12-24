@@ -31,6 +31,9 @@ int main(){
      	}
     }
   }
+  strcpy(buf, word);
+  hash_value = hash(word);
+	insert(word, hash_value);
   iterate();
 	bookanalise();
 	return 0;
