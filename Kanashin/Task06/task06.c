@@ -101,6 +101,7 @@ void addWord(char *word, HashTable *table)
             exit(4);
         }
         newElemList = table->lists[index];
+        table->lengthList[index] = 1;
     }
     else
     {
@@ -118,6 +119,7 @@ void addWord(char *word, HashTable *table)
         }
 
         prevElemList->ptrNext = newElemList;
+        table->lengthList[index]++;
     }
 
     newElemList->key = (char *)malloc((strlen(word) + 1) * sizeof(char));
