@@ -49,7 +49,8 @@ void add (struct hashtable *table, char *word, int val)
         tmpblock->value = val;
         return;
     }
-    while (1)
+    int true = 1;
+    while (true == 1)
     {
         if (strcmp (word, tmpblock->key)==0)
         {
@@ -87,7 +88,8 @@ int getvalue (struct hashtable *table, char *word)
     {
         return 0;
     }
-    while (1)
+    int true = 1;
+    while (true == 1)
     {
         if (strcmp (word, tmpblock->key)==0)
         {
@@ -108,7 +110,8 @@ void printstatistic (struct hashtable *table)
     for (int i=0; i<table->size; i++)
     {
         tmpblock = &table->block[i];
-        while (1)
+        int true = 1;
+        while (true == 1)
         {
             if (tmpblock->value == 0) break;
             printf ("%s %d\n", tmpblock->key, tmpblock->value);
@@ -123,7 +126,8 @@ void printstatistic (struct hashtable *table)
     for (int i=0; i<table->size; i++)
     {
         tmpblock = &table->block[i];
-        while (1)
+        int true = 1;
+        while (true == 1)
         {
             if (tmpblock->value == 0) break;
             if (tmpblock->value == often_word_value)
@@ -145,7 +149,7 @@ void delete_table (struct hashtable *table)
             continue;
         int flag = 1;
         struct hashblock *currentblock = &table->block[i];
-        while (flag)
+        while (flag==1)
         {
             struct hashblock *tmpblock;
             tmpblock = currentblock;
@@ -201,7 +205,7 @@ int main ()
     createtable (&table, tablesize);
     int flag = 1;
     char *word;
-    while (flag)
+    while (flag==1)
     {
         word = getword(&flag);
         if (word!=NULL)
