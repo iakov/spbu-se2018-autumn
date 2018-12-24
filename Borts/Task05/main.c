@@ -10,64 +10,6 @@
 clock_t timecounter_start = 0;
 clock_t timecounter_end = 0;
 
-/*void heapify(char** Strings, int NumberStrings, int Position) {
-	int Largest = Position, 
-		Left = (Position << 1) + 1, 
-		Right = (Position << 1) + 2;
-	if (Left < NumberStrings && 
-		strcmp(Strings[Left], Strings[Largest]) > 0)
-		Largest = Left;
-	if (Right < NumberStrings && 
-		strcmp(Strings[Right], Strings[Largest]) > 0)
-		Largest = Right;
-	if (Largest != Position) {
-		SwapString(&Strings[Largest], &Strings[Position]);
-		heapify(Strings, NumberStrings, Largest);
-	}
-}
-
-void HeapSort(char** Strings, int NumberStrings) {
-	for (int i = (NumberStrings >> 1) - 1; i >= 0; --i)
-		heapify(Strings, NumberStrings, i);
-	for (int i = NumberStrings - 1; i >= 0; --i) {
-		if (strcmp(Strings[0], Strings[i]) != 0)
-			SwapString(&Strings[0], &Strings[i]);
-		heapify(Strings, i, 0);
-	}
-}
-
-void Sort_Radix(char * sortlines[], unsigned int from, unsigned int to, unsigned int byte, unsigned int maxlength)
-{
-	byte = maxlength;
-	maxlength = byte;
-	HeapSort(sortlines, to-from+1);
-}*/
-
-int Partition(char** Strings, int Left, int Right) {
-	char* Pivot = Strings[Left];
-	int i = Left - 1, 
-		j = Right + 1;
-	while (true) {
-		do {i++;} while (strcmp(Strings[i], Pivot) < 0);
-		do {j--;} while (strcmp(Strings[j], Pivot) > 0);
-		if (i >= j) return j;
-		SwapString(&Strings[i], &Strings[j]);
-	}
-}
-void QuickSort(char** Strings, int Left, int Right) {
-	if (Left < Right) {
-		int Middle = Partition(Strings, Left, Right);
-		QuickSort(Strings, Left, Middle);
-		QuickSort(Strings, Middle + 1, Right);
-	}
-}
-void Sort_Quick(char * sortlines[], unsigned int first, unsigned int last)
-{
-	unsigned int ttt = first;
-	first = ttt;
-	QuickSort(sortlines, 0, last);
-}
-
 int main(int argc, char * inputstring[])
 {
 	unsigned int Numberoflines;
@@ -262,7 +204,7 @@ void Sort_Merge(char * sortlines[], unsigned int Countofline)
 	timecounter_end = clock();
 }
 
-/*void Sort_Quick(char * sortlines[], unsigned int first, unsigned int last)
+void Sort_Quick(char * sortlines[], unsigned int first, unsigned int last)
 {
 	if(first >= last)
 	{
@@ -305,7 +247,7 @@ void Sort_Merge(char * sortlines[], unsigned int Countofline)
     }
 
 	timecounter_end = clock();
-}*/
+}
 
 void Sort_Radix(char * sortlines[], unsigned int from, unsigned int to, unsigned int byte, unsigned int maxlength)
 {
