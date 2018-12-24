@@ -11,7 +11,7 @@ int main(){
 	char word[50] = "";
 	char symbol;
 	while((symbol = getchar()) != EOF){
-  	if((symbol<='Z' && symbol>='A') || (symbol<='z' && symbol>='a') || symbol=='-' || symbol=='\''){
+  	if((symbol<='9' && symbol>='0') || (symbol<='Z' && symbol>='A') || (symbol<='z' && symbol>='a') || symbol=='-' || symbol=='\''){
     	word[i++] = symbol;
     }
     else{
