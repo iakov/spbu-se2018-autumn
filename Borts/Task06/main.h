@@ -26,7 +26,7 @@ struct HashTable CreateHashTable(uint32_t size)
     hashTable.size = size;
     hashTable.numberOfElements = 0;
     return hashTable;
-};
+}
 
 void Add(struct HashTable *hashTable, char *key, uint32_t value);
 void Resize(struct HashTable *hashTable, uint32_t size);
