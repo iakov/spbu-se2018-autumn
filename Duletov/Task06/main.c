@@ -10,7 +10,6 @@ int main(){
 	long int hash_value;
 	char word[50] = "";
 	char symbol;
-	char *buf;
 	while((symbol = getchar()) != EOF){
   	if((symbol<='Z' && symbol>='A') || (symbol<='z' && symbol>='a') || symbol=='-' || symbol=='\''){
     	word[i++] = symbol;
