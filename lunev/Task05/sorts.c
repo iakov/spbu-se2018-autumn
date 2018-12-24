@@ -183,7 +183,7 @@ int main (int argc, char *argv[])
           number_str = i;
           break;
       }
-      str[i] = malloc((strlen(buffer))*sizeof(char));
+      str[i] = malloc((strlen(buffer)+1)*sizeof(char));
       if (str[i] == NULL)
       {
           printf("Failed to allocate memory\n");
