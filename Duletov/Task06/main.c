@@ -6,7 +6,7 @@
 
 int main(){
 	makeTable();
-	int i;
+	int i=0;
 	long int hash_value;
 	char word[50] = "";
 	char symbol;
@@ -27,9 +27,10 @@ int main(){
             strcpy(buf, word);
             hash_value = hash(word);
 						insert(word, hash_value);
-            i = 0;
+            i=0;
           }
         }
     }
 	bookanalise();
+	return 0;
 }
