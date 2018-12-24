@@ -43,6 +43,31 @@ void Sort_Radix(char * sortlines[], unsigned int from, unsigned int to, unsigned
 	HeapSort(sortlines, to-from+1);
 }
 
+int Partition(char** Strings, int Left, int Right) {
+	char* Pivot = Strings[Left];
+	int i = Left - 1, 
+		j = Right + 1;
+	while (true) {
+		do {i++;} while (strcmp(Strings[i], Pivot) < 0);
+		do {j--;} while (strcmp(Strings[j], Pivot) > 0);
+		if (i >= j) return j;
+		SwapString(&Strings[i], &Strings[j]);
+	}
+}
+void QuickSort(char** Strings, int Left, int Right) {
+	if (Left < Right) {
+		int Middle = Partition(Strings, Left, Right);
+		QuickSort(Strings, Left, Middle);
+		QuickSort(Strings, Middle + 1, Right);
+	}
+}
+void Sort_Quick(char * sortlines[], unsigned int first, unsigned int last)
+{
+	unsigned int ttt = first;
+	first = ttt;
+	QuickSort(sortlines, 0, last);
+}
+
 int main(int argc, char * inputstring[])
 {
 	unsigned int Numberoflines;
@@ -237,7 +262,7 @@ void Sort_Merge(char * sortlines[], unsigned int Countofline)
 	timecounter_end = clock();
 }
 
-void Sort_Quick(char * sortlines[], unsigned int first, unsigned int last)
+/*void Sort_Quick(char * sortlines[], unsigned int first, unsigned int last)
 {
 	if(first >= last)
 	{
@@ -280,134 +305,134 @@ void Sort_Quick(char * sortlines[], unsigned int first, unsigned int last)
     }
 
 	timecounter_end = clock();
-}
+}*/
 
-// void Sort_Radix(char * sortlines[], unsigned int from, unsigned int to, unsigned int byte, unsigned int maxlength)
-// {
-// 	if(timecounter_start == 0)
-// 	{
-// 		timecounter_start = clock();
-// 	}
+/*void Sort_Radix(char * sortlines[], unsigned int from, unsigned int to, unsigned int byte, unsigned int maxlength)
+{
+	if(timecounter_start == 0)
+	{
+		timecounter_start = clock();
+	}
 
-// 	if(byte >= maxlength)
-// 	{
-// 		return;
-// 	}
+	if(byte >= maxlength)
+	{
+		return;
+	}
 
-// 	char *basecharacters = " !\"'(),-.0123456789:;?ABCDEFGHIJKLMNOPQRSTUVWXYZ`abcdefghijklmnoprqrstuvwxyz";
-// 	unsigned int length = strlen(basecharacters)+1;
-// 	unsigned int datacounter[length];
-// 	unsigned int strcounter[length];
-// 	char ***data = (char***)malloc((length + 1) * sizeof(char**));
-// 	if(data == NULL)
-//     {
-// 		PrintError("I can not allocate memory in Radix sorting for a \"data\" array.", 4);
-//     }
+	char *basecharacters = " !\"'(),-.0123456789:;?ABCDEFGHIJKLMNOPQRSTUVWXYZ`abcdefghijklmnoprqrstuvwxyz";
+	unsigned int length = strlen(basecharacters)+1;
+	unsigned int datacounter[length];
+	unsigned int strcounter[length];
+	char ***data = (char***)malloc((length + 1) * sizeof(char**));
+	if(data == NULL)
+    {
+		PrintError("I can not allocate memory in Radix sorting for a \"data\" array.", 4);
+    }
 
-//     for(unsigned int i = 0; i <= length; ++i)
-// 	{
-// 		datacounter[i] = 0;
-// 		strcounter[i] = 0;
-// 	}
+    for(unsigned int i = 0; i <= length; ++i)
+	{
+		datacounter[i] = 0;
+		strcounter[i] = 0;
+	}
 
-// 	for(unsigned int i = from; i <= to; ++i)
-// 	{
-// 		int tempchar;
-// 		if(byte >= strlen(sortlines[i])-2)
-// 		{
-// 			tempchar = 0;
-// 		}
-// 		else
-// 		{
-// 			char *tempchar_temp = strchr(basecharacters, sortlines[i][byte]);
-// 			if(tempchar_temp == NULL)
-// 			{
-// 		        printf("\n[!] String: %d Byte: %d / [ %c ]\n", i+1, byte, sortlines[i][byte]);
-// 				PrintError("Found a character that is not part of the allowed.", 5);
-// 			}
-// 			tempchar = tempchar_temp - basecharacters + 1;
-// 		}
-// 		if(datacounter[tempchar] == 0)
-// 		{
-// 			data[tempchar] = (char**)calloc(1, sizeof(char*));
-// 			if(data[tempchar] == NULL)
-// 		    {
-// 				PrintError("I can not allocate memory in Radix sorting for a \"data[tempchar]\" array.", 4);
-// 		    }
-// 		}
-// 		else if(datacounter[tempchar] > 0)
-// 		{
-// 			data[tempchar] = (char**)realloc(data[tempchar], (datacounter[tempchar] + 1) * sizeof(char*));			
-// 			if(data[tempchar] == NULL)
-// 		    {
-// 				PrintError("I can not change the size of the allocated memory in Radix sorting for a \"data[tempchar]\" array.", 4);
-// 		    }
-// 		}
+	for(unsigned int i = from; i <= to; ++i)
+	{
+		int tempchar;
+		if(byte >= strlen(sortlines[i])-2)
+		{
+			tempchar = 0;
+		}
+		else
+		{
+			char *tempchar_temp = strchr(basecharacters, sortlines[i][byte]);
+			if(tempchar_temp == NULL)
+			{
+		        printf("\n[!] String: %d Byte: %d / [ %c ]\n", i+1, byte, sortlines[i][byte]);
+				PrintError("Found a character that is not part of the allowed.", 5);
+			}
+			tempchar = tempchar_temp - basecharacters + 1;
+		}
+		if(datacounter[tempchar] == 0)
+		{
+			data[tempchar] = (char**)calloc(1, sizeof(char*));
+			if(data[tempchar] == NULL)
+		    {
+				PrintError("I can not allocate memory in Radix sorting for a \"data[tempchar]\" array.", 4);
+		    }
+		}
+		else if(datacounter[tempchar] > 0)
+		{
+			data[tempchar] = (char**)realloc(data[tempchar], (datacounter[tempchar] + 1) * sizeof(char*));			
+			if(data[tempchar] == NULL)
+		    {
+				PrintError("I can not change the size of the allocated memory in Radix sorting for a \"data[tempchar]\" array.", 4);
+		    }
+		}
 
-// 		data[tempchar][datacounter[tempchar]] = (char*)malloc((strlen(sortlines[i]) + 1) * sizeof(char));
-// 		if(data[tempchar][datacounter[tempchar]] == NULL)
-// 	    {
-// 			PrintError("I can not allocate memory in Radix sorting for a \"data[tempchar][datacounter[tempchar]]\" array.", 4);
-// 	    }
-// 		sprintf(data[tempchar][datacounter[tempchar]], "%s", sortlines[i]);
+		data[tempchar][datacounter[tempchar]] = (char*)malloc((strlen(sortlines[i]) + 1) * sizeof(char));
+		if(data[tempchar][datacounter[tempchar]] == NULL)
+	    {
+			PrintError("I can not allocate memory in Radix sorting for a \"data[tempchar][datacounter[tempchar]]\" array.", 4);
+	    }
+		sprintf(data[tempchar][datacounter[tempchar]], "%s", sortlines[i]);
 
-// 		datacounter[tempchar]++;
-// 		strcounter[tempchar]++;
-// 	}
+		datacounter[tempchar]++;
+		strcounter[tempchar]++;
+	}
 
-// 	unsigned int counter = 0;
-// 	while(counter <= (to-from))
-// 	{
-// 		for(unsigned int i = 0; i <= length; ++i)
-// 		{
-// 			if(datacounter[i] > 0)
-// 			{
-// 				for(unsigned int j = 0; j < datacounter[i]; ++j)
-// 				{
-// 					free(sortlines[from+counter]);
-// 					sortlines[from+counter] = (char*)calloc((strlen(data[i][j]) + 1), sizeof(char));
-// 					sprintf(sortlines[from+counter], "%s", data[i][j]);
-// 					counter++;
-// 				}
-// 			}
-// 		}
-// 	}
+	unsigned int counter = 0;
+	while(counter <= (to-from))
+	{
+		for(unsigned int i = 0; i <= length; ++i)
+		{
+			if(datacounter[i] > 0)
+			{
+				for(unsigned int j = 0; j < datacounter[i]; ++j)
+				{
+					free(sortlines[from+counter]);
+					sortlines[from+counter] = (char*)calloc((strlen(data[i][j]) + 1), sizeof(char));
+					sprintf(sortlines[from+counter], "%s", data[i][j]);
+					counter++;
+				}
+			}
+		}
+	}
 
-// 	counter = 0; int fromposition = -1;
-// 	for(unsigned int i = from; i < to; ++i)
-// 	{
-// 		if(sortlines[i][byte] == sortlines[i+1][byte])
-// 		{
-// 			if(fromposition == -1)
-// 			{
-// 				fromposition = i;
-// 			}
-// 			counter++;
-// 		}
-// 		else if(( sortlines[i][byte] != sortlines[i+1][byte]) && (fromposition != -1))
-// 		{
-// 			Sort_Radix(sortlines, fromposition, fromposition+counter, byte+1, maxlength);
-// 			counter = 0;
-// 			fromposition = -1;
-// 		}
-// 	}
+	counter = 0; int fromposition = -1;
+	for(unsigned int i = from; i < to; ++i)
+	{
+		if(sortlines[i][byte] == sortlines[i+1][byte])
+		{
+			if(fromposition == -1)
+			{
+				fromposition = i;
+			}
+			counter++;
+		}
+		else if(( sortlines[i][byte] != sortlines[i+1][byte]) && (fromposition != -1))
+		{
+			Sort_Radix(sortlines, fromposition, fromposition+counter, byte+1, maxlength);
+			counter = 0;
+			fromposition = -1;
+		}
+	}
 
-// 	for(unsigned int i = 0; i <= length; ++i)
-// 	{
-// 		if(datacounter[i] > 0)
-// 		{
-// 			for(int j = strcounter[i]; j > 0; --j)
-// 			{
-// 				free(data[i][j-1]);
-// 			}
-// 			free(data[i]);
-// 		}
-// 	}
+	for(unsigned int i = 0; i <= length; ++i)
+	{
+		if(datacounter[i] > 0)
+		{
+			for(int j = strcounter[i]; j > 0; --j)
+			{
+				free(data[i][j-1]);
+			}
+			free(data[i]);
+		}
+	}
 
-// 	free(data);
+	free(data);
 
-// 	timecounter_end = clock();
-// }
+	timecounter_end = clock();
+}*/
 
 void CheckOption(char * options[], unsigned int *Numberoflines)
 {
