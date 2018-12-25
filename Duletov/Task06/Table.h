@@ -4,9 +4,9 @@
 
 
 struct Cell {
+ 	struct Cell *next;
   int value;
-  char *key;
-  struct Cell *next;
+  char key[50];
 };
 
 
