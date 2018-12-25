@@ -2,12 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+#pragma pack(push, 1)
 struct Cell {
   long int hash;
   int value;
   char key[56];
   struct Cell *next;
-}__attribute__((packed));
+};
+#pragma pack(pop)
 
 
 struct Cell *Chains[100000] = {0};
