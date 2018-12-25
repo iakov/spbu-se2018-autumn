@@ -2,22 +2,22 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct Cell {
+struct CellG {
 	char *key;
-  struct Cell *next;
-  int value;
+	int value;
+  struct CellG *next;
   long int hash;
-};
+} cell;
 
 
-struct Cell *Chains[100000] = {0};
+cell *Chains[100000] = {0};
 int size, counter, counter2;
 
 void makeTable(){
 	size = 1000;
 }
 
-void copies(struct Cell *i, char *key){
+void copies(cell *i, char *key){
 	if(strcmp(i->key,key)==0){
 		i->value ++;
 		counter=1;
@@ -35,7 +35,7 @@ void copies(struct Cell *i, char *key){
 void insert(char *key, long int hash){
 	long int value = hash % size;
 	if(Chains[value]==0){
-		Chains[value] = (struct Cell*)malloc(sizeof(struct Cell));
+		Chains[value] = (cell *)malloc(sizeof(cell));
 		Chains[value]->key = key;
 		Chains[value]->hash = hash;
 		Chains[value]->value = 1;
@@ -46,8 +46,8 @@ void insert(char *key, long int hash){
 	 		counter=0;
 	 		return;
 	 	}
-		struct Cell *buf = Chains[value];
-		Chains[value] = (struct Cell*)malloc(sizeof(struct Cell));
+		cell *buf = Chains[value];
+		Chains[value] = (cell*)malloc(sizeof(cell));
 		Chains[value]->key = key;
 		Chains[value]->hash = hash;
 		Chains[value]->value = 1;
@@ -55,7 +55,7 @@ void insert(char *key, long int hash){
 	}
 }
 
-void freeChain(struct Cell *i){
+void freeChain(cell *i){
 		if(i->next != 0)
 		freeChain(i->next);
 		free(i);
@@ -71,7 +71,7 @@ void clearTable(){
 	size=0;
 }
 /*
-int seek(struct Cell *i, char *key){
+int seek(cell *i, char *key){
 	if(strcmp(i->key,key)==0){
 		return i->value;
 	}
@@ -95,7 +95,7 @@ int get(char *key, long int hash){
 	}
 }
 
-void count(struct Cell *i){
+void count(cell *i){
 	counter++;
 	if(i->next!=0){
 		count(i->next);
@@ -118,7 +118,7 @@ void statistic(){
 	printf("There are %li keys in table\n", z);
 }
 */
-void iteration(struct Cell *i){
+void iteration(cell *i){
 	printf("%s %d\n", i->key, i->value);
 	if(i->next!=0){
 		iteration(i->next);
@@ -136,7 +136,7 @@ void iterate(){
 	}
 }
 
-void frequency(struct Cell *i){
+void frequency(cell *i){
 	if(i->next != 0){
 		frequency(i->next);
 		if(i->value > counter2){
@@ -150,7 +150,7 @@ void frequency(struct Cell *i){
 	}
 }
 
-void output(struct Cell *i){
+void output(cell *i){
 	if(i->next != 0){
 		output(i->next);
 	}
