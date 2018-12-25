@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct CellG {
+typedef struct CellG {
 	char *key;
 	int value;
   struct CellG *next;
