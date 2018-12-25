@@ -3,7 +3,7 @@
 #include <string.h>
 
 //array of links to strings
-int Strings[1002][2];
+int Strings[1000000][2];
 
 void SwapStrings(int i, int j){
 	int buf = Strings[i][0];
@@ -45,7 +45,7 @@ void mergeSort(char *text, int N, int start){
 	int m = start + len/2;
     mergeSort(text, m, start);
     mergeSort(text, N, m+1);
-    int Buffer[len][2];
+    int Buffer[len+2][2];
     int PosLeft=start, PosRight=m+1, Pos=0, i, j=0;
     while(PosLeft<=m && PosRight<=N){
         if(strcmp(&text[Strings[PosRight][0]], &text[Strings[PosLeft][0]])>0){
