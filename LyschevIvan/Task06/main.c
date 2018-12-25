@@ -186,25 +186,24 @@ int main(int argc, char *argv[])
 
         if ((inputChar <= 'Z' && inputChar >= 'A'))
         {
-            word[wordLen] = inputChar;
-            wordLen++;
+            word[wordLen++] = inputChar;
+
         }
         else if (inputChar <= 'z' && inputChar >= 'a')
         {
-            word[wordLen] = inputChar;
-            wordLen++;
+            word[wordLen++] = inputChar;
+
         }
         else if (wordLen > 0 && (inputChar == '-' || inputChar == '\''))
         {
-            word[wordLen] = inputChar;
-            wordLen++;
+            word[wordLen++] = inputChar;
+
         }
         else if (wordLen)
         {
             while (word[wordLen - 1] == '\'' || word[wordLen - 1] == '-')
             {
-                word[wordLen] = '\0';
-                wordLen--;
+                word[wordLen--] = '\0';
             }
             word[wordLen] = '\0';
             buffer = (char *)calloc(strlen(word) + 1, sizeof(char));
