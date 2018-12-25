@@ -168,7 +168,8 @@ void addToTable(struct HashTable *hashTable, char *key, uint32_t value)
 
 int main(int argc, char *argv[])
 {
-    if (argc > 1)
+
+    if (argc > 1||argv[0] == NULL)
     {
         printf("arguments error");
         exit(1);
@@ -177,24 +178,25 @@ int main(int argc, char *argv[])
     struct HashTable hashTable = newHashTable(256);
     char word[10000];
     char *buffer;
-    char inputSymbol;
+    char inputChar;
     int wordLen = 0;
 
-    while ((inputSymbol = getchar()) != EOF)
+    while ((inputChar = getchar()) != EOF)
     {
-        if ((inputSymbol <= 'Z' && inputSymbol >= 'A'))
+
+        if ((inputChar <= 'Z' && inputChar >= 'A'))
         {
-            word[wordLen] = inputSymbol;// - 'A' + 'a';
+            word[wordLen] = inputChar;
             wordLen++;
         }
-        else if (inputSymbol <= 'z' && inputSymbol >= 'a')
+        else if (inputChar <= 'z' && inputChar >= 'a')
         {
-            word[wordLen] = inputSymbol;
+            word[wordLen] = inputChar;
             wordLen++;
         }
-        else if (wordLen > 0 && (inputSymbol == '-' || inputSymbol == '\''))
+        else if (wordLen > 0 && (inputChar == '-' || inputChar == '\''))
         {
-            word[wordLen] = inputSymbol;
+            word[wordLen] = inputChar;
             wordLen++;
         }
         else if (wordLen)
