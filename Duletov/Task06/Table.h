@@ -3,9 +3,9 @@
 #include <string.h>
 
 struct Cell {
+	char *key;
   int value;
   long int hash;
-  char *key;
   struct Cell *next;
 };
 
