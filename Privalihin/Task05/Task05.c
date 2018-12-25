@@ -59,7 +59,7 @@ void heapSort(char **array, int len)
         {
             if (2 * pos >= heapSize || heap[2 * pos] == NULL)
             {
-                if (2 * pos + 1 > heapSize || heap[2 * pos + 1] == NULL)
+                if (2 * pos + 1 >= heapSize || heap[2 * pos + 1] == NULL)
                 {
                     heap[pos] = NULL;
                     break;
@@ -70,7 +70,7 @@ void heapSort(char **array, int len)
                     pos = 2 * pos + 1;
                 }
             }
-            else if (2 * pos + 1 > heapSize || heap[2 * pos + 1] == NULL || strcmp(heap[2 * pos + 1], heap[2 * pos]) > 0)
+            else if (2 * pos + 1 >= heapSize || heap[2 * pos + 1] == NULL || strcmp(heap[2 * pos + 1], heap[2 * pos]) > 0)
             {
                 heap[pos] = heap[2 * pos];
                 pos = 2 * pos;
