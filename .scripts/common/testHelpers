@@ -18,7 +18,7 @@ compile(){
       TEST_CFLAGS_SANITIZE["clang"]="${TEST_CFLAGS_SANITIZE[generic]} -fsanitize=address -ftrapv"
       TEST_CFLAGS_SANITIZE["gcc-4.8"]=" ${TEST_CFLAGS_SANITIZE[generic]}"
       TEST_CFLAGS_SANITIZE["gcc-4.9"]="${TEST_CFLAGS_SANITIZE['gcc-4.8']} -fsanitize=address -fsanitize=undefined -fsanitize=enum -fsanitize=signed-integer-overflow -fsanitize=return -fsanitize=null -fsanitize=integer-divide-by-zero -fsanitize=shift"
-      TEST_CFLAGS_SANITIZE["gcc-5"]="${TEST_CFLAGS_SANITIZE['gcc-4.9']}  -fsanitize-undefined-trap-on-error  -fno-sanitize-recover=all -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow "
+      TEST_CFLAGS_SANITIZE["gcc-5"]="${TEST_CFLAGS_SANITIZE['gcc-4.9']}  -fuse-ld=gold -fno-sanitize-recover=all -fsanitize=float-divide-by-zero -fsanitize=float-cast-overflow "
       TEST_CFLAGS_SANITIZE["gcc-7"]="${TEST_CFLAGS_SANITIZE['gcc-5']} -fsanitize-address-use-after-scope -fsanitize=bounds-strict"
       TEST_CFLAGS_SANITIZE["gcc-8"]=" ${TEST_CFLAGS_SANITIZE['gcc-7']}  -fsanitize=pointer-subtract -fsanitize=pointer-compare  -fsanitize=pointer-overflow "
       TEST_CFLAGS_SANITIZE["gcc-8-mpx"]="-fno-sanitize=address,bounds-strict,pointer-compare,pointer-subtract -fcheck-pointer-bounds -mmpx -Wchkp"
