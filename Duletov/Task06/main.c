@@ -9,6 +9,7 @@ int main(){
 	int i=0;
 	long int hash_value;
 	char word[50] = "";
+	char *buf;
 	char symbol;
 	while((symbol = getchar()) != EOF){
   	if((symbol<='9' && symbol>='0') || (symbol<='Z' && symbol>='A') || (symbol<='z' && symbol>='a') || symbol=='-' || symbol=='\''){
@@ -18,7 +19,9 @@ int main(){
     	if(i>0){
       	word[i]='\0';
         hash_value = hash(word);
-				insert(word, hash_value);
+				buf = (char *)calloc(strlen(word)+1, sizeof(char));
+        strcpy(buf, word);
+				insert(buf, hash_value);
     		i = 0;
      	}
     }

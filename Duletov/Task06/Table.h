@@ -5,7 +5,7 @@
 struct Cell {
   long int hash;
   int value;
-  char key[54];
+  char *key;
   struct Cell *next;
 };
 
@@ -37,7 +37,7 @@ void insert(char *key, long int hash){
 	if(Chains[value]==0){
 		Chains[value] = (struct Cell*)malloc(sizeof(struct Cell));
 		Chains[value]->hash = hash;
-		strcpy(Chains[value]->key, key);
+		Chains[value]->key = key;
 		Chains[value]->value = 1;
 	}
 	else{
@@ -49,7 +49,7 @@ void insert(char *key, long int hash){
 		struct Cell *buf = Chains[value];
 		Chains[value] = (struct Cell*)malloc(sizeof(struct Cell));
 		Chains[value]->hash = hash;
-		strcpy(Chains[value]->key, key);
+		Chains[value]->key = key;
 		Chains[value]->value = 1;
 		Chains[value]->next = buf;
 	}
