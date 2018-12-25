@@ -168,56 +168,36 @@ void delete_table (struct hashtable *table)
 
 }
 
-char *getword (int *flag)
-{
-    char *word = (char *) malloc (100);
-    if (word == NULL)
-    {
-        printf("Failed to allocate memory\n");
-        exit(4);
-    }
-    int i;
-    for (i=0; i<100; i++)
-    {
-        char c = getchar();
-        if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
-            word[i]=c;
-        else if (c == EOF)
-        {
-            *flag = 0;
-            break;
-        }
-        else
-            break;
-    }
-
-    if (i==0)
-    {
-        free(word);
-        return 0;
-    }
-
-    return word;
-}
-
 int main ()
 {
-
     int tablesize = 100000;
     struct hashtable table;
     createtable (&table, tablesize);
-    int flag = 1;
+
+    char buffer[10000];
+    char symbol;
     char *word;
-    while (flag==1)
+    int len = 0;
+    while ( (symbol = getchar()) != EOF)
     {
-        word = getword(&flag);
-        if (word!=NULL)
+        if (( symbol >= 'a' && symbol <= 'z' ) || ( symbol >= 'A' && symbol <= 'Z' ))
         {
-            add (&table, word, 1);
-
+            buffer[len] = symbol;
+            len++;
         }
-
-
+        else if (len > 0)
+        {
+            buffer[len] = '\0';
+            word = (char *) malloc((strlen(buffer)+1)*sizeof(char));
+            if (word == NULL)
+            {
+                printf("Failed to allocate memory\n");
+                exit(4);
+            }
+            strcpy(word, buffer);
+            add (&table, word, 1);
+            len = 0;
+        }
     }
 
     printstatistic(&table);
