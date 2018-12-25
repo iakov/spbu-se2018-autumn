@@ -6,7 +6,6 @@ typedef struct CellG {
 	char *key;
 	int value;
   struct CellG *next;
-  long int hash;
 } cell;
 
 
@@ -37,7 +36,6 @@ void insert(char *key, long int hash){
 	if(Chains[value]==0){
 		Chains[value] = (cell *)malloc(sizeof(cell));
 		Chains[value]->key = key;
-		Chains[value]->hash = hash;
 		Chains[value]->value = 1;
 	}
 	else{
@@ -49,7 +47,6 @@ void insert(char *key, long int hash){
 		cell *buf = Chains[value];
 		Chains[value] = (cell*)malloc(sizeof(cell));
 		Chains[value]->key = key;
-		Chains[value]->hash = hash;
 		Chains[value]->value = 1;
 		Chains[value]->next = buf;
 	}
