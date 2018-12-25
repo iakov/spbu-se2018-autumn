@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 struct Cell {
- 	struct Cell *next;
+  long int hash;
   int value;
-  char key[50];
+  char key[54];
+  struct Cell *next;
 };
 
 
@@ -36,6 +36,7 @@ void insert(char *key, long int hash){
 	long int value = hash % size;
 	if(Chains[value]==0){
 		Chains[value] = (struct Cell*)malloc(sizeof(struct Cell));
+		Chains[value]->hash = hash;
 		strcpy(Chains[value]->key, key);
 		Chains[value]->value = 1;
 	}
@@ -47,6 +48,7 @@ void insert(char *key, long int hash){
 	 	}
 		struct Cell *buf = Chains[value];
 		Chains[value] = (struct Cell*)malloc(sizeof(struct Cell));
+		Chains[value]->hash = hash;
 		strcpy(Chains[value]->key, key);
 		Chains[value]->value = 1;
 		Chains[value]->next = buf;
