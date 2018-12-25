@@ -4,7 +4,7 @@
 
 struct Cell {
   long int hash;
-  char key[50];
+  char key[56];
   int value;
   struct Cell *next;
 };
