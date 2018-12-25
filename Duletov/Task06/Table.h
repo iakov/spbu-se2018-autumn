@@ -3,7 +3,6 @@
 #include <string.h>
 
 struct Cell {
-  long int hash;
   int value;
   char *key;
   struct Cell *next;
@@ -36,7 +35,6 @@ void insert(char *key, long int hash){
 	long int value = hash % size;
 	if(Chains[value]==0){
 		Chains[value] = (struct Cell*)malloc(sizeof(struct Cell));
-		Chains[value]->hash = hash;
 		Chains[value]->key = key;
 		Chains[value]->value = 1;
 	}
@@ -48,7 +46,6 @@ void insert(char *key, long int hash){
 	 	}
 		struct Cell *buf = Chains[value];
 		Chains[value] = (struct Cell*)malloc(sizeof(struct Cell));
-		Chains[value]->hash = hash;
 		Chains[value]->key = key;
 		Chains[value]->value = 1;
 		Chains[value]->next = buf;
