@@ -4,10 +4,10 @@
 
 struct Cell {
   long int hash;
-  char key[56];
   int value;
+  char key[56];
   struct Cell *next;
-};
+}__attribute__((packed));
 
 
 struct Cell *Chains[100000] = {0};
