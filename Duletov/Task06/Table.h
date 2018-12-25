@@ -4,6 +4,7 @@
 
 struct Cell {
   int value;
+  long int hash;
   char *key;
   struct Cell *next;
 };
@@ -36,6 +37,7 @@ void insert(char *key, long int hash){
 	if(Chains[value]==0){
 		Chains[value] = (struct Cell*)malloc(sizeof(struct Cell));
 		Chains[value]->key = key;
+		Chains[value]->hash = hash;
 		Chains[value]->value = 1;
 	}
 	else{
@@ -47,6 +49,7 @@ void insert(char *key, long int hash){
 		struct Cell *buf = Chains[value];
 		Chains[value] = (struct Cell*)malloc(sizeof(struct Cell));
 		Chains[value]->key = key;
+		Chains[value]->hash = hash;
 		Chains[value]->value = 1;
 		Chains[value]->next = buf;
 	}
@@ -67,7 +70,54 @@ void clearTable(){
 	}
 	size=0;
 }
+/*
+int seek(struct Cell *i, char *key){
+	if(strcmp(i->key,key)==0){
+		return i->value;
+	}
+	else{
+		if(i->next != 0){	
+		 return seek(i->next, key);
+		}
+		else{
+			return 2;
+		}
+	}
+}
 
+int get(char *key, long int hash){
+	long int value = hash % size;
+	if(Chains[value]!=0){
+		return seek(Chains[value], key);
+	}
+	else{
+		return 1;
+	}
+}
+
+void count(struct Cell *i){
+	counter++;
+	if(i->next!=0){
+		count(i->next);
+	}
+	else{
+		return;
+	}
+}
+
+void statistic(){
+	long int z = 0;
+	int i;
+	for(i=0;i<size;i++){
+		if(Chains[i]!=0)
+		count(Chains[i]);
+		printf("Chain %d contain %d keys\n", i, counter);
+		z = z + counter;
+		counter = 0;
+	}
+	printf("There are %li keys in table\n", z);
+}
+*/
 void iteration(struct Cell *i){
 	printf("%s %d\n", i->key, i->value);
 	if(i->next!=0){
