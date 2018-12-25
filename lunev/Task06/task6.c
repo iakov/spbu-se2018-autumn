@@ -54,6 +54,7 @@ void add (struct hashtable *table, char *word, int val)
     {
         if (strcmp (word, tmpblock->key)==0)
         {
+            free (word);
             tmpblock->value = tmpblock->value + val;
             return;
         }
