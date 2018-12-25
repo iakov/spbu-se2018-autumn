@@ -145,9 +145,10 @@ void delete_table (struct hashtable *table)
 {
     for (int i=0; i<table->size; i++)
     {
-        if (table->block[i].value == 0)
-            continue;
         int flag = 1;
+        if (table->block[i].value == 0)
+            flag = 0;
+
         struct hashblock *currentblock = &table->block[i];
         while (flag==1)
         {
@@ -157,8 +158,8 @@ void delete_table (struct hashtable *table)
                 flag = 0;
             else
                 currentblock = currentblock->next;
+            if (tmpblock != NULL)
             free (tmpblock);
-
         }
     }
     free (table->block);
