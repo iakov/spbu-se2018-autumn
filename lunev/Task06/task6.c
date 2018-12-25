@@ -160,7 +160,13 @@ void delete_table (struct hashtable *table)
             else
                 currentblock = currentblock->next;
             if (len>1)
-            free (tmpblock);
+            {
+                free (tmpblock->key);
+                free (tmpblock);
+            }
+            else
+                free (tmpblock->key);
+
             len++;
         }
     }
