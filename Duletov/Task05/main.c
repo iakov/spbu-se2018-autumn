@@ -3,7 +3,7 @@
 #include <string.h>
 
 //array of links to strings
-int Strings[100000000][2];
+int Strings[1000000][2];
 
 void SwapStrings(int i, int j){
 	int buf = Strings[i][0];
