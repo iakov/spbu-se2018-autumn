@@ -33,4 +33,5 @@ int main(){
   iterate();
 	bookanalise();
 	return 0;
+	clearTable();
 }
