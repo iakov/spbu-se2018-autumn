@@ -42,7 +42,7 @@ void Delete(HashTable* table);                          //Delete hash table
 const int MAX_WORD_SIZE = 2 * CHAR_MAX;
 const int MAX_TABLE_SIZE = INT16_MAX;
 
-int main()
+int main(int argc, char* argv[])
 {
     if (argc > 1 || !argv[0]) exit(1);   //Seriously? Why?
     
