@@ -1,0 +1,9 @@
+﻿Size 	Time
+1	1.669±0.008
+10	0.360±0.003
+100	0.113±0.003
+1000	0.092±0.003
+5000	0.092±0.003
+
+Book for testing is "Roadside Picnic" by by A. and B. Strugatsky.
+There are 7328 different words. The most frequent word is "the" with 3124 mentions.
