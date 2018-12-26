@@ -24,7 +24,62 @@ void ExitWithMemoryError(size_t size)
     exit(4);
 }
 
-//New hash table initialization
+
+HashTable Init(unsigned int size);                      //New hash table initialization
+
+uint32_t Hash(char *key);                               //Get hash
+
+List* Find(char* word, uint32_t i, HashTable *table);   //Find word in hash table node
+
+void Add(char* word, HashTable *table);                 //Add word to hash table
+
+int GetRepetitionsNumber(char* word, HashTable* table); //Get repetitions count
+
+void GetStatistics(HashTable* table);                   //Get statistics
+
+void Delete(HashTable* table);                          //Delete hash table
+
+const int MAX_WORD_SIZE = 2 * CHAR_MAX;
+const int MAX_TABLE_SIZE = INT16_MAX;
+
+int main()
+{
+    HashTable table = Init(MAX_TABLE_SIZE);
+
+    char* buffer = (char *) calloc(MAX_WORD_SIZE, sizeof(char));
+    if (!buffer) ExitWithMemoryError(MAX_WORD_SIZE * sizeof(char));
+
+    char c;
+    char* word;
+
+    int pos = 0;
+    while ((c = (char)getchar()) != EOF)
+    {
+        if (('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z'))
+        {
+            buffer[pos] = c;
+            pos++;
+        }
+        else if (pos > 0)
+        {
+            buffer[pos] = '\0';
+
+            word = (char *) calloc(strlen(buffer) + 1, sizeof(char));
+            if (!word) ExitWithMemoryError((strlen(buffer) + 1) * sizeof(char));
+
+            strcpy(word, buffer);
+            Add(word, &table);
+            free(word);
+            pos = 0;
+        }
+    }
+
+    GetStatistics(&table);
+    Delete(&table);
+
+    return 0;
+}
+
 HashTable Init(unsigned int size)
 {
     HashTable table;
@@ -39,7 +94,6 @@ HashTable Init(unsigned int size)
     return table;
 }
 
-//Get hash
 uint32_t Hash(char *key)
 {
     uint32_t hash;
@@ -54,7 +108,6 @@ uint32_t Hash(char *key)
     return hash;
 }
 
-//Find word in hash table node
 List* Find(char* word, uint32_t i, HashTable *table)
 {
     List *elem;
@@ -91,7 +144,7 @@ void Add(char* word, HashTable *table)
         elem = table->data[i];
         table->listLength[i] = 1;
     }
-    //If collision
+        //On collision
     else
     {
         List *prev = table->data[i];
@@ -158,7 +211,6 @@ void GetStatistics(HashTable* table)
     }
 }
 
-//Deleting hash table
 void Delete(HashTable* table)
 {
     for (int i = 0; i < table->size; i++)
@@ -177,45 +229,4 @@ void Delete(HashTable* table)
 
     free(table->listLength);
     free(table->data);
-}
-
-const int MAX_WORD_SIZE = 2 * CHAR_MAX;
-const int MAX_TABLE_SIZE = INT16_MAX;
-
-int main()
-{
-    HashTable table = Init(MAX_TABLE_SIZE);
-
-    char* buffer = (char *) calloc(MAX_WORD_SIZE, sizeof(char));
-    if (!buffer) ExitWithMemoryError(MAX_WORD_SIZE * sizeof(char));
-
-    char c;
-    char* word;
-
-    int pos = 0;
-    while ((c = (char)getchar()) != EOF)
-    {
-        if (('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z'))
-        {
-            buffer[pos] = c;
-            pos++;
-        }
-        else if (pos > 0)
-        {
-            buffer[pos] = '\0';
-
-            word = (char *) calloc(strlen(buffer) + 1, sizeof(char));
-            if (!word) ExitWithMemoryError((strlen(buffer) + 1) * sizeof(char));
-
-            strcpy(word, buffer);
-            Add(word, &table);
-            free(word);
-            pos = 0;
-        }
-    }
-
-    GetStatistics(&table);
-    Delete(&table);
-
-    return 0;
 }
