@@ -50,7 +50,6 @@ void *mallocate(size_t bytes) {
 	return pointer;
 }
 
-
 /* Allocates memory with calloc(). Handles exceptions */
 void *callocate(unsigned count, size_t size) {
 	void *pointer = calloc(count, size);
@@ -215,8 +214,13 @@ void stats(uint32_t key, chainElement *element) {
 	}
 }
 
+/* Prints word from chain element and number of repetitions */
+void print_word_stats(__attribute__((unused)) uint32_t key, chainElement *element) {
+	printf("%s %u\n", element -> word, element -> count);
+}
 
-int main() {
+
+int main(int argc, char **argv) {
 	
 	hashTable *ht = ht_create(HASH_TABLE_SIZE, SHA256);
 	
@@ -227,10 +231,18 @@ int main() {
 	
 	while(!feof(stdin)) {
 		
-		if((current_symbol >= 'a' && current_symbol <= 'z') || (current_symbol >= 'A' && current_symbol <= 'Z')) {
+		if(current_symbol >= 'a' && current_symbol <= 'z') {
+			
 			*pointer = current_symbol;
 			++pointer;
+			
+		} else if(current_symbol >= 'A' && current_symbol <= 'Z') {
+			
+			*pointer = current_symbol + ('a' - 'A');
+			++pointer;
+			
 		} else {
+			
 			if(pointer - buffer != 0) {
 				*pointer = '\0';
 				
@@ -250,27 +262,39 @@ int main() {
 	
 	free(buffer);
 	
-	chains_count = callocate(HASH_TABLE_SIZE, sizeof(unsigned));
-	max_word_count = 0;
-	ht_iterate(ht, stats);
-	
-	unsigned chain_elements_amount = 0;
-	unsigned max_chain_length = 0;
-	
-	for(unsigned i = 0; i < HASH_TABLE_SIZE; ++i) {
-		chain_elements_amount += chains_count[i];
+	if(argc == 2 && strcmp(argv[1], "stats") == 0) {
 		
-		if(chains_count[i] > max_chain_length) {
-			max_chain_length = chains_count[i];
+		/* Printing stats */
+		
+		chains_count = callocate(HASH_TABLE_SIZE, sizeof(unsigned));
+		max_word_count = 0;
+		ht_iterate(ht, stats);
+		
+		unsigned chain_elements_amount = 0;
+		unsigned max_chain_length = 0;
+		
+		for(unsigned i = 0; i < HASH_TABLE_SIZE; ++i) {
+			chain_elements_amount += chains_count[i];
+			
+			if(chains_count[i] > max_chain_length) {
+				max_chain_length = chains_count[i];
+			}
 		}
+		
+		printf("There are %u different words in text.\n\n", chain_elements_amount);
+		printf("The most common word is \"%s\", it occurs %u times.\n\n", most_common_word, max_word_count);
+		printf("Middle chain length - %.3lf.\n\n", (double)chain_elements_amount / (double)HASH_TABLE_SIZE);
+		printf("The longest chain consists of %u elements.\n\n", max_chain_length);
+		
+		free(chains_count);
+		
+	} else {
+		
+		/* Printing words and number of repetitions */
+		
+		ht_iterate(ht, print_word_stats);
+		
 	}
-	
-	printf("There are %u different words in text.\n\n", chain_elements_amount);
-	printf("The most common word is \"%s\", it occurs %u times.\n\n", most_common_word, max_word_count);
-	printf("Middle chain length - %.3lf.\n\n", (double)chain_elements_amount / (double)HASH_TABLE_SIZE);
-	printf("The longest chain consists of %u elements.\n\n", max_chain_length);
-	
-	free(chains_count);
 	
 	ht_remove(ht);
 	
