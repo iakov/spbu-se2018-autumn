@@ -37,6 +37,7 @@ void insert(char *key, long int hash){
 		Chains[value] = (cell *)malloc(sizeof(cell));
 		Chains[value]->key = key;
 		Chains[value]->value = 1;
+		Chains[value]->next = NULL;
 	}
 	else{
 	 	copies(Chains[value], key);
@@ -55,6 +56,7 @@ void insert(char *key, long int hash){
 void freeChain(cell *i){
 		if(i->next != 0)
 		freeChain(i->next);
+		free(i->key);
 		free(i);
 }
 
