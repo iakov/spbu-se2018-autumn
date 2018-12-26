@@ -14,7 +14,7 @@ struct hash_t   //Custom hash table
 {
     List **data;
     int *listLength;
-    unsigned int size;
+    int size;
 };
 typedef struct hash_t HashTable;
 
@@ -200,7 +200,7 @@ int main()
             buffer[pos] = c;
             pos++;
         }
-        else if
+        else
         {
             buffer[pos] = '\0';
 
