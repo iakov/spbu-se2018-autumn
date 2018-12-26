@@ -200,7 +200,7 @@ int main()
             buffer[pos] = c;
             pos++;
         }
-        else
+        else if (pos > 0)
         {
             buffer[pos] = '\0';
 
