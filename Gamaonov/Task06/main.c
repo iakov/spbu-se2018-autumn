@@ -44,6 +44,8 @@ const int MAX_TABLE_SIZE = INT16_MAX;
 
 int main()
 {
+    if (argc > 1 || !argv[0]) exit(1);   //Seriously? Why?
+    
     HashTable table = Init(MAX_TABLE_SIZE);
 
     char* buffer = (char *) calloc(MAX_WORD_SIZE, sizeof(char));
