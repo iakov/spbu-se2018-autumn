@@ -20,6 +20,7 @@ void copies(cell *i, char *key){
 	if(strcmp(i->key,key)==0){
 		i->value ++;
 		counter=1;
+		free(key);
 	}
 	else{
 		if(i->next != 0){
