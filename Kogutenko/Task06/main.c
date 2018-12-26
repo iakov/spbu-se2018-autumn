@@ -231,14 +231,9 @@ int main(int argc, char **argv) {
 	
 	while(!feof(stdin)) {
 		
-		if(current_symbol >= 'a' && current_symbol <= 'z') {
+		if((current_symbol >= 'a' && current_symbol <= 'z') || (current_symbol >= 'A' && current_symbol <= 'Z')) {
 			
 			*pointer = current_symbol;
-			++pointer;
-			
-		} else if(current_symbol >= 'A' && current_symbol <= 'Z') {
-			
-			*pointer = current_symbol + ('a' - 'A');
 			++pointer;
 			
 		} else {
