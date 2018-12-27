@@ -1,0 +1,1 @@
+Analyzing the book Christopoulos NeHes OpenGL Tutorials. After analysis, it was clarified that in this book (I suspect that most books written in English) most often the word "the". In this case, 8428 times.

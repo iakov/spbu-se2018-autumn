@@ -47,13 +47,14 @@ int main(int argc, char *argv[]) {
     if (buffer == NULL)
         ExitWithMemoryError(MAX_WORD_SIZE * sizeof(char));
 
-    char c;
+    int c;
     char *word;
 
     int pos = 0;
-    while ((c = (char) getchar()) != EOF) {
+    c = getchar();
+    while (c  != EOF) {
         if (('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z')) {
-            buffer[pos] = c;
+            buffer[pos] = (char)c;
             pos++;
         } else if (pos > 0) {
             buffer[pos] = '\0';
@@ -67,6 +68,7 @@ int main(int argc, char *argv[]) {
             free(word);
             pos = 0;
         }
+        c = getchar();
     }
 
     GetStatistics(&table);
@@ -176,39 +178,20 @@ int GetRepetitionsNumber(char *word, HashTable *table) {
 void GetStatistics(HashTable *table) {
     int repetitionsMaxNum = 0;
 
-    int avgLengthList = 0;
-    int amountLists = 0;
-    int amountWords = 0;
-    int maxList = 0;
-    int totalWords = 0;
-
     List *node;
     //Find max and print all words
     for (int i = 0; i < table->size; i++) {
 
-        int currLengthList = 0;
-        if (table->data[i] != 0) {
-            avgLengthList += table->listLength[i];
-            amountLists++;
-        }
-
         node = table->data[i];
         while (node) {
-            currLengthList++;
-            int currNumberReplies = GetRepetitionsNumber(node->key, table);
-            amountWords++;
-            totalWords += currNumberReplies;
 
             if (node->count > repetitionsMaxNum)
                 repetitionsMaxNum = node->count;
 
             //Print all words and repeat count
-            //fprintf(stdout, "%s %d\n", node->key, node->count);
+            fprintf(stdout, "%s %d\n", node->key, node->count);
 
             node = node->next;
-        }
-        if (currLengthList > maxList) {
-            maxList = currLengthList;
         }
     }
 
@@ -222,11 +205,6 @@ void GetStatistics(HashTable *table) {
             node = node->next;
         }
     }
-    printf("Total words are %d\n", totalWords);
-    printf("Total words are %d\n", amountWords);
-    printf("Average length of Lists is %d\n", avgLengthList / amountLists);
-    printf("Max length of Lists is %d\n", maxList);
-
 }
 
 void Delete(HashTable *table) {
