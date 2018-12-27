@@ -1,11 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-/* Input file must contain N lines of 10 characters
+#include "errors.h"
+/*
+ * errors.h includes:
  *
- * Data output is performed in the console and in
- * the output file (OUT_FILE_NAME)
+ * all functions exit with the appropriate
+ * code and print an error message
+ *
+ * 1) void ExitWithArgumentError(int argc)
+ * 2) void ExitWithFileError(char *path)
+ * 3) void ExitWithInputDataError(char *filename)
+ * 4) void ExitWithMemoryError()
+ *
+ ==================================================
+ *
+ * Input file must contain N lines of 10 characters
  *
  * Application exit codes:
  *
@@ -16,7 +26,6 @@
  * 5 - reserved
  */
 
-//Swap strings
 void strSwap(char **x, char **y)
 {
     char *temp = *x;
@@ -24,7 +33,6 @@ void strSwap(char **x, char **y)
     *y = temp;
 }
 
-//Bubble sort
 void bubbleSort(char **str_array, int strNum)
 {
     for (int i = 0; i < strNum; i++)
@@ -37,7 +45,6 @@ void bubbleSort(char **str_array, int strNum)
     }
 }
 
-//Insertion sort
 void insertionSort(char **str_array, int strNum)
 {
     int j = 0;
@@ -53,9 +60,10 @@ void insertionSort(char **str_array, int strNum)
     }
 }
 
-//Merge sort
-void merge(char **str_array, int middle, int strNum)
+void merge(char **str_array, int strNum)
 {
+    int middle = strNum / 2;
+
     char **tmp = malloc(strNum * sizeof(char *));
     if (tmp == NULL)
     {
@@ -83,15 +91,14 @@ void mergeSort(char **str_array, int strNum)
     mergeSort(str_array, middle);
     mergeSort(str_array + middle, strNum - middle);
 
-    merge(str_array, middle, strNum);
+    merge(str_array, strNum);
 }
 
-//Quick sort
 void quickSort(char **str_array, int left, int right)
 {
-    int l_pointer = left;        //left pointer
-    int r_pointer = right;   //Right pointer
-    char *pivot = str_array[(left + (right - left)/2)];  //Pivot element
+    int l_pointer = left;
+    int r_pointer = right;
+    char *pivot = str_array[(left + (right - left)/2)];
     do
     {
         while((strcmp(str_array[l_pointer], pivot) < 0))
@@ -126,7 +133,6 @@ void quickSort(char **str_array, int left, int right)
     }
 }
 
-//Heap sort
 void heapify(char* str_array[], int strNum, int i)
 {
     int largest = i;
@@ -163,32 +169,31 @@ void heapSort(char **str_array, int strNum)
     }
 }
 
-//Sort by defined algorithm
 void sort(char **str_array, int linesNumber, const char *alg)
 {
     if (strcmp(alg,"bubble") == 0)
     {
-        bubbleSort(str_array, linesNumber);     //Bubble sort
+        bubbleSort(str_array, linesNumber);
     }
     else if (strcmp(alg,"insertion") == 0)
     {
-        insertionSort(str_array, linesNumber);  //Insertion sort
+        insertionSort(str_array, linesNumber);
     }
     else if (strcmp(alg,"merge") == 0)
     {
-        mergeSort(str_array, linesNumber);      //Merge sort
+        mergeSort(str_array, linesNumber);
     }
     else if (strcmp(alg,"quick") == 0)
     {
-        quickSort(str_array, 0, linesNumber - 1);   //Quick sort
+        quickSort(str_array, 0, linesNumber - 1);
     }
     else if (strcmp(alg,"heap") == 0)
     {
-        heapSort(str_array, linesNumber);       //Heap sort
+        heapSort(str_array, linesNumber);
     }
     else if (strcmp(alg,"radix") == 0)
     {
-        heapSort(str_array, linesNumber);       //Still heap sort
+        heapSort(str_array, linesNumber);
     }
     else
     {
@@ -197,110 +202,68 @@ void sort(char **str_array, int linesNumber, const char *alg)
     }
 }
 
+void ReleaseMemory(char **str_array, int str_array_size, char* temp)
+{
+    for (int i = 0; i < str_array_size; i++)
+    {
+        free(str_array[i]);
+    }
+    free(str_array);
+    free(temp);
+}
+
+const int LINE_LENGTH = 1337228;
+
 int main(int argc, char *argv[])
 {
-    //Number of program arguments validity check
     if (argc != 4)
-    {
-        fprintf(stderr, "Invalid number of arguments! (%d) 4 expected\n", argc);
-        exit(1);    //1 - invalid program argument exit code
-    }
+        ExitWithArgumentError(argc);
 
-    //Output to file
-    //char *OUT_FILE_NAME = "/home/avalacnhe/CLionProjects/FileSort/output.txt";
-
-    const int LINE_LENGTH = 1337228;
-    int LINES_NUMBER = (int)strtol(argv[1], NULL, 10);  //String to int conversion
-    char *IN_FILE_NAME = argv[2];                       //
-    char *ALG_NAME = argv[3];                           //
-
-    fprintf(stderr, "==========================================\n");
-    fprintf(stderr, "Lines number: %d\nInput file: %s\nSorting algorithm: %s\n", LINES_NUMBER, IN_FILE_NAME, ALG_NAME);
+    int LINES_NUMBER = (int)strtol(argv[1], NULL, 10);
+    char *IN_FILE_NAME = argv[2];
+    char *ALG_NAME = argv[3];
 
     FILE *i_file = fopen(IN_FILE_NAME, "r");
     if (i_file == NULL)
-    {
-        fprintf(stderr, "Invalid path to file! (%s)\n", IN_FILE_NAME);
-        exit(2);    //2 - missing file exit code
-    }
+        ExitWithFileError(IN_FILE_NAME);
 
-    char **str_array = malloc(LINES_NUMBER * sizeof(char *));   //File content
+    char **str_array = malloc(LINES_NUMBER * sizeof(char *));
     if (str_array == NULL)
-    {
-        fprintf(stderr, "Not enough memory!\n");
-        exit(4);    //4 - system function call error exit code
-    }
+        ExitWithMemoryError();
 
-    char *temp = malloc(LINE_LENGTH);  //Temporary string buffer
+    char *temp = malloc(LINE_LENGTH);
     if (temp == NULL)
-    {
-        fprintf(stderr, "Not enough memory! (and money...)\n");
-        exit(4);    //4 - system function call error exit code
-    }
+        ExitWithMemoryError();
 
     int current_line_number = 0;
     for (current_line_number = 0; current_line_number < LINES_NUMBER; current_line_number++)
     {
         if (fgets(temp, LINE_LENGTH, i_file) == NULL)
         {
-            if (current_line_number < LINE_LENGTH)      //if input file contains less lines than expected
-            {
-                fprintf(stderr, "Wrong input data! (%s)\n", IN_FILE_NAME);
-                exit(3);
-            }
+            if (current_line_number < LINE_LENGTH)
+                ExitWithInputDataError(IN_FILE_NAME);
             break;
         }
 
         str_array[current_line_number] = malloc((strlen(temp) + 1) * sizeof(char));
         if (str_array[current_line_number] == NULL)
         {
-            for (int i = 0; i < current_line_number; i++)
-                free(str_array[i]);
-
-            free(str_array);
-            free(temp);
-
-            fprintf(stderr, "Not enough memory!");
-            exit(4);    //4 - system function call error exit code
+            ReleaseMemory(str_array, current_line_number, temp);
+            ExitWithMemoryError();
         }
         strcpy(str_array[current_line_number], temp);
     }
 
-    /*
-    FILE *o_file = fopen(OUT_FILE_NAME, "w");
-    if (o_file == NULL)
-    {
-        fprintf(stderr, "File open/creation error (%s)\n", OUT_FILE_NAME);
-        exit(5);    //5 - use-it-in-any-incomprehensible-situation exit code
-    }
-     */
-
     if (current_line_number > 0)
         sort(str_array, current_line_number, ALG_NAME);
-
-    /*
-    //Output to file
-    for (int i = 0; i < LINES_NUMBER; i++)
-    {
-        fprintf(o_file, "%s", str_array[i]);
-    }
-     */
 
     for (int i = 0; i < current_line_number; i++)
     {
         printf("%s", str_array[i]);
     }
 
-    //Memory release
-    for (int i = 0; i < current_line_number; i++)
-    {
-        free(str_array[i]);
-    }
-    free(str_array);
-    free(temp);         //Temporary buffer memory release
-    fclose(i_file);     //Input file close
-    //fclose(o_file);     //Output file close
+    ReleaseMemory(str_array, current_line_number, temp);
+    fclose(i_file);
 
     return 0;
 }
-
